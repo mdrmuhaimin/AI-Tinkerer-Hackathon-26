@@ -28,6 +28,8 @@ def main(argv: list[str] | None = None) -> int:
             "errors": [],
             "contact_evidence": None,
             "extracted_card": None,
+            "voice_transcript": None,
+            "conversation_notes": None,
         }
     )
     payload = {
@@ -37,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
         "status": result.get("status"),
         "errors": result.get("errors", []),
         "contact_evidence": result.get("contact_evidence"),
+        "voice_transcript": result.get("voice_transcript"),
+        "conversation_notes": result.get("conversation_notes"),
     }
     print(json.dumps(payload, indent=2))
     return 0 if result.get("status") == "complete" else 1

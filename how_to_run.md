@@ -1,8 +1,8 @@
-# How to Run — AI Conference CRM (Task 2)
+# How to Run — AI Conference CRM (Task 3)
 
-This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation and business-card extraction.
+This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation, business-card extraction, and an optional voice-note transcription branch.
 
-Voice transcription, CRM storage, and embeddings are not used yet.
+CRM storage and embeddings are not used yet.
 
 ---
 
@@ -107,26 +107,30 @@ export GROQ_API_KEY=...
 
 The vision call follows Groq's documented API: `from groq import Groq`, local image as a base64 `data:` URL, model `qwen/qwen3.6-27b`, and `response_format={"type": "json_object"}`.
 
-If `GROQ_API_KEY` is missing on a live CLI run, extraction fails and the graph finishes with `status: error`.
+Voice transcription uses the same `GROQ_API_KEY` and Groq Speech-to-Text: `client.audio.transcriptions.create(file=..., model="whisper-large-v3")`. The original audio file is sent as-is (ogg is accepted; no FFmpeg or conversion).
+
+If `GROQ_API_KEY` is missing on a live CLI run, card extraction fails with `status: error`. If a voice file was also supplied, a missing key fails transcription the same way after a valid card extract.
 
 ---
 
 ## 6. Run the CLI
 
 ```bash
-python -m crm --name "Ada Lovelace" --image /path/to/card.jpg
+python -m crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
-With an optional voice file (path is stored; transcription is not implemented yet):
+With an optional local voice file (transcribed when the path is a real file):
 
 ```bash
-python -m crm --name "Ada Lovelace" --image /path/to/card.jpg --voice /path/to/note.wav
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
 ```
+
+Name + image still complete when `--voice` is omitted. Absence of a voice note is normal success.
 
 If you installed the package, you can also use:
 
 ```bash
-crm --name "Ada Lovelace" --image /path/to/card.jpg
+crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
 The image path must point to an **existing file**. A placeholder file is enough to pass path validation, but only a real card image will extract useful fields.
@@ -152,7 +156,9 @@ On success, the CLI prints the **final graph state as JSON** (including `contact
     "phone": "+44 20 0000 0000",
     "website": "https://ada.example",
     "address": "London"
-  }
+  },
+  "voice_transcript": null,
+  "conversation_notes": null
 }
 ```
 
@@ -162,10 +168,16 @@ On validation or extraction failure, it still prints JSON but exits with code `1
 
 ## 8. What the graph does today
 
-Current flow (linear edges only):
+Current flow (conditional voice branch):
 
 ```text
-START → load_input → validate_input → extract_card → validate_extraction → finalize → END
+START → load_input → validate_input → extract_card → validate_extraction
+  → voice_present?
+       /          \
+     no            yes
+      |      transcribe_voice
+      \          /
+       merge_context → finalize → END
 ```
 
 | Node                  | Purpose                                                                 |
@@ -174,15 +186,17 @@ START → load_input → validate_input → extract_card → validate_extraction
 | `validate_input`      | Checks name, image file, optional voice file                            |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
+| `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
+| `merge_context`       | Copies a non-empty transcript into `conversation_notes`                 |
 | `finalize`            | Sets `status` to `complete` when evidence is valid                      |
 
-If `validate_input` already set `status="invalid"`, `extract_card` returns the state unchanged and does not call the provider.
+If `validate_input` already set `status="invalid"`, `extract_card` returns the state unchanged and does not call the provider. Prior `invalid`/`error` status also skips `transcribe_voice`.
 
 ---
 
-## 9. Live extraction test
+## 9. Live tests
 
-Requires `GROQ_API_KEY` (environment or `.env`) and `input/visiting_card.png`.
+Requires `GROQ_API_KEY` (environment or `.env`) and `input/visiting_card.png`. The live voice test also needs `input/6134386456120009929.ogg`; it is skipped if that file is missing.
 
 Because the default pytest config is `-m "not live"`, override it:
 
@@ -190,19 +204,19 @@ Because the default pytest config is `-m "not live"`, override it:
 pytest -q -m live --override-ini addopts=
 ```
 
-The live test is skipped unless `GROQ_API_KEY` is set.
+The live tests are skipped unless `GROQ_API_KEY` is set. Default `pytest` never constructs a live Groq client.
 
 ---
 
 ## 10. What is not implemented yet
 
-The following are intentionally out of scope for Task 2:
+The following are intentionally out of scope for Task 3:
 
-- Voice transcription
 - PostgreSQL or any database
 - Embeddings / semantic search
 - Duplicate detection
 - Contact create/update storage
+- Reminder / task / follow-up-date extraction from the voice note
 
 ---
 

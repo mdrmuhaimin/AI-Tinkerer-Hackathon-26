@@ -17,3 +17,5 @@ class CRMState(TypedDict):
     errors: list[str]
     contact_evidence: dict | None
     extracted_card: dict | None
+    voice_transcript: str | None
+    conversation_notes: str | None

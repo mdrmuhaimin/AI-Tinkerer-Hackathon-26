@@ -227,17 +227,23 @@ Last updated: 2026-09-12
 * Graph was: `START → load_input → validate_input → finalize → END`
 * Deterministic input validation only.
 
-**Task 2 — Business Card Extraction** (verifier PASS; `pytest -q` → 19 passed, 1 deselected)
+**Task 2 — Business Card Extraction** (verifier PASS)
+
+* Graph was: `START → load_input → validate_input → extract_card → validate_extraction → finalize → END`
+* Pydantic `ContactEvidence`; isolated Groq vision extractor (`GROQ_API_KEY`)
+
+**Task 3 — Optional Voice Note Branch and Transcription** (verifier PASS; `pytest -q` → 30 passed, 2 deselected)
 
 The human specified this task.
 
-* Graph: `START → load_input → validate_input → extract_card → validate_extraction → finalize → END`
-* Pydantic `ContactEvidence` in `crm/schemas.py`
-* Isolated `CardExtractor` protocol; live impl is official Groq client (`GROQ_API_KEY` from `.env` or system env)
-* Unit tests use `FakeExtractor`. Live smoke test is `@pytest.mark.live` and excluded by default.
-* No CRM storage. No embeddings.
+* After `validate_extraction`, explicit `voice_present` conditional edge
+* No voice → `merge_context` (transcriber not called)
+* Voice present and still valid → `transcribe_voice` → `merge_context`
+* State: `voice_transcript`, `conversation_notes` (separate from `contact_evidence`)
+* Isolated `VoiceTranscriber`; live Groq Whisper `whisper-large-v3`
+* No FFmpeg. No Telegram. No CRM storage.
 
-Key files: `crm/schemas.py`, `crm/providers/`, `crm/graph.py`, `tests/test_extract.py`
+Key files: `crm/graph.py`, `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`
 
 ### Next
 

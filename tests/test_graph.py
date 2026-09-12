@@ -2,7 +2,7 @@ from pathlib import Path
 
 from crm.graph import build_graph
 from crm.state import CRMState
-from tests.helpers import FakeExtractor
+from tests.helpers import FakeExtractor, FakeTranscriber
 
 
 def _pending(
@@ -19,6 +19,8 @@ def _pending(
         "errors": [],
         "contact_evidence": None,
         "extracted_card": None,
+        "voice_transcript": None,
+        "conversation_notes": None,
     }
 
 
@@ -27,10 +29,15 @@ def _touch(path: Path) -> str:
     return str(path)
 
 
-def _graph(extractor: FakeExtractor | None = None):
+def _graph(
+    extractor: FakeExtractor | None = None,
+    transcriber: FakeTranscriber | None = None,
+):
     if extractor is None:
         extractor = FakeExtractor({"full_name": "Ada Lovelace"})
-    return build_graph(extractor=extractor)
+    if transcriber is None:
+        transcriber = FakeTranscriber()
+    return build_graph(extractor=extractor, transcriber=transcriber)
 
 
 def test_valid_name_and_image_completes(tmp_path: Path) -> None:
@@ -134,18 +141,21 @@ def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
         "validate_input",
         "extract_card",
         "validate_extraction",
+        "merge_context",
         "finalize",
     ]
 
     valid_state = _pending(name="Ada Lovelace", image_path=image)
     assert _stream_node_names(graph, valid_state) == expected
+    assert "transcribe_voice" not in expected
 
     valid_events = list(graph.stream(valid_state))
     assert valid_events[0]["load_input"]["status"] == "loaded"
     assert valid_events[1]["validate_input"]["status"] == "valid"
     assert valid_events[2]["extract_card"]["status"] == "extracted"
     assert valid_events[3]["validate_extraction"]["status"] == "valid"
-    assert valid_events[4]["finalize"]["status"] == "complete"
+    assert valid_events[4]["merge_context"]["status"] == "valid"
+    assert valid_events[5]["finalize"]["status"] == "complete"
 
     invalid_fake = FakeExtractor({"full_name": "Ada Lovelace"})
     invalid_graph = _graph(invalid_fake)
@@ -157,5 +167,6 @@ def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
     assert invalid_events[1]["validate_input"]["status"] == "invalid"
     assert invalid_events[2]["extract_card"]["status"] == "invalid"
     assert invalid_events[3]["validate_extraction"]["status"] == "invalid"
-    assert invalid_events[4]["finalize"]["status"] == "invalid"
+    assert invalid_events[4]["merge_context"]["status"] == "invalid"
+    assert invalid_events[5]["finalize"]["status"] == "invalid"
     assert invalid_fake.calls == []

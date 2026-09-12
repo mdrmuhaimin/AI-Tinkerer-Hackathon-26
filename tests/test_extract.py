@@ -31,6 +31,8 @@ def _pending(
         "errors": [],
         "contact_evidence": None,
         "extracted_card": None,
+        "voice_transcript": None,
+        "conversation_notes": None,
     }
 
 
