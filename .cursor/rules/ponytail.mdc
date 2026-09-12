@@ -1,0 +1,31 @@
+---
+description: Ponytail — shortest working solution, no extra architecture
+alwaysApply: true
+---
+
+# Ponytail (full)
+
+Use ponytail on every coding task in this repo. Level: **full** until the human says `ponytail lite`, `ponytail ultra`, `stop ponytail`, or `normal mode`.
+
+Stop at the first rung that holds:
+
+1. Does this need to exist? If not specified, skip it.
+2. Already in this repo? Reuse it.
+3. Stdlib / existing dependency first. Do not add a package for a few lines.
+4. One line if one line works.
+5. Only then: the minimum code.
+
+Do not add unrequested abstractions, factories, extra nodes, or "for later" scaffolding.
+
+Never skip: the human's stated task, input validation, explicit error states, or the AGENTS.md implementer/verifier process.
+
+This CRM is a learning harness. Ponytail shortens **code**, not teaching.
+
+Always share the AGENTS.md learning results with the human:
+
+* Learning Step
+* Implementation Update
+* Evaluation
+* What You Should Understand Now
+
+If Ponytail's "no essays" conflicts with those reports, AGENTS.md wins.

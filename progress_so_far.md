@@ -6,6 +6,11 @@ This document records only work that has been specified and completed. The next 
 
 How to run the current app: see [how_to_run.md](how_to_run.md).
 
+**Agent tooling in this repo:**
+
+- **Ponytail (full)** — `.cursor/rules/ponytail.mdc`. Smallest working **code**. Learning reports still follow [AGENTS.md](AGENTS.md).
+- **Graphify-Labs Graphify** — https://github.com/Graphify-Labs/graphify only. Rule: `.cursor/rules/graphify.mdc`. Query `graphify-out/` first, then teach from what you found using the AGENTS.md formats.
+
 ---
 
 ## What this project is
@@ -103,44 +108,106 @@ The graph does not contain Groq HTTP details. Tests inject `FakeExtractor`, so d
 
 ## Task 3 — Optional Voice Note Branch and Transcription
 
-**Status:** Done. Independent verifier PASS.
+**Status:** Done. Independent verifier PASS (`pytest -q` → 30 passed, 2 deselected).
 
-**What we built:** An explicit LangGraph fork after card extraction. Voice is optional. Both paths meet at `merge_context`.
+**What we built:** An explicit LangGraph fork after card extraction. Voice is optional conversation context, not identity. Both paths meet at `merge_context`.
 
-**Graph now:**
+**Current graph:**
 
 ```text
+START
+  ↓
+load_input
+  ↓
+validate_input
+  ↓
+extract_card
+  ↓
 validate_extraction
-        ↓
-   voice_present?
-      /        \
-    no          yes
-     |     transcribe_voice
-     \        /
-    merge_context → finalize → END
+  ↓
+voice_present?
+   /       \
+ no        yes
+ |          |
+ |    transcribe_voice
+ |          |
+ \          /
+  merge_context
+       ↓
+   finalize
+       ↓
+      END
 ```
 
-**State:** `voice_transcript` and `conversation_notes` (both `None` when voice is absent).
+The fork is a real `add_conditional_edges` call in `crm/graph.py`, not a hidden `if` inside one node.
 
-**Provider:** `VoiceTranscriber` protocol. Live impl is Groq Whisper `whisper-large-v3`. Original `.ogg` is passed through. No FFmpeg. Tests use `FakeTranscriber`.
+**Optional behaviour:**
 
-**Boundary:** Card fields stay identity. Voice text is conversation context only. Voice never overwrites `company` or other `ContactEvidence` fields.
+- Name + image only: skip `transcribe_voice`, leave voice fields `None`, still `complete`. Groq Whisper is not called.
+- Name + image + existing `.ogg`: run `transcribe_voice`, store the text, still `complete`.
+- Voice supplied but STT fails: `status="error"` (not silently ignored).
 
-**CLI:** still `--voice` as a local path. Telegram is not part of this task.
+**New state fields (`crm/state.py`):**
 
-**Key files:** `crm/graph.py` (`voice_present`, `transcribe_voice`, `merge_context`), `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`
+- `voice_transcript` — raw Whisper text, or `None`
+- `conversation_notes` — same text attached as context in `merge_context`, or `None`
+
+**Provider isolation:**
+
+```text
+LangGraph transcribe_voice  →  VoiceTranscriber.transcribe(path)  →  Groq Whisper
+                                         ↑
+                                tests: FakeTranscriber
+```
+
+Live impl: official Groq client, `GROQ_API_KEY`, model `whisper-large-v3`. Original `.ogg` (Opus) is passed through. No FFmpeg. Groq accepts `ogg` directly.
+
+**Boundary:**
+
+```text
+business card → ContactEvidence (identity)
+voice note    → conversation_notes (context)
+```
+
+Voice never overwrites `company`, email, or other card fields.
+
+**CLI:**
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
+```
+
+Telegram is not part of this task. The CLI still takes a local voice-file path.
+
+**Key files:** `crm/graph.py`, `crm/state.py`, `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`, `tests/test_live_transcribe.py`
 
 ---
 
-## Live check on a real card
+## Live checks
 
-On branch `ft/Core_Engine`, with `GROQ_API_KEY` in `.env` and `input/visiting_card.png`:
+On branch `ft/Core_Engine`, with `GROQ_API_KEY` in `.env`.
+
+**Card only:**
 
 ```bash
 python -m crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
-Result: `status="complete"`. Extracted evidence included name, company (NexaTech Solutions), title, email, phone, website, and address.
+Result: `status="complete"`. `contact_evidence` included Sarah Khan, NexaTech Solutions, Product Manager, email, phone, website, and address. `voice_transcript` and `conversation_notes` were `None`.
+
+**Card + sample voice** (`input/6134386456120009929.ogg`):
+
+```bash
+python -m crm \
+  --name "Sarah Khan" \
+  --image input/visiting_card.png \
+  --voice input/6134386456120009929.ogg
+```
+
+Result: `status="complete"`. Card fields unchanged. Voice context:
+
+> So I met this person in an event. She is a very good contact for our CRM project and would like to follow up with her after two weeks.
 
 ---
 
@@ -182,7 +249,13 @@ These were not in Task 1, Task 2, or Task 3:
 | Graph nodes and edges | `crm/graph.py` |
 | Shared graph state | `crm/state.py` |
 | Contact schema | `crm/schemas.py` |
-| Groq client | `crm/providers/groq.py` |
+| Groq vision + Whisper | `crm/providers/groq.py` |
+| Provider interfaces | `crm/providers/base.py` |
 | CLI | `crm/cli.py` |
+| Sample card | `input/visiting_card.png` |
+| Sample voice | `input/6134386456120009929.ogg` |
 | How to run | `how_to_run.md` |
 | Learning harness | `AGENTS.md` |
+| Ponytail rule | `.cursor/rules/ponytail.mdc` |
+| Graphify rule | `.cursor/rules/graphify.mdc` |
+| Code knowledge graph | `graphify-out/graph.json` |
