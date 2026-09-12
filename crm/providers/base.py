@@ -19,3 +19,13 @@ class VoiceTranscriber(Protocol):
 
 class SearchAnswerer(Protocol):
     def answer(self, query: str, records: Sequence[Mapping]) -> str: ...
+
+
+class EmbedderError(Exception):
+    """Raised when embedding generation fails."""
+
+
+class EmbeddingProvider(Protocol):
+    dimension: int
+
+    def embed(self, text: str) -> list[float]: ...

@@ -4,7 +4,10 @@ Last updated: 2026-09-12
 
 This document records only work that has been specified and completed. The next task is not listed here because it has not been specified.
 
+Lessons (what to understand): [understandable_so_far.md](understandable_so_far.md).  
 How to run the current app: see [how_to_run.md](how_to_run.md).
+
+After every later task that passes verification, update **this file** and `understandable_so_far.md` before stopping.
 
 **Agent tooling in this repo:**
 
@@ -21,9 +24,11 @@ A small conference CRM capture workflow. The user provides:
 - a business-card image
 - an optional voice-file path
 
-The system is built as an explicit LangGraph. Deterministic Python handles validation and workflow. Groq is used to read the card image and, when a voice file is present, to transcribe it.
+The system is built as an explicit LangGraph. Deterministic Python handles validation, matching, persistence, and write verification. Groq is used to read the card image, transcribe an optional voice note, and (after a verified write) embed the search document. Contacts live in local SQLite (`data/crm.db`). Semantic search uses `sqlite-vec`; the vector index only stores IDs, not the canonical row.
 
-No database, embeddings, Telegram, or contact storage yet.
+No PostgreSQL or Telegram yet.
+
+The full current graph (Tasks 1–8) is in [understandable_so_far.md](understandable_so_far.md). Observability wraps that graph; it does not add nodes. Search is a separate CLI path.
 
 ---
 
@@ -112,31 +117,11 @@ The graph does not contain Groq HTTP details. Tests inject `FakeExtractor`, so d
 
 **What we built:** An explicit LangGraph fork after card extraction. Voice is optional conversation context, not identity. Both paths meet at `merge_context`.
 
-**Current graph:**
+**Graph after Task 3** (persist and verify came later):
 
 ```text
-START
-  ↓
-load_input
-  ↓
-validate_input
-  ↓
-extract_card
-  ↓
-validate_extraction
-  ↓
-voice_present?
-   /       \
- no        yes
- |          |
- |    transcribe_voice
- |          |
- \          /
-  merge_context
-       ↓
-   finalize
-       ↓
-      END
+START → load_input → validate_input → extract_card → validate_extraction
+  → voice_present? → (transcribe_voice or skip) → merge_context → finalize
 ```
 
 The fork is a real `add_conditional_edges` call in `crm/graph.py`, not a hidden `if` inside one node.
@@ -219,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after Task 3: **30 passed, 2 deselected**.
+Last recorded default run after Task 8: **93 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -229,16 +214,160 @@ pytest -q -m live --override-ini addopts=
 
 ---
 
+## Task 4 — SQLite CRM Persistence, Matching, and Notes
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 46 passed, 2 deselected).
+
+**What we built:** After merge, normalize and search SQLite. Explicit CREATE vs UPDATE. Notes append. LLM does not match people.
+
+**Graph after Task 4** (verify_write came next):
+
+```text
+merge_context
+      ↓
+persistable?
+   /         \
+finalize   normalize_contact
+                  ↓
+             search_crm
+                  ↓
+            match_found?
+             /         \
+     update_contact  create_contact
+             \         /
+              finalize → END
+```
+
+**Store:** `crm/db.py` (`sqlite3`, default `data/crm.db`). Tests use a temp file.
+
+**Match order:** normalized email, then phone, then full_name + company.
+
+**Notes:** CREATE may have `NULL`. UPDATE appends with a blank line. No new notes → leave old notes. Null fields do not erase stored values.
+
+**Key files:** `crm/db.py`, `crm/normalize.py`, `crm/graph.py`, `tests/test_crm.py`
+
+---
+
+## Write verification
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 55 passed, 2 deselected).
+
+**What we built:** After CREATE/UPDATE the graph re-reads the row. `complete` requires `verified_contact` from that read, not from the write return value.
+
+```text
+create_contact ↘
+                verify_write → write_ok? → finalize → END
+update_contact ↗
+```
+
+Read-back is `ContactStore.get` (SQLite). PostgreSQL was not added.
+
+**Key files:** `crm/graph.py`, `tests/test_verify.py`
+
+---
+
+## Task 6 — Semantic Contact Retrieval with sqlite-vec
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 65 passed, 2 deselected).
+
+**What we built:** After a verified write, build a short search document, embed it, and store the vector in `sqlite-vec`. `crm query` finds contacts by meaning, then loads the SQLite rows.
+
+**Graph after a successful write:**
+
+```text
+verify_write → write_ok?
+   fail → finalize
+   ok   → build_search_document → create_embedding → store_embedding → finalize
+```
+
+Failed verify skips the embed path. Embed or store failure keeps `status="error"` (not `complete`).
+
+**Storage:** `contacts` table unchanged. Separate virtual table `contact_embeddings` (`vec0`). `rowid` = `contact_id`. Upsert is DELETE then INSERT so updates do not leave a stale vector.
+
+**Search document:** non-blank `full_name`, `company`, `job_title`, `notes` only.
+
+**Provider isolation:**
+
+```text
+LangGraph create_embedding  →  EmbeddingProvider.embed(text)  →  Groq
+                                         ↑
+                                tests: FakeEmbedder
+```
+
+Live: `GroqEmbedder` (`nomic-embed-text-v1.5`, dim 768), `GROQ_API_KEY`. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
+
+**CLI:**
+
+```bash
+python -m crm query "Who did I meet regarding AI workflow automation?"
+```
+
+Embeds the question, KNN on `contact_embeddings`, loads contacts by id. JSON list with `distance`. Default `--limit` 5.
+
+This Mac’s CPython cannot load SQLite extensions, so `crm/db.py` uses a thin APSW wrapper so `sqlite_vec.load` still works.
+
+**Key files:** `crm/search.py`, `crm/providers/embeddings.py`, `crm/db.py`, `crm/graph.py`, `crm/cli.py`, `tests/test_embeddings.py`
+
+---
+
+## Task 7 — LangSmith Observability and Evaluation
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 83 passed, 2 deselected).
+
+**What we built:** Optional LangSmith tracing on live model calls. An offline dataset of 10 capture cases. Five deterministic evaluators. `python -m crm.eval` runs the real graph (fakes + temp SQLite) through `langsmith.evaluate` and writes scores.
+
+**Graph change:** none.
+
+**Tracing:** `crm/tracing.py` `enable_tracing()`. If `LANGSMITH_API_KEY` is set: `LANGSMITH_TRACING=true`, project `ai-conference-crm`. No key → no-op. Live Groq `extract_card` / `transcribe` / `embed` are `@traceable`. CLI calls `enable_tracing()` after `load_dotenv`.
+
+**Dataset** (`eval/dataset.json`): complete-card, partial-card, missing-phone, missing-email, existing-contact, new-contact, voice-present, voice-absent, conflicting-voice, unsupported-fields.
+
+**Evaluators** (code, not LLM judges): extraction correctness; unsupported-field hallucination; CREATE vs UPDATE; duplicate avoidance; post-write verification.
+
+**Experiment:** `eval/latest_experiment.json`. All means 1.0 with fakes. `experiment_url` is null (no LangSmith key). Weakest/hardest labeled case: `conflicting-voice`.
+
+**CLI:**
+
+```bash
+python -m crm.eval
+```
+
+Default pytest does not upload and does not need a LangSmith key.
+
+**Key files:** `crm/eval.py`, `crm/tracing.py`, `eval/dataset.json`, `eval/latest_experiment.json`, `tests/test_eval.py`
+
+---
+
+## Task 8 — Text Notes and Semantic Search Interface
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 93 passed, 2 deselected).
+
+**What we built:** Optional `--notes` on capture. Typed and voice context merge in ordinary Python. `crm query` prints a short ranked list from SQLite rows. Search does not run the capture graph.
+
+**Graph:** same nodes. `load_input` now copies `typed_notes`. `merge_context` joins typed and/or voice (`"\n\n"` when both). No notes AI node.
+
+**CLI:**
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Potential consulting lead."
+python -m crm query "Who did I speak with about data warehouse consulting?"
+```
+
+`--notes` and `--voice` are both optional. Query default `--limit` 5. Results are name, company, title, notes from `contacts`.
+
+**Key files:** `crm/graph.py` (`merge_context`), `crm/cli.py`, `crm/state.py`, `crm/search.py`, `tests/test_voice.py`, `tests/test_crm.py`, `tests/test_cli.py`
+
+---
+
 ## What is intentionally not built yet
 
-These were not in Task 1, Task 2, or Task 3:
+These were not specified as later work:
 
-- PostgreSQL or any CRM storage
-- Duplicate detection
-- Create/update of a stored contact
-- Embeddings / semantic search
+- PostgreSQL / SQLAlchemy / migrations
+- pgvector / RAG chat
 - Telegram or other chat integrations
 - Structured reminders / follow-up extraction from the transcript
+- A live-vision LangSmith experiment (this task’s experiment uses fakes so it stays offline)
 
 ---
 
@@ -249,12 +378,20 @@ These were not in Task 1, Task 2, or Task 3:
 | Graph nodes and edges | `crm/graph.py` |
 | Shared graph state | `crm/state.py` |
 | Contact schema | `crm/schemas.py` |
+| SQLite store | `crm/db.py` |
+| Vector index | `crm/db.py` (`contact_embeddings`), `crm/search.py` |
+| Write verification | `crm/graph.py` (`verify_write`), `tests/test_verify.py` |
+| Normalization | `crm/normalize.py` |
 | Groq vision + Whisper | `crm/providers/groq.py` |
+| Groq embeddings | `crm/providers/embeddings.py` |
 | Provider interfaces | `crm/providers/base.py` |
-| CLI | `crm/cli.py` |
+| CLI (capture + query) | `crm/cli.py` |
+| Tracing | `crm/tracing.py` |
+| Eval dataset + experiment | `eval/dataset.json`, `crm/eval.py`, `eval/latest_experiment.json` |
 | Sample card | `input/visiting_card.png` |
 | Sample voice | `input/6134386456120009929.ogg` |
 | How to run | `how_to_run.md` |
+| What to understand | `understandable_so_far.md` |
 | Learning harness | `AGENTS.md` |
 | Ponytail rule | `.cursor/rules/ponytail.mdc` |
 | Graphify rule | `.cursor/rules/graphify.mdc` |

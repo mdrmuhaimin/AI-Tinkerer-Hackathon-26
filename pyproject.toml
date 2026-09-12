@@ -13,6 +13,9 @@ dependencies = [
     "groq",
     "python-dotenv",
     "python-telegram-bot>=22.8,<23",
+    "sqlite-vec",
+    "apsw",
+    "langsmith",
 ]
 
 [project.optional-dependencies]

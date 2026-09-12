@@ -147,6 +147,13 @@ Then give one small exercise or question the human can use to confirm understand
 
 Always share this checkpoint with the human. This is the learning result. Ponytail shortens code, not teaching.
 
+After a task PASSES verification, update both documents before stopping:
+
+* [progress_so_far.md](progress_so_far.md) — what was built, graph change, files, test counts
+* [understandable_so_far.md](understandable_so_far.md) — add that task's **What You Should Understand Now** (keep prior lessons)
+
+Do not leave those files stale.
+
 Do NOT automatically begin the next task.
 
 Do not invent the next task. Only implement a task the human has explicitly specified.
@@ -276,6 +283,31 @@ The human specified this task.
 * No FFmpeg. No Telegram. No CRM storage.
 
 Key files: `crm/graph.py`, `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`
+
+**Task 4 — SQLite CRM Persistence, Matching, and Notes** (verifier PASS; `pytest -q` → 46 passed, 2 deselected)
+
+The human specified this task.
+
+* After `merge_context`, persist only when still valid (`persistable`)
+* `normalize_contact` → `search_crm` → `match_found?` → `update_contact` or `create_contact`
+* Match order: email, then phone, then name+company (deterministic, no LLM)
+* Notes append on UPDATE; null does not erase existing fields
+* Isolated `ContactStore` in `crm/db.py` (`sqlite3`, `data/crm.db`)
+* No SQLAlchemy, PostgreSQL, embeddings, or Telegram
+
+Key files: `crm/db.py`, `crm/normalize.py`, `crm/graph.py`, `tests/test_crm.py`
+
+**Write verification** (verifier PASS; `pytest -q` → 55 passed, 2 deselected)
+
+The human specified this task.
+
+* `create_contact` / `update_contact` → `verify_write` → `write_ok?` → `finalize`
+* Re-reads via `ContactStore.get` (SQLite). Does not trust INSERT/UPDATE return alone.
+* Missing row, wrong fields, or get exception → `status="error"`
+* Success includes `contact_id` and `verified_contact`
+* No PostgreSQL introduced
+
+Key files: `crm/graph.py` (`verify_write`, `write_ok`), `tests/test_verify.py`
 
 ### Next
 

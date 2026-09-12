@@ -1,0 +1,264 @@
+{
+  "examples": [
+    {
+      "id": "complete-card",
+      "scenarios": ["complete business card"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": "ada@example.com",
+          "phone": "+44 20 0000 0000",
+          "website": "https://ada.example",
+          "address": "London"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": "ada@example.com",
+          "phone": "+44 20 0000 0000",
+          "website": "https://ada.example",
+          "address": "London"
+        },
+        "crm_action": "created",
+        "null_fields": [],
+        "verified": true
+      }
+    },
+    {
+      "id": "partial-card",
+      "scenarios": ["partially populated card"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        },
+        "crm_action": "created",
+        "null_fields": ["job_title", "phone", "website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "missing-phone",
+      "scenarios": ["missing phone"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": "ada@example.com",
+          "phone": null,
+          "website": "https://ada.example",
+          "address": "London"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": "ada@example.com",
+          "phone": null,
+          "website": "https://ada.example",
+          "address": "London"
+        },
+        "crm_action": "created",
+        "null_fields": ["phone"],
+        "verified": true
+      }
+    },
+    {
+      "id": "missing-email",
+      "scenarios": ["missing email"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": null,
+          "phone": "+44 20 0000 0000",
+          "website": "https://ada.example",
+          "address": "London"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "job_title": "Mathematician",
+          "email": null,
+          "phone": "+44 20 0000 0000",
+          "website": "https://ada.example",
+          "address": "London"
+        },
+        "crm_action": "created",
+        "null_fields": ["email"],
+        "verified": true
+      }
+    },
+    {
+      "id": "existing-contact",
+      "scenarios": ["existing contact"],
+      "inputs": {
+        "name": "Sarah Khan",
+        "card": {
+          "full_name": "Sarah Khan",
+          "company": "NexaTech Solutions",
+          "job_title": "VP Product",
+          "email": "sarah@nexatech.example",
+          "phone": "+1 555 0100"
+        },
+        "seed_contact": {
+          "full_name": "Sarah Khan",
+          "company": "NexaTech Solutions",
+          "job_title": "Product Manager",
+          "email": "sarah@nexatech.example",
+          "phone": "+1 555 0100"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Sarah Khan",
+          "company": "NexaTech Solutions",
+          "job_title": "VP Product",
+          "email": "sarah@nexatech.example",
+          "phone": "+1 555 0100"
+        },
+        "crm_action": "updated",
+        "null_fields": ["website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "new-contact",
+      "scenarios": ["new contact"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        },
+        "seed_contact": {
+          "full_name": "Decoy Person",
+          "company": "Other Corp",
+          "email": "decoy@other.example"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        },
+        "crm_action": "created",
+        "null_fields": ["job_title", "phone", "website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "voice-present",
+      "scenarios": ["voice note present"],
+      "inputs": {
+        "name": "Sarah Khan",
+        "card": {
+          "full_name": "Sarah Khan",
+          "company": "NexaTech Solutions",
+          "email": "sarah@nexatech.example"
+        },
+        "voice_transcript": "Met Sarah at the conference. Follow up next week about the CRM pilot."
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Sarah Khan",
+          "company": "NexaTech Solutions",
+          "email": "sarah@nexatech.example"
+        },
+        "crm_action": "created",
+        "null_fields": ["job_title", "phone", "website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "voice-absent",
+      "scenarios": ["voice note absent"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com"
+        },
+        "crm_action": "created",
+        "null_fields": ["job_title", "phone", "website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "conflicting-voice",
+      "scenarios": ["conflicting information"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com",
+          "phone": "+44 20 0000 0000"
+        },
+        "voice_transcript": "She said she now works at Google and her email is ada@google.com."
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace",
+          "company": "Analytical Engines",
+          "email": "ada@example.com",
+          "phone": "+44 20 0000 0000"
+        },
+        "crm_action": "created",
+        "null_fields": ["job_title", "website", "address"],
+        "verified": true
+      }
+    },
+    {
+      "id": "unsupported-fields",
+      "scenarios": ["unsupported information"],
+      "inputs": {
+        "name": "Ada Lovelace",
+        "card": {
+          "full_name": "Ada Lovelace"
+        }
+      },
+      "outputs": {
+        "contact_evidence": {
+          "full_name": "Ada Lovelace"
+        },
+        "crm_action": "created",
+        "null_fields": ["company", "job_title", "email", "phone", "website", "address"],
+        "verified": true
+      }
+    }
+  ]
+}

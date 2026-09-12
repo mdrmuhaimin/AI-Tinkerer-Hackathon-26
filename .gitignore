@@ -16,3 +16,4 @@ graphify-out/.graphify_root
 *.sqlite3-journal
 *.sqlite3-wal
 *.sqlite3-shm
+data/*.db

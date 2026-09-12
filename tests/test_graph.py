@@ -2,7 +2,7 @@ from pathlib import Path
 
 from crm.graph import build_graph
 from crm.state import CRMState
-from tests.helpers import FakeExtractor, FakeTranscriber
+from tests.helpers import FakeEmbedder, FakeExtractor, FakeTranscriber
 
 
 def _pending(
@@ -10,11 +10,13 @@ def _pending(
     name: str | None,
     image_path: str | None,
     voice_path: str | None = None,
+    typed_notes: str | None = None,
 ) -> CRMState:
     return {
         "name": name,
         "image_path": image_path,
         "voice_path": voice_path,
+        "typed_notes": typed_notes,
         "status": "pending",
         "errors": [],
         "contact_evidence": None,
@@ -30,6 +32,7 @@ def _touch(path: Path) -> str:
 
 
 def _graph(
+    tmp_path: Path,
     extractor: FakeExtractor | None = None,
     transcriber: FakeTranscriber | None = None,
 ):
@@ -37,12 +40,17 @@ def _graph(
         extractor = FakeExtractor({"full_name": "Ada Lovelace"})
     if transcriber is None:
         transcriber = FakeTranscriber()
-    return build_graph(extractor=extractor, transcriber=transcriber)
+    return build_graph(
+        extractor=extractor,
+        transcriber=transcriber,
+        db_path=tmp_path / "crm.db",
+        embedder=FakeEmbedder(),
+    )
 
 
 def test_valid_name_and_image_completes(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
-    graph = _graph()
+    graph = _graph(tmp_path)
 
     result = graph.invoke(_pending(name="Ada Lovelace", image_path=image))
 
@@ -56,7 +64,7 @@ def test_valid_name_and_image_completes(tmp_path: Path) -> None:
 def test_missing_or_blank_name_is_invalid(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    graph = _graph(fake)
+    graph = _graph(tmp_path, fake)
 
     missing = graph.invoke(_pending(name=None, image_path=image))
     assert missing["status"] == "invalid"
@@ -71,9 +79,9 @@ def test_missing_or_blank_name_is_invalid(tmp_path: Path) -> None:
     assert fake.calls == []
 
 
-def test_missing_or_nonexistent_image_is_invalid() -> None:
+def test_missing_or_nonexistent_image_is_invalid(tmp_path: Path) -> None:
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    graph = _graph(fake)
+    graph = _graph(tmp_path, fake)
 
     missing = graph.invoke(_pending(name="Ada Lovelace", image_path=None))
     assert missing["status"] == "invalid"
@@ -92,7 +100,7 @@ def test_missing_or_nonexistent_image_is_invalid() -> None:
 def test_voice_path_optional_and_kept_when_present(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     voice = _touch(tmp_path / "note.wav")
-    graph = _graph()
+    graph = _graph(tmp_path)
 
     without_voice = graph.invoke(
         _pending(name="Ada Lovelace", image_path=image, voice_path=None)
@@ -115,7 +123,7 @@ def test_voice_path_optional_and_kept_when_present(tmp_path: Path) -> None:
     assert with_voice["voice_path"] == voice
 
     missing_voice_fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    missing_voice = _graph(missing_voice_fake).invoke(
+    missing_voice = _graph(tmp_path, missing_voice_fake).invoke(
         _pending(
             name="Ada Lovelace",
             image_path=image,
@@ -135,8 +143,23 @@ def _stream_node_names(graph, state: CRMState) -> list[str]:
 def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    graph = _graph(fake)
-    expected = [
+    graph = _graph(tmp_path, fake)
+    expected_valid = [
+        "load_input",
+        "validate_input",
+        "extract_card",
+        "validate_extraction",
+        "merge_context",
+        "normalize_contact",
+        "search_crm",
+        "create_contact",
+        "verify_write",
+        "build_search_document",
+        "create_embedding",
+        "store_embedding",
+        "finalize",
+    ]
+    expected_invalid = [
         "load_input",
         "validate_input",
         "extract_card",
@@ -146,8 +169,8 @@ def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
     ]
 
     valid_state = _pending(name="Ada Lovelace", image_path=image)
-    assert _stream_node_names(graph, valid_state) == expected
-    assert "transcribe_voice" not in expected
+    assert _stream_node_names(graph, valid_state) == expected_valid
+    assert "transcribe_voice" not in expected_valid
 
     valid_events = list(graph.stream(valid_state))
     assert valid_events[0]["load_input"]["status"] == "loaded"
@@ -155,12 +178,12 @@ def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
     assert valid_events[2]["extract_card"]["status"] == "extracted"
     assert valid_events[3]["validate_extraction"]["status"] == "valid"
     assert valid_events[4]["merge_context"]["status"] == "valid"
-    assert valid_events[5]["finalize"]["status"] == "complete"
+    assert valid_events[-1]["finalize"]["status"] == "complete"
 
     invalid_fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    invalid_graph = _graph(invalid_fake)
+    invalid_graph = _graph(tmp_path, invalid_fake)
     invalid_state = _pending(name=None, image_path=image)
-    assert _stream_node_names(invalid_graph, invalid_state) == expected
+    assert _stream_node_names(invalid_graph, invalid_state) == expected_invalid
 
     invalid_events = list(invalid_graph.stream(invalid_state))
     assert invalid_events[0]["load_input"]["status"] == "loaded"

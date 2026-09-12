@@ -8,6 +8,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from groq import Groq
+from langsmith import traceable
 
 from crm.providers.base import ExtractorError, TranscriberError
 
@@ -45,6 +46,7 @@ class GroqCardExtractor:
             raise ExtractorError("missing environment variable: GROQ_API_KEY")
         return cls(api_key=api_key)
 
+    @traceable(name="extract_card")
     def extract_card(self, image_path: str) -> dict:
         try:
             mime, encoded = _encode_image(image_path)
@@ -100,6 +102,7 @@ class GroqVoiceTranscriber:
             raise TranscriberError("missing environment variable: GROQ_API_KEY")
         return cls(api_key=api_key)
 
+    @traceable(name="transcribe")
     def transcribe(self, voice_path: str) -> str:
         try:
             client = Groq(api_key=self._api_key)

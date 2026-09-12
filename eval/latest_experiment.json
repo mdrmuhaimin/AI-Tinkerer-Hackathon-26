@@ -1,0 +1,117 @@
+{
+  "examples": [
+    {
+      "id": "complete-card",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "partial-card",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "missing-phone",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "missing-email",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "existing-contact",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "new-contact",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "voice-present",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "voice-absent",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "conflicting-voice",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    },
+    {
+      "id": "unsupported-fields",
+      "scores": {
+        "extraction_correctness": 1.0,
+        "unsupported_field_hallucination": 1.0,
+        "create_vs_update": 1.0,
+        "duplicate_avoidance": 1.0,
+        "post_write_verification": 1.0
+      }
+    }
+  ],
+  "mean_scores": {
+    "extraction_correctness": 1.0,
+    "unsupported_field_hallucination": 1.0,
+    "create_vs_update": 1.0,
+    "duplicate_avoidance": 1.0,
+    "post_write_verification": 1.0
+  },
+  "experiment_url": null,
+  "weakest_example": {
+    "id": "conflicting-voice",
+    "mean": 1.0,
+    "why": "fakes make every score 1.0; this case is still the hardest because a live extract or sloppy merge could overwrite card company/email from the voice note. Card identity must win; notes keep the voice."
+  }
+}
