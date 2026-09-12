@@ -1,119 +1,103 @@
-# Telegram Input Adapter MVP Specification
+# Telegram Card and Voice Intake Specification
 
-## Goal
+## Goal and boundary
 
-Add Telegram as a small input/output adapter for the existing CRM graph. The bot
-runs on the developer's laptop and lets an approved user submit one business-card
-image with the person's name as its caption.
-
-Telegram remains outside LangGraph and does not change the graph's execution
-model or the CLI behavior.
+An allowlisted user can submit a business-card image and name through a private
+Telegram chat, then send one Telegram voice note or `/done`. Telegram remains an
+adapter: it downloads files and invokes the existing optional-voice LangGraph.
+There is no database or contact persistence.
 
 ```text
-Telegram private message
-        ↓
-Telegram adapter (access, download, formatting, cleanup)
-        ↓
-{name, image_path, voice_path=None, status="pending", errors=[]}
-        ↓
+photo/JPEG/PNG + name caption → pending intake → voice note or /done
+                                                   ↓
 load_input → validate_input → extract_card → validate_extraction
-        ↓
-merge_context → finalize
-        ↓
-Telegram response
+                                                   ↓
+                                             voice_present?
+                                            /              \
+                                     transcribe_voice     merge_context
+                                            \              /
+                                          merge_context → finalize
+                                                   ↓
+                                       projected JSON reply
 ```
 
-## Runtime and configuration
+## Configuration and access
 
-- Python 3.11 or newer.
-- Current stable asynchronous `python-telegram-bot` API.
-- Start with `python -m crm.telegram_bot`.
-- Run locally with long polling. There are no webhooks, public server, cloud
-  deployment, or Docker requirements.
-- Read the bot token from `TELEGRAM_BOT_TOKEN`.
-- Read a comma-separated allowlist of numeric Telegram user IDs from
-  `TELEGRAM_ALLOWED_USER_IDS`.
-- Both variables are required. `GROQ_API_KEY` is also required for live card
-  extraction. Secrets must never be committed, shown to users, or logged.
+Run locally with Python 3.11+, long polling, and `python -m crm.telegram_bot`.
+`TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USER_IDS`, and `GROQ_API_KEY` are
+required for live use. Only allowlisted users in private chats may use any
+handler. Secrets and provider details must not be logged or returned.
 
-## Accepted input
+## Conversation
 
-An allowlisted user in a private chat sends exactly one of:
+`/start` and `/help` tell the user to send one photo or JPEG/PNG document with
+only the person's name in its caption, followed by one voice note or `/done`.
 
-1. A Telegram photo with the person's name as its caption.
-2. A JPEG or PNG image document with the person's name as its caption.
+A valid card is downloaded with explicit Telegram connection/read timeouts and
+stored in an in-memory, per-chat pending intake. The graph is not invoked yet.
+The bot replies:
 
-The full trimmed caption is the name; the adapter performs no natural-language
-parsing. Albums and multi-card submissions are not supported.
+```text
+Card received.
 
-For each intake, the adapter creates a separate temporary directory, downloads
-the image into it, and invokes the existing graph while the file exists with:
+Send one voice note, or /done to continue without voice.
+```
 
-```python
+A voice note from the same chat is downloaded beside the pending image. The
+graph is invoked once while both files exist. `/done` invokes it with
+`voice_path=None`. Voice or `/done` without a pending card returns safe usage
+instructions without invoking the graph.
+
+Sending a new valid card in the same chat replaces and deletes the previous
+pending intake. Chats remain isolated. A failed card download creates no new
+pending intake; a failed voice download preserves the card so voice can be
+retried or skipped. All files and pending state are removed after graph success
+or failure. Restarting the local bot loses pending intakes.
+
+Albums, unsupported documents, missing captions, arbitrary audio files, group
+messages, and unauthorized users are rejected. Only Telegram's voice-message
+type is accepted for the voice step.
+
+## Graph input and output
+
+The adapter invokes the existing graph with the stored name and paths, status
+`pending`, and an empty error list. It replies with indented plain JSON containing
+exactly these top-level keys. Long JSON is delivered in consecutive, ordered
+messages whose bodies concatenate to the complete JSON without truncation:
+
+```json
 {
-    "name": caption.strip(),
-    "image_path": downloaded_path,
-    "voice_path": None,
-    "status": "pending",
-    "errors": [],
+  "status": "complete",
+  "errors": [],
+  "contact_evidence": {
+    "full_name": "...",
+    "company": "...",
+    "job_title": "...",
+    "email": "...",
+    "phone": "...",
+    "website": "...",
+    "address": "..."
+  },
+  "voice_transcript": "...",
+  "conversation_notes": "..."
 }
 ```
 
-The directory is removed after graph execution, including failure paths. There
-is no persistent image storage.
-
-## Responses
-
-Successful card extraction and schema validation returns exactly:
-
-```text
-✓ Input accepted
-
-Name: Ada Lovelace
-Status: complete
-```
-
-A graph validation failure begins with:
-
-```text
-✗ Input rejected
-
-```
-
-and includes safe user-facing error text. Local paths and internal details must
-not be exposed. A download failure asks the user to resend the image. An
-unexpected failure returns a generic try-again response and is logged without
-secrets.
-
-`/start` and `/help` explain that the user must send one business-card photo or
-JPEG/PNG image document and put only the person's name in the caption.
-
-The bot safely rejects:
-
-- users not in the allowlist;
-- group and channel messages;
-- photos or supported documents without a caption;
-- text without an image;
-- unsupported attachments;
-- media albums.
-
-## Explicit non-goals
-
-This Telegram MVP has no voice-note conversation, pending conversation state,
-database, duplicate detection, persistence, processing indicator, or RAG. The
-shared graph does support Groq card extraction and optional CLI voice-file
-transcription. `Status: complete` means extraction produced schema-valid
-evidence; it does **not** mean a contact was saved.
+The reply never includes local paths, `extracted_card`, API keys, or
+provider/internal error detail. Graph errors are reduced to safe categories while
+preserving graph status. Invalid or unserializable results and unexpected
+exceptions receive a generic error response.
 
 ## Acceptance criteria
 
-- A valid photo and a valid JPEG/PNG document each map to the specified graph
-  state, and the downloaded file exists during graph invocation.
-- Temporary files are cleaned up after success and failure.
-- Access, caption, media type, album, download, validation, and unexpected-error
-  paths return safe messages and do not invoke later work when rejected.
-- Graph error formatting cannot expose a local file path.
-- `/start` and `/help` document the exact input contract.
-- Configuration rejects missing tokens, empty allowlists, and nonnumeric IDs.
-- Automated tests use fake Telegram updates/files and never contact Telegram.
-- Existing graph, provider, voice, CLI, and Telegram tests pass together.
+- Card input queues without graph invocation; voice and `/done` invoke it once.
+- Image and voice files exist during graph execution and are then cleaned up.
+- JSON has exactly the five specified keys and real graph result values.
+- Per-chat isolation, deterministic replacement, retry, and restart behavior are
+  explicit and tested where applicable.
+- Access, input, download, graph, serialization, and cleanup failure paths are safe.
+- Tests use fake Telegram/Groq boundaries and make no live network calls.
+- LangGraph, providers, and CLI remain unchanged.
+
+`complete` means extraction and optional transcription completed. It does not
+mean a contact was stored.

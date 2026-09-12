@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,6 +9,7 @@ import pytest
 
 from crm.telegram_bot import (
     DOWNLOAD_ERROR_MESSAGE,
+    CARD_RECEIVED_MESSAGE,
     GENERIC_ERROR_MESSAGE,
     GROUP_MESSAGE,
     HELP_MESSAGE,
@@ -16,6 +18,7 @@ from crm.telegram_bot import (
     UNSUPPORTED_MESSAGE,
     TelegramBotConfig,
     build_handlers,
+    create_application,
     load_config,
     main,
 )
@@ -26,11 +29,11 @@ class FakeAttachment:
         self.content = content
         self.download_error = download_error
 
-    async def get_file(self):
+    async def get_file(self, **kwargs):
         attachment = self
 
         class File:
-            async def download_to_drive(self, custom_path):
+            async def download_to_drive(self, custom_path, **kwargs):
                 if attachment.download_error:
                     raise attachment.download_error
                 Path(custom_path).write_bytes(attachment.content)
@@ -46,19 +49,22 @@ def make_update(
     photo=None,
     document=None,
     text=None,
+    voice=None,
     media_group_id=None,
+    chat_id=100,
 ):
     message = SimpleNamespace(
         caption=caption,
         photo=photo or [],
         document=document,
+        voice=voice,
         text=text,
         media_group_id=media_group_id,
         reply_text=AsyncMock(),
     )
     return SimpleNamespace(
         effective_user=SimpleNamespace(id=user_id),
-        effective_chat=SimpleNamespace(type=chat_type),
+        effective_chat=SimpleNamespace(type=chat_type, id=chat_id),
         effective_message=message,
     )
 
@@ -67,32 +73,50 @@ def run(coro):
     return asyncio.run(coro)
 
 
-def test_photo_maps_to_graph_while_file_exists_then_cleans_up():
+def test_photo_queues_then_voice_maps_to_graph_while_files_exist_and_cleans_up():
     seen = {}
 
     class Graph:
         def invoke(self, state):
             seen.update(state)
-            seen["exists_during_invoke"] = Path(state["image_path"]).is_file()
-            return {**state, "status": "complete", "errors": []}
+            seen["files_exist"] = (
+                Path(state["image_path"]).is_file(),
+                Path(state["voice_path"]).is_file(),
+            )
+            return {
+                **state,
+                "status": "complete",
+                "errors": [],
+                "contact_evidence": {"full_name": "Ada Lovelace"},
+                "voice_transcript": "Met at the conference.",
+                "conversation_notes": "Met at the conference.",
+            }
 
     update = make_update(photo=[FakeAttachment(b"card")], caption="  Ada Lovelace  ")
     handlers = build_handlers({42}, Graph())
 
     run(handlers.intake(update, None))
+    graph_result_message = make_update(voice=FakeAttachment(b"voice"), caption=None)
+    assert seen == {}
+    update.effective_message.reply_text.assert_awaited_once_with(CARD_RECEIVED_MESSAGE)
+    run(handlers.voice(graph_result_message, None))
 
     assert seen == {
         "name": "Ada Lovelace",
         "image_path": seen["image_path"],
-        "voice_path": None,
+        "voice_path": seen["voice_path"],
         "status": "pending",
         "errors": [],
-        "exists_during_invoke": True,
+        "files_exist": (True, True),
     }
     assert not Path(seen["image_path"]).exists()
-    update.effective_message.reply_text.assert_awaited_once_with(
-        "✓ Input accepted\n\nName: Ada Lovelace\nStatus: complete"
-    )
+    assert not Path(seen["voice_path"]).exists()
+    payload = json.loads(graph_result_message.effective_message.reply_text.await_args.args[0])
+    assert list(payload) == [
+        "status", "errors", "contact_evidence", "voice_transcript", "conversation_notes"
+    ]
+    assert payload["contact_evidence"] == {"full_name": "Ada Lovelace"}
+    assert payload["voice_transcript"] == "Met at the conference."
 
 
 @pytest.mark.parametrize(
@@ -101,21 +125,166 @@ def test_photo_maps_to_graph_while_file_exists_then_cleans_up():
 )
 def test_supported_image_document_maps_to_graph(mime_type, file_name):
     graph = Mock()
-    graph.invoke.return_value = {
-        "name": "Ada Lovelace",
-        "status": "complete",
-        "errors": [],
-    }
     document = FakeAttachment()
     document.mime_type = mime_type
     document.file_name = file_name
     update = make_update(document=document)
 
-    run(build_handlers({42}, graph).intake(update, None))
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(update, None))
 
-    assert graph.invoke.call_args.args[0]["image_path"].endswith(
-        ".png" if mime_type == "image/png" else ".jpg"
+    graph.invoke.assert_not_called()
+    expected_suffix = ".png" if mime_type == "image/png" else ".jpg"
+    assert handlers.pending[100].image_path.endswith(expected_suffix)
+    run(handlers.done(make_update(text="/done", caption=None), None))
+
+
+def test_done_invokes_without_voice_and_returns_projected_json():
+    graph = Mock()
+    graph.invoke.return_value = {
+        "status": "complete", "errors": [],
+        "contact_evidence": {"full_name": "Ada Lovelace"},
+        "voice_transcript": None, "conversation_notes": None,
+        "image_path": "/secret/path", "extracted_card": {"raw": True},
+    }
+    handlers = build_handlers({42}, graph)
+    image = make_update(photo=[FakeAttachment()])
+    done = make_update(text="/done", caption=None)
+
+    run(handlers.intake(image, None))
+    queued_path = handlers.pending[100].image_path
+    assert queued_path.endswith(".jpg")
+    run(handlers.done(done, None))
+
+    state = graph.invoke.call_args.args[0]
+    assert state["voice_path"] is None
+    assert not Path(queued_path).exists()
+    assert json.loads(done.effective_message.reply_text.await_args.args[0]) == {
+        "status": "complete", "errors": [],
+        "contact_evidence": {"full_name": "Ada Lovelace"},
+        "voice_transcript": None, "conversation_notes": None,
+    }
+
+
+def test_voice_and_done_without_pending_do_not_invoke_graph():
+    graph = Mock()
+    handlers = build_handlers({42}, graph)
+    voice = make_update(voice=FakeAttachment(), caption=None)
+    done = make_update(text="/done", caption=None)
+    run(handlers.voice(voice, None))
+    run(handlers.done(done, None))
+    graph.invoke.assert_not_called()
+    assert "business-card" in voice.effective_message.reply_text.await_args.args[0]
+    assert "business-card" in done.effective_message.reply_text.await_args.args[0]
+
+
+def test_pending_intakes_are_isolated_and_replacement_cleans_old_file():
+    handlers = build_handlers({42}, Mock())
+    first = make_update(photo=[FakeAttachment(b"first")], chat_id=100)
+    other = make_update(photo=[FakeAttachment(b"other")], chat_id=200)
+    replacement = make_update(photo=[FakeAttachment(b"second")], chat_id=100)
+    run(handlers.intake(first, None))
+    first_path = handlers.pending[100].image_path
+    run(handlers.intake(other, None))
+    run(handlers.intake(replacement, None))
+    assert not Path(first_path).exists()
+    assert Path(handlers.pending[100].image_path).read_bytes() == b"second"
+    assert Path(handlers.pending[200].image_path).read_bytes() == b"other"
+    run(handlers.done(make_update(text="/done", caption=None, chat_id=100), None))
+    run(handlers.done(make_update(text="/done", caption=None, chat_id=200), None))
+
+
+def test_voice_download_failure_keeps_card_for_retry():
+    graph = Mock()
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(make_update(photo=[FakeAttachment()]), None))
+    card_path = handlers.pending[100].image_path
+    voice = make_update(voice=FakeAttachment(download_error=RuntimeError("network")), caption=None)
+    run(handlers.voice(voice, None))
+    graph.invoke.assert_not_called()
+    assert Path(card_path).exists()
+    assert 100 in handlers.pending
+    run(handlers.done(make_update(text="/done", caption=None), None))
+
+
+@pytest.mark.parametrize("callback_name", ["voice", "done"])
+def test_new_handlers_enforce_access(callback_name):
+    graph = Mock()
+    handlers = build_handlers({42}, graph)
+    update = make_update(
+        user_id=99, caption=None, text="/done",
+        voice=FakeAttachment() if callback_name == "voice" else None,
     )
+    run(getattr(handlers, callback_name)(update, None))
+    graph.invoke.assert_not_called()
+    update.effective_message.reply_text.assert_awaited_once_with(UNAUTHORIZED_MESSAGE)
+
+
+def test_application_registers_done_before_media_and_voice_handlers():
+    application = create_application(TelegramBotConfig("123:TEST", frozenset({42})), Mock())
+    callbacks = [handler.callback.__name__ for handler in application.handlers[0]]
+    assert callbacks == [
+        "help_handler", "done_handler", "intake_handler", "voice_handler",
+        "unsupported_handler",
+    ]
+
+
+def test_graph_exception_cleans_pending_files():
+    graph = Mock()
+    graph.invoke.side_effect = RuntimeError("provider secret")
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(make_update(photo=[FakeAttachment()]), None))
+    card_path = handlers.pending[100].image_path
+    voice = make_update(voice=FakeAttachment(), caption=None)
+    run(handlers.voice(voice, None))
+    assert 100 not in handlers.pending
+    assert not Path(card_path).exists()
+    voice.effective_message.reply_text.assert_awaited_once_with(GENERIC_ERROR_MESSAGE)
+
+
+def test_graph_errors_are_safe_json_without_internal_details():
+    graph = Mock()
+    graph.invoke.return_value = {
+        "status": "error",
+        "errors": ["voice transcription failed: /tmp/private.ogg API key abc"],
+        "contact_evidence": {"full_name": "Ada"},
+        "voice_transcript": None,
+        "conversation_notes": None,
+    }
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(make_update(photo=[FakeAttachment()]), None))
+    done = make_update(text="/done", caption=None)
+    run(handlers.done(done, None))
+    output = done.effective_message.reply_text.await_args.args[0]
+    assert "/tmp" not in output and "abc" not in output
+    assert json.loads(output)["errors"] == ["voice note could not be validated"]
+
+
+def test_long_json_is_sent_in_ordered_safe_chunks_without_data_loss():
+    transcript = "Met at conference 🚀 " * 500
+    graph = Mock()
+    graph.invoke.return_value = {
+        "status": "complete",
+        "errors": [],
+        "contact_evidence": {"full_name": "Ada Lovelace"},
+        "voice_transcript": transcript,
+        "conversation_notes": transcript,
+    }
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(make_update(photo=[FakeAttachment()]), None))
+    done = make_update(text="/done", caption=None)
+
+    run(handlers.done(done, None))
+
+    chunks = [call.args[0] for call in done.effective_message.reply_text.await_args_list]
+    assert len(chunks) > 1
+    assert all(len(chunk.encode("utf-16-le")) // 2 <= 3500 for chunk in chunks)
+    payload = json.loads("".join(chunks))
+    assert list(payload) == [
+        "status", "errors", "contact_evidence", "voice_transcript", "conversation_notes"
+    ]
+    assert payload["voice_transcript"] == transcript
+    assert payload["conversation_notes"] == transcript
 
 
 def test_missing_caption_is_rejected_without_graph_call():
@@ -204,12 +373,14 @@ def test_graph_rejection_does_not_expose_file_path():
 
     update = make_update(photo=[FakeAttachment()])
 
-    run(build_handlers({42}, Graph()).intake(update, None))
+    handlers = build_handlers({42}, Graph())
+    run(handlers.intake(update, None))
+    done = make_update(text="/done", caption=None)
+    run(handlers.done(done, None))
 
-    reply = update.effective_message.reply_text.await_args.args[0]
-    assert reply.startswith("✗ Input rejected\n\n")
+    reply = done.effective_message.reply_text.await_args.args[0]
     assert "/tmp" not in reply and "/var" not in reply
-    assert "image" in reply.lower()
+    assert json.loads(reply)["errors"] == ["image could not be validated"]
 
 
 def test_unexpected_graph_exception_is_generic():
@@ -222,10 +393,14 @@ def test_unexpected_graph_exception_is_generic():
 
     update = make_update(photo=[FakeAttachment()])
 
-    run(build_handlers({42}, Graph()).intake(update, None))
+    handlers = build_handlers({42}, Graph())
+    run(handlers.intake(update, None))
+    queued_path = handlers.pending[100].image_path
+    done = make_update(text="/done", caption=None)
+    run(handlers.done(done, None))
 
-    update.effective_message.reply_text.assert_awaited_once_with(GENERIC_ERROR_MESSAGE)
-    assert not Path(seen["image_path"]).exists()
+    done.effective_message.reply_text.assert_awaited_once_with(GENERIC_ERROR_MESSAGE)
+    assert not Path(queued_path).exists()
 
 
 def test_load_config_reads_and_validates_environment():

@@ -35,9 +35,6 @@ def load_input(state: CRMState) -> CRMState:
 def validate_input(state: CRMState) -> CRMState:
     errors: list[str] = []
 
-    if _blank(state.get("name")):
-        errors.append("name is required")
-
     image_path = state.get("image_path")
     if _blank(image_path):
         errors.append("image path is required")
@@ -85,7 +82,10 @@ def validate_extraction(state: CRMState) -> CRMState:
     if status != "extracted":
         return state
     try:
-        evidence = ContactEvidence.model_validate(state.get("extracted_card"))
+        raw = state.get("extracted_card")
+        if isinstance(raw, dict) and _blank(raw.get("full_name")) and not _blank(state.get("name")):
+            raw = {**raw, "full_name": str(state["name"]).strip()}
+        evidence = ContactEvidence.model_validate(raw)
         return {
             **state,
             "status": "valid",

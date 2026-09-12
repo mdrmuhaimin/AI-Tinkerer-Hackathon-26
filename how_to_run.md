@@ -76,33 +76,56 @@ python -m crm.telegram_bot
 
 Keep the terminal open and laptop awake. Stop the bot with `Ctrl-C`.
 
-From an allowlisted account in a private chat, send one business-card photo (or
-JPEG/PNG document) and put only the person's name in its caption. The bot
-downloads the image temporarily, runs Groq card extraction through the graph,
-and deletes the temporary image after processing.
+From an allowlisted account in a private chat:
 
-On successful extraction and schema validation:
+1. Send one business-card photo (or JPEG/PNG document) and put only the person's
+   name in its caption.
+2. Wait for `Card received.`
+3. Send one Telegram voice note, or send `/done` to process the card without voice.
 
-```text
-✓ Input accepted
+The bot keeps the card only while this intake is pending. Restarting the process
+loses pending intakes, so resend the card after a restart.
 
-Name: Ada Lovelace
-Status: complete
+On successful card extraction and voice transcription, Telegram displays the
+complete projected graph result as plain JSON:
+
+```json
+{
+  "status": "complete",
+  "errors": [],
+  "contact_evidence": {
+    "full_name": "Ada Lovelace",
+    "company": null,
+    "job_title": null,
+    "email": null,
+    "phone": null,
+    "website": null,
+    "address": null
+  },
+  "voice_transcript": "Met at the conference.",
+  "conversation_notes": "Met at the conference."
+}
 ```
+
+With `/done`, `voice_transcript` and `conversation_notes` are `null`.
+Long transcripts may make the JSON arrive as several consecutive Telegram
+messages; read them in order as one complete result.
 
 Useful manual checks:
 
 | Action | Expected result |
 |---|---|
-| Send `/start` or `/help` privately | Input instructions |
+| Send `/start` or `/help` privately | Card, voice, and `/done` instructions |
 | Send a supported image without a caption | Missing-caption rejection |
 | Send text without an image | Supported-format rejection |
 | Send a PDF or album | Supported-format rejection |
+| Send voice or `/done` before a card | Instructions to send a card first |
+| Send a second card before voice | Old pending card is replaced |
+| Voice download temporarily fails | Card remains pending; retry voice or `/done` |
 | Message from an unlisted account | Authorization rejection |
 | Use the bot in a group | Private-chat-only rejection |
 
-Telegram currently sends `voice_path=None`; voice files are supported by the
-CLI graph, not by a multi-message Telegram conversation.
+After processing succeeds or fails, temporary card/voice files are deleted.
 
 ## 5. Run and manually test the CLI
 
@@ -165,13 +188,11 @@ setup uses polling, not webhooks.
 
 ### No extracted data appears in the terminal for Telegram
 
-The Telegram adapter returns only its user-facing acceptance/rejection message;
-it does not print contact evidence to the terminal or save it. Use the CLI when
-you need to inspect the complete graph result as JSON.
+The structured result appears in the Telegram chat (the bot console), not the
+shell running the polling process. The shell displays operational logs only.
 
 ## Not implemented
 
-- Telegram voice-message conversations
 - PostgreSQL/contact persistence
 - duplicate detection
 - embeddings or RAG
