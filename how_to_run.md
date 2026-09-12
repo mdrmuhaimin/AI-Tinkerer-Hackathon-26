@@ -1,8 +1,8 @@
-# How to Run — AI Conference CRM (Task 3)
+# How to Run — AI Conference CRM (Task 4)
 
-This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation, business-card extraction, and an optional voice-note transcription branch.
+This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation, business-card extraction, optional voice-note transcription, and SQLite contact create/update.
 
-CRM storage and embeddings are not used yet.
+Repeating the same card updates the existing row. The default database is `data/crm.db`.
 
 ---
 
@@ -73,7 +73,9 @@ This installs:
 
 - `langgraph` — graph orchestration
 - `pydantic` — `ContactEvidence` schema
-- `openai` — OpenAI-compatible Chat Completions client
+- `groq` — card extract, voice transcription, embeddings
+- `sqlite-vec` — local vector KNN (`contact_embeddings`)
+- `langsmith` — optional tracing and offline `evaluate()`
 - `pytest` — test runner
 - the `crm` CLI entry point (optional; see below)
 
@@ -87,7 +89,7 @@ From the project root:
 pytest -q
 ```
 
-The default suite excludes live provider tests (`addopts = -m "not live"`). It does not need a network connection or API key.
+The default suite excludes live provider tests (`addopts = -m "not live"`). It injects a **FakeEmbedder** (and fake card/voice providers). It does not need a network connection, `GROQ_API_KEY`, or `LANGSMITH_API_KEY`, never constructs the live embedder, and never uploads traces or experiment results.
 
 ---
 
@@ -111,6 +113,20 @@ Voice transcription uses the same `GROQ_API_KEY` and Groq Speech-to-Text: `clien
 
 If `GROQ_API_KEY` is missing on a live CLI run, card extraction fails with `status: error`. If a voice file was also supplied, a missing key fails transcription the same way after a valid card extract.
 
+`LANGSMITH_API_KEY` is **optional**. When it is set, `enable_tracing()` turns on LangSmith tracing (`LANGSMITH_TRACING=true`, project `ai-conference-crm`) so live Groq extract/transcribe/embed spans nest under the graph invoke. Without the key, tracing is a no-op and nothing is uploaded.
+
+---
+
+## 5b. Offline evaluation
+
+Run the capture graph against the checked-in dataset (fake providers, temp SQLite — no LangSmith account required):
+
+```bash
+python -m crm.eval
+```
+
+This writes `eval/latest_experiment.json` with per-example evaluator scores and means. If `LANGSMITH_API_KEY` is present, the same command also uploads the experiment and records the URL in that file. Default `pytest` stays offline and never needs a LangSmith key.
+
 ---
 
 ## 6. Run the CLI
@@ -119,13 +135,53 @@ If `GROQ_API_KEY` is missing on a live CLI run, card extraction fails with `stat
 python -m crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
+With optional typed notes (no transcription):
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Met at AI Tinkerer. Interested in workflow automation."
+```
+
 With an optional local voice file (transcribed when the path is a real file):
 
 ```bash
 python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
 ```
 
-Name + image still complete when `--voice` is omitted. Absence of a voice note is normal success.
+Typed notes and voice can be combined. Merge is deterministic (typed, blank line, then transcript):
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Potential consulting lead." --voice input/6134386456120009929.ogg
+```
+
+Name + image still complete when `--voice` and `--notes` are omitted. Absence of notes is normal success.
+
+Semantic query against stored embeddings (needs `GROQ_API_KEY` and a database that already has contacts). This does **not** run the capture graph:
+
+```bash
+python -m crm query "Who did I meet regarding data warehouse consulting?"
+```
+
+Same command via the console script:
+
+```bash
+crm query "Who did I meet regarding data warehouse consulting?"
+```
+
+Default result limit is 5 (`--limit` to change). Output is a ranked text list from SQLite contact rows:
+
+```text
+1. Sarah Khan
+   NexaTech Solutions
+   Director of Product
+
+   Met at LEAP.
+   Discussed data warehouse modernization.
+
+2. Omar Rahman
+   DataWorks
+
+   Discussed analytics infrastructure.
+```
 
 If you installed the package, you can also use:
 
@@ -134,6 +190,8 @@ crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
 The image path must point to an **existing file**. A placeholder file is enough to pass path validation, but only a real card image will extract useful fields.
+
+Successful runs persist a contact to **`data/crm.db`**. A later run with the same normalized email (or phone, or name+company) **updates** that row instead of inserting a second one. New notes are appended. `contact_id` and `crm_action` (`created` or `updated`) are printed in the JSON.
 
 ---
 
@@ -158,7 +216,9 @@ On success, the CLI prints the **final graph state as JSON** (including `contact
     "address": "London"
   },
   "voice_transcript": null,
-  "conversation_notes": null
+  "conversation_notes": null,
+  "contact_id": 1,
+  "crm_action": "created"
 }
 ```
 
@@ -177,18 +237,42 @@ START → load_input → validate_input → extract_card → validate_extraction
      no            yes
       |      transcribe_voice
       \          /
-       merge_context → finalize → END
+       merge_context → persistable?
+            /              \
+      invalid/error         valid
+            |                 |
+            |          normalize_contact → search_crm → match_found?
+            |                                 /              \
+            |                         update_contact    create_contact
+            |                                 \              /
+            \                         verify_write → write_ok?
+             \                              /              \
+              \                     write_failed         write_ok
+               \                           |                 |
+                \                          |    build_search_document
+                 \                         |    → create_embedding
+                  \                        |    → store_embedding
+                   \                       \                 /
+                    \                       finalize → END
 ```
 
 | Node                  | Purpose                                                                 |
 |-----------------------|-------------------------------------------------------------------------|
-| `load_input`          | Copies CLI inputs into graph state                                      |
+| `load_input`          | Copies CLI inputs (`name`, `image_path`, `voice_path`, `typed_notes`) into graph state |
 | `validate_input`      | Checks name, image file, optional voice file                            |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
-| `merge_context`       | Copies a non-empty transcript into `conversation_notes`                 |
-| `finalize`            | Sets `status` to `complete` when evidence is valid                      |
+| `merge_context`       | Deterministic: typed only / voice only / both (`typed\\n\\nvoice`) / neither → `None` |
+| `normalize_contact`   | Deterministic email/phone/name/company forms for matching               |
+| `search_crm`          | Looks up an existing row (email, then phone, then name+company)         |
+| `create_contact`      | Inserts a new SQLite row when no match                                  |
+| `update_contact`      | Updates the matched row; blank new fields do not erase existing values  |
+| `verify_write`        | Re-reads the row and checks intended fields                             |
+| `build_search_document` | Joins non-blank `full_name`, `company`, `job_title`, `notes`          |
+| `create_embedding`    | Isolated embedder → vector (live Groq only when no embedder injected)   |
+| `store_embedding`     | Upserts `contact_embeddings` (rowid = contact_id); always replaces      |
+| `finalize`            | Sets `status` to `complete` only after verify; embedding errors stay `error` |
 
 If `validate_input` already set `status="invalid"`, `extract_card` returns the state unchanged and does not call the provider. Prior `invalid`/`error` status also skips `transcribe_voice`.
 
@@ -210,12 +294,10 @@ The live tests are skipped unless `GROQ_API_KEY` is set. Default `pytest` never 
 
 ## 10. What is not implemented yet
 
-The following are intentionally out of scope for Task 3:
+The following are intentionally out of scope for this task:
 
-- PostgreSQL or any database
-- Embeddings / semantic search
-- Duplicate detection
-- Contact create/update storage
+- PostgreSQL, SQLAlchemy, or migrations
+- RAG chat / Telegram or other chat integrations
 - Reminder / task / follow-up-date extraction from the voice note
 
 ---

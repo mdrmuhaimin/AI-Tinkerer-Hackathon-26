@@ -4,7 +4,7 @@ from crm.graph import build_graph
 from crm.providers.base import ExtractorError
 from crm.schemas import ContactEvidence
 from crm.state import CRMState
-from tests.helpers import FakeExtractor
+from tests.helpers import FakeEmbedder, FakeExtractor
 
 FULL_PAYLOAD = {
     "full_name": "Ada Lovelace",
@@ -22,11 +22,13 @@ def _pending(
     name: str | None,
     image_path: str | None,
     voice_path: str | None = None,
+    typed_notes: str | None = None,
 ) -> CRMState:
     return {
         "name": name,
         "image_path": image_path,
         "voice_path": voice_path,
+        "typed_notes": typed_notes,
         "status": "pending",
         "errors": [],
         "contact_evidence": None,
@@ -41,10 +43,16 @@ def _touch(path: Path) -> str:
     return str(path)
 
 
+def _graph(tmp_path: Path, extractor: FakeExtractor):
+    return build_graph(
+        extractor=extractor, db_path=tmp_path / "crm.db", embedder=FakeEmbedder()
+    )
+
+
 def test_fake_full_payload_matches_contact_evidence(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor(FULL_PAYLOAD)
-    result = build_graph(extractor=fake).invoke(
+    result = _graph(tmp_path, fake).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
 
@@ -58,7 +66,7 @@ def test_fake_full_payload_matches_contact_evidence(tmp_path: Path) -> None:
 def test_fake_only_full_name_does_not_invent_fields(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
 
-    omitted = build_graph(extractor=FakeExtractor({"full_name": "Ada Lovelace"})).invoke(
+    omitted = _graph(tmp_path, FakeExtractor({"full_name": "Ada Lovelace"})).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
     assert omitted["status"] == "complete"
@@ -80,7 +88,7 @@ def test_fake_only_full_name_does_not_invent_fields(tmp_path: Path) -> None:
         "website": None,
         "address": None,
     }
-    nulled = build_graph(extractor=FakeExtractor(explicit_nulls)).invoke(
+    nulled = _graph(tmp_path, FakeExtractor(explicit_nulls)).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
     assert nulled["status"] == "complete"
@@ -92,7 +100,7 @@ def test_fake_only_full_name_does_not_invent_fields(tmp_path: Path) -> None:
 def test_fake_invalid_payload_is_schema_invalid(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
 
-    missing_name = build_graph(extractor=FakeExtractor({"company": "Analytical Engines"})).invoke(
+    missing_name = _graph(tmp_path, FakeExtractor({"company": "Analytical Engines"})).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
     assert missing_name["status"] == "invalid"
@@ -100,7 +108,7 @@ def test_fake_invalid_payload_is_schema_invalid(tmp_path: Path) -> None:
     assert missing_name["errors"]
     assert any("schema" in error.lower() for error in missing_name["errors"])
 
-    wrong_types = build_graph(extractor=FakeExtractor({"full_name": 123})).invoke(
+    wrong_types = _graph(tmp_path, FakeExtractor({"full_name": 123})).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
     assert wrong_types["status"] == "invalid"
@@ -112,7 +120,7 @@ def test_fake_invalid_payload_is_schema_invalid(tmp_path: Path) -> None:
 def test_fake_extractor_error_sets_error_status(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor(error=ExtractorError("provider unavailable"))
-    result = build_graph(extractor=fake).invoke(
+    result = _graph(tmp_path, fake).invoke(
         _pending(name="Ada Lovelace", image_path=image)
     )
 
@@ -127,7 +135,7 @@ def test_fake_extractor_error_sets_error_status(tmp_path: Path) -> None:
 def test_invalid_input_does_not_call_extractor(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor(FULL_PAYLOAD)
-    result = build_graph(extractor=fake).invoke(
+    result = _graph(tmp_path, fake).invoke(
         _pending(name=None, image_path=image)
     )
 

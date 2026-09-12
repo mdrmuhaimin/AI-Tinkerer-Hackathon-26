@@ -22,4 +22,4 @@ Only use Read/Grep/Glob directly when:
 - Read `graphify-out/GRAPH_REPORT.md` only for broad architecture review when query/path/explain do not surface enough context
 - After modifying code files, run `graphify update .` to keep the graph current (AST-only, no API cost)
 
-Graphify orients you. It does not replace AGENTS.md teaching. After you use the graph, still share Learning Step, Implementation Update, Evaluation, and What You Should Understand Now with the human.
+Graphify orients you. It does not replace AGENTS.md teaching. After you use the graph, still share Learning Step, Implementation Update, Evaluation, and What You Should Understand Now with the human. After PASS, update `progress_so_far.md` and `understandable_so_far.md`.
