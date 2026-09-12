@@ -9,7 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 
-from crm.providers.base import ExtractorError
+from crm.providers.base import ExtractorError, TranscriberError
 
 # Official Groq vision model with JSON mode:
 # https://console.groq.com/docs/vision
@@ -82,3 +82,37 @@ class GroqCardExtractor:
             raise
         except Exception as exc:
             raise ExtractorError(str(exc)) from exc
+
+
+_STT_MODEL = "whisper-large-v3"
+
+
+class GroqVoiceTranscriber:
+    def __init__(self, *, api_key: str, model: str = _STT_MODEL) -> None:
+        self._api_key = api_key
+        self._model = model
+
+    @classmethod
+    def from_env(cls) -> GroqVoiceTranscriber:
+        load_dotenv()
+        api_key = os.environ.get("GROQ_API_KEY")
+        if not api_key:
+            raise TranscriberError("missing environment variable: GROQ_API_KEY")
+        return cls(api_key=api_key)
+
+    def transcribe(self, voice_path: str) -> str:
+        try:
+            client = Groq(api_key=self._api_key)
+            with Path(voice_path).open("rb") as audio:
+                transcription = client.audio.transcriptions.create(
+                    file=audio,
+                    model=self._model,
+                )
+            text = getattr(transcription, "text", None)
+            if not text:
+                raise TranscriberError("empty transcription")
+            return text
+        except TranscriberError:
+            raise
+        except Exception as exc:
+            raise TranscriberError(str(exc)) from exc

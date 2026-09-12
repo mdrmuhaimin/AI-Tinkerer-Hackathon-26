@@ -16,9 +16,9 @@ A small conference CRM capture workflow. The user provides:
 - a business-card image
 - an optional voice-file path
 
-The system is built as an explicit LangGraph. Deterministic Python handles validation and workflow. An LLM is used only to read the card image.
+The system is built as an explicit LangGraph. Deterministic Python handles validation and workflow. Groq is used to read the card image and, when a voice file is present, to transcribe it.
 
-No database, embeddings, voice transcription, or contact storage yet.
+No database, embeddings, Telegram, or contact storage yet.
 
 ---
 
@@ -101,6 +101,37 @@ The graph does not contain Groq HTTP details. Tests inject `FakeExtractor`, so d
 
 ---
 
+## Task 3 — Optional Voice Note Branch and Transcription
+
+**Status:** Done. Independent verifier PASS.
+
+**What we built:** An explicit LangGraph fork after card extraction. Voice is optional. Both paths meet at `merge_context`.
+
+**Graph now:**
+
+```text
+validate_extraction
+        ↓
+   voice_present?
+      /        \
+    no          yes
+     |     transcribe_voice
+     \        /
+    merge_context → finalize → END
+```
+
+**State:** `voice_transcript` and `conversation_notes` (both `None` when voice is absent).
+
+**Provider:** `VoiceTranscriber` protocol. Live impl is Groq Whisper `whisper-large-v3`. Original `.ogg` is passed through. No FFmpeg. Tests use `FakeTranscriber`.
+
+**Boundary:** Card fields stay identity. Voice text is conversation context only. Voice never overwrites `company` or other `ContactEvidence` fields.
+
+**CLI:** still `--voice` as a local path. Telegram is not part of this task.
+
+**Key files:** `crm/graph.py` (`voice_present`, `transcribe_voice`, `merge_context`), `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`
+
+---
+
 ## Live check on a real card
 
 On branch `ft/Core_Engine`, with `GROQ_API_KEY` in `.env` and `input/visiting_card.png`:
@@ -121,9 +152,9 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after the Groq key change: **21 passed, 1 deselected**.
+Last recorded default run after Task 3: **30 passed, 2 deselected**.
 
-Optional live smoke test (needs `GROQ_API_KEY` and `input/visiting_card.png`):
+Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
 ```bash
 pytest -q -m live --override-ini addopts=
@@ -133,14 +164,14 @@ pytest -q -m live --override-ini addopts=
 
 ## What is intentionally not built yet
 
-These were not in Task 1 or Task 2:
+These were not in Task 1, Task 2, or Task 3:
 
-- Voice transcription
 - PostgreSQL or any CRM storage
 - Duplicate detection
 - Create/update of a stored contact
 - Embeddings / semantic search
-- LangChain, web UI, or chat integrations
+- Telegram or other chat integrations
+- Structured reminders / follow-up extraction from the transcript
 
 ---
 
