@@ -142,7 +142,9 @@ Then give one small exercise or question the human can use to confirm understand
 
 Do NOT automatically begin the next task.
 
-Wait for the human to say continue.
+Do not invent the next task. Only implement a task the human has explicitly specified.
+
+Wait for that brief. Do not propose or start unstated work.
 
 ## Architecture Constraints
 
@@ -209,4 +211,28 @@ Build one learning step at a time.
 
 Never implement requirements from future tasks just because they seem obvious.
 
+Do not invent upcoming tasks, graph nodes, or product features the human has not specified.
+
 The objective is progressive understanding, not maximum code generation.
+
+## Progress
+
+Last updated: 2026-09-12
+
+### Completed
+
+**Task 1 — LangGraph Skeleton** (verifier PASS; `pytest -q` → 8 passed)
+
+The human specified this task. It is the only completed learning task.
+
+* CLI: `python -m crm --name ... --image ... [--voice ...]`
+* Graph: `START → load_input → validate_input → finalize → END`
+* State: `CRMState` in `crm/state.py` (raw inputs, `status`, `errors`)
+* Validation is deterministic Python. Failures set `status="invalid"` and still reach END.
+* No LLM. No database. No embeddings.
+
+Key files: `crm/state.py`, `crm/graph.py`, `crm/cli.py`, `tests/test_graph.py`, `tests/test_cli.py`
+
+### Next
+
+Not specified. Do not invent or start it.
