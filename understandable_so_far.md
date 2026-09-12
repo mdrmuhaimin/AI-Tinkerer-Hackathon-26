@@ -116,7 +116,7 @@ This is a different job from duplicate matching:
 
 The embed path runs only after `write_ok`. A failed verify must not write a vector for a row you do not trust. When notes change, DELETE + INSERT replaces that `contact_id`’s vector so search does not keep the old meaning.
 
-The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`. If this Groq account has no embedding model, the provider logs a warning and returns a local token-hash vector (same 768 dimensions) so the contact write is not rolled back for a search-index miss.
+The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`. This Groq account lists no embedding models, so the live default is a local 768-d token hash. Set `CRM_EMBED_MODEL` only if a host actually offers one.
 
 `crm query` is not a capture-graph node. It embeds the question, asks sqlite-vec for IDs, then `ContactStore.get`.
 

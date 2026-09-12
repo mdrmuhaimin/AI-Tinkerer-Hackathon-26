@@ -204,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after the Discord name-from-card + embed fallback fix: **101 passed, 2 deselected**.
+Last recorded default run after local-default embeddings: **102 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -294,7 +294,7 @@ LangGraph create_embedding  →  EmbeddingProvider.embed(text)  →  Groq
                                 tests: FakeEmbedder
 ```
 
-Live: `GroqEmbedder` tries Groq nomic slugs (`nomic-embed-text-v1_5`, then `nomic-embed-text-v1.5`, dim 768), `GROQ_API_KEY`. If Groq returns `model_not_found`, it falls back to a local 768-d token-hash vector so capture can still complete. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
+Live default: local 768-d token-hash vector (this Groq account has no embedding models). Groq embeddings run only if `CRM_EMBED_MODEL` is set; a 404 falls back to the same local hash. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
 
 **CLI:**
 

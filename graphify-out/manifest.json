@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "crm/graph.py": {
-    "mtime": 1789202714.3131404,
-    "seen": 1789203416.783669,
-    "ast_hash": "8a18af57093d121773c9e60208226610",
+    "mtime": 1789206281.363946,
+    "seen": 1789206854.243546,
+    "ast_hash": "91b3c8ef6eb6ba2a02cb2de1cce2cd6e",
     "semantic_hash": ""
   },
   "crm/providers/__init__.py": {
@@ -72,27 +72,27 @@
     "semantic_hash": ""
   },
   "tests/test_cli.py": {
-    "mtime": 1789202714.358691,
-    "seen": 1789203416.783694,
-    "ast_hash": "41d99db64a50a7b5a648e083624dee46",
+    "mtime": 1789206384.9027643,
+    "seen": 1789206854.243573,
+    "ast_hash": "8104c060b606e1231777c925e5c42813",
     "semantic_hash": ""
   },
   "tests/test_extract.py": {
-    "mtime": 1789202714.3631556,
-    "seen": 1789203416.7837021,
-    "ast_hash": "bbb9057ca5ce35c784e4391c91e95634",
+    "mtime": 1789206337.7548199,
+    "seen": 1789206854.2435808,
+    "ast_hash": "c62000f59e61f5ecbdd59387c6b58928",
     "semantic_hash": ""
   },
   "tests/test_graph.py": {
-    "mtime": 1789202714.3643534,
-    "seen": 1789203416.783704,
-    "ast_hash": "129dd9f12e8ba85cd584b753ec69c1f1",
+    "mtime": 1789206296.8258672,
+    "seen": 1789206854.243583,
+    "ast_hash": "c037a702329d58beb8fc4b3195c23a1b",
     "semantic_hash": ""
   },
   "tests/test_groq_provider.py": {
-    "mtime": 1789202714.365265,
-    "seen": 1789203416.783705,
-    "ast_hash": "1cf51d792eb47acce56e137c07f6e321",
+    "mtime": 1789206823.0400543,
+    "seen": 1789206854.243585,
+    "ast_hash": "b5673cca13e8ec283de033b094c0b690",
     "semantic_hash": ""
   },
   "tests/test_live_extract.py": {
@@ -114,9 +114,9 @@
     "semantic_hash": ""
   },
   "tests/test_voice.py": {
-    "mtime": 1789202714.3695924,
-    "seen": 1789203416.783714,
-    "ast_hash": "f48a0e746bdbd2879630b47f7bc216f7",
+    "mtime": 1789206337.7545745,
+    "seen": 1789206854.243593,
+    "ast_hash": "99186492c0e2cf24b9786af7674a3630",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -132,15 +132,15 @@
     "semantic_hash": ""
   },
   "how_to_run.md": {
-    "mtime": 1789203389.9907756,
-    "seen": 1789203416.783721,
-    "ast_hash": "83905c98c00f02ae1bebe702d6321ed6",
+    "mtime": 1789206835.9173994,
+    "seen": 1789206854.2436,
+    "ast_hash": "e4d37f5aab636c6635cd39cf2735f52e",
     "semantic_hash": ""
   },
   "progress_so_far.md": {
-    "mtime": 1789202714.3556292,
-    "seen": 1789203416.783723,
-    "ast_hash": "49091c3cab8cb2a82f35e23b42b92d1d",
+    "mtime": 1789206590.8113253,
+    "seen": 1789206854.243602,
+    "ast_hash": "c1f5ce9de5c2d721ebdd47e33887af6d",
     "semantic_hash": ""
   },
   "telegram_plan.md": {
@@ -174,9 +174,9 @@
     "semantic_hash": ""
   },
   "tests/test_crm.py": {
-    "mtime": 1789202714.3596542,
-    "seen": 1789203416.783696,
-    "ast_hash": "f19c656489f2e0532a1c02d35ee3e5e7",
+    "mtime": 1789206364.5750282,
+    "seen": 1789206854.243574,
+    "ast_hash": "fb3ca191fc65368f61ad1f2a18fdc063",
     "semantic_hash": ""
   },
   "tests/test_verify.py": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "crm/providers/embeddings.py": {
-    "mtime": 1789202714.3166459,
-    "seen": 1789203416.783676,
-    "ast_hash": "973224ac3d7032e2824a6db01db68167",
+    "mtime": 1789206835.2384906,
+    "seen": 1789206854.243553,
+    "ast_hash": "83e03fcc5ade749ea9798b27ebfef690",
     "semantic_hash": ""
   },
   "crm/search.py": {
@@ -204,9 +204,9 @@
     "semantic_hash": ""
   },
   "understandable_so_far.md": {
-    "mtime": 1789202714.3706357,
-    "seen": 1789203416.783726,
-    "ast_hash": "0bac149188b043b21b1dfcec77f90a10",
+    "mtime": 1789206595.1737056,
+    "seen": 1789206854.243605,
+    "ast_hash": "278ac9486e0333a47f74c84473dfc936",
     "semantic_hash": ""
   },
   "crm/eval.py": {
@@ -240,15 +240,15 @@
     "semantic_hash": ""
   },
   "crm/discord_bot.py": {
-    "mtime": 1789203380.2135332,
-    "seen": 1789203416.783666,
-    "ast_hash": "d937ac89f5cdfe5fc1ccc360655cd957",
+    "mtime": 1789206462.7298434,
+    "seen": 1789206854.243542,
+    "ast_hash": "42df52462ae9a2bf8c1ecccf90c89f27",
     "semantic_hash": ""
   },
   "tests/test_discord.py": {
-    "mtime": 1789203357.5653634,
-    "seen": 1789203416.783697,
-    "ast_hash": "e49c9ca3aca1736976e3d4886a29607f",
+    "mtime": 1789206299.0697002,
+    "seen": 1789206854.243576,
+    "ast_hash": "6949c29644fc773709660c02fe620282",
     "semantic_hash": ""
   },
   "discord_plan.md": {

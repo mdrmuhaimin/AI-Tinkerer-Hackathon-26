@@ -73,7 +73,7 @@ This installs:
 
 - `langgraph` — graph orchestration
 - `pydantic` — `ContactEvidence` schema
-- `groq` — card extract, voice transcription, embeddings
+- `groq` — card extract, voice transcription (embeddings default to a local 768-d token hash)
 - `sqlite-vec` — local vector KNN (`contact_embeddings`)
 - `langsmith` — optional tracing and offline `evaluate()`
 - `discord.py` — optional Discord DM adapter (`python -m crm.discord_bot`)
@@ -309,7 +309,7 @@ START → load_input → validate_input → extract_card → validate_extraction
 | `update_contact`      | Updates the matched row; blank new fields do not erase existing values  |
 | `verify_write`        | Re-reads the row and checks intended fields                             |
 | `build_search_document` | Joins non-blank `full_name`, `company`, `job_title`, `notes`          |
-| `create_embedding`    | Isolated embedder → vector (live Groq only when no embedder injected)   |
+| `create_embedding`    | Isolated embedder → vector (local 768-d token hash by default; Groq only if `CRM_EMBED_MODEL` is set)   |
 | `store_embedding`     | Upserts `contact_embeddings` (rowid = contact_id); always replaces      |
 | `finalize`            | Sets `status` to `complete` only after verify; embedding errors stay `error` |
 

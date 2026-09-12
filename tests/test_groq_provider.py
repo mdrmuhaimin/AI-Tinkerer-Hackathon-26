@@ -66,6 +66,22 @@ def test_transcribe_uses_whisper_large_v3_and_wraps_errors(
         GroqVoiceTranscriber(api_key="test-key").transcribe(str(voice))
 
 
+def test_default_embed_does_not_call_groq(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _Embeddings:
+        def create(self, **_kwargs):
+            raise AssertionError("embeddings.create must not be called")
+
+    class _Client:
+        def __init__(self, **_kwargs):
+            self.embeddings = _Embeddings()
+
+    monkeypatch.setattr("crm.providers.embeddings.Groq", _Client)
+    monkeypatch.delenv("CRM_EMBED_MODEL", raising=False)
+    vector = GroqEmbedder(api_key="test-key").embed("workflow automation")
+    assert len(vector) == GroqEmbedder.dimension
+    assert any(x != 0 for x in vector)
+
+
 def test_embed_falls_back_when_groq_model_missing(monkeypatch: pytest.MonkeyPatch) -> None:
     class _Embeddings:
         def create(self, **_kwargs):
@@ -78,6 +94,8 @@ def test_embed_falls_back_when_groq_model_missing(monkeypatch: pytest.MonkeyPatc
             self.embeddings = _Embeddings()
 
     monkeypatch.setattr("crm.providers.embeddings.Groq", _Client)
-    vector = GroqEmbedder(api_key="test-key").embed("workflow automation")
+    vector = GroqEmbedder(api_key="test-key", model="missing-embed").embed(
+        "workflow automation"
+    )
     assert len(vector) == GroqEmbedder.dimension
     assert any(x != 0 for x in vector)

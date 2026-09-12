@@ -12,7 +12,6 @@ from crm.providers.base import EmbedderError
 
 log = logging.getLogger(__name__)
 
-_MODELS = ("nomic-embed-text-v1_5", "nomic-embed-text-v1.5")
 _DIMENSION = 768
 
 
@@ -34,7 +33,7 @@ class GroqEmbedder:
 
     def __init__(self, *, api_key: str, model: str | None = None) -> None:
         self._api_key = api_key
-        self._model = model or os.environ.get("CRM_EMBED_MODEL") or _MODELS[0]
+        self._model = model or os.environ.get("CRM_EMBED_MODEL")
 
     @classmethod
     def from_env(cls) -> GroqEmbedder:
@@ -46,15 +45,11 @@ class GroqEmbedder:
 
     @traceable(name="embed")
     def embed(self, text: str) -> list[float]:
-        models = []
-        for model in (self._model, *_MODELS):
-            if model not in models:
-                models.append(model)
-        last_error = None
-        client = Groq(api_key=self._api_key)
-        for model in models:
+        if self._model:
             try:
-                response = client.embeddings.create(input=text, model=model)
+                response = Groq(api_key=self._api_key).embeddings.create(
+                    input=text, model=self._model
+                )
                 vector = response.data[0].embedding
                 if not vector:
                     raise EmbedderError("empty embedding")
@@ -62,11 +57,10 @@ class GroqEmbedder:
             except EmbedderError:
                 raise
             except Exception as exc:
-                last_error = exc
                 if "model_not_found" not in str(exc) and "does not exist" not in str(exc):
                     raise EmbedderError(str(exc)) from exc
-        log.warning(
-            "Groq embeddings unavailable (%s); using local token hash",
-            last_error,
-        )
+                log.warning(
+                    "Groq embeddings unavailable (%s); using local token hash",
+                    exc,
+                )
         return _local_embed(text, self.dimension)
