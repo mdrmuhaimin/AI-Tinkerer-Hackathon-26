@@ -218,11 +218,11 @@ python -m crm.discord_bot
 
 **DM capture**
 
-1. DM a business-card **image**. First line of text = **name**; remaining lines = typed notes.
+1. DM a business-card **image**. Optional typed text is notes only — the name comes from the card.
 2. Bot replies that the card was received; send a **voice message** or type `save` (or `done`).
 3. Voice (`audio/ogg`, `voice-message.ogg`, or any `audio/*`) is downloaded as-is (no FFmpeg) and the capture graph runs.
 4. Extra typed text while waiting is appended to notes. Pending state is in-memory (lost on restart).
-5. Image + voice in the first DM runs immediately. Image with no name: bot asks for the name.
+5. Image + voice in the first DM runs immediately. `full_name` always comes from the card.
 
 **Query** (does not run the capture graph, does not write contacts):
 
@@ -298,7 +298,7 @@ START → load_input → validate_input → extract_card → validate_extraction
 | Node                  | Purpose                                                                 |
 |-----------------------|-------------------------------------------------------------------------|
 | `load_input`          | Copies CLI inputs (`name`, `image_path`, `voice_path`, `typed_notes`) into graph state |
-| `validate_input`      | Checks name, image file, optional voice file                            |
+| `validate_input`      | Checks image file and optional voice file; name is required only when there is no image |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |

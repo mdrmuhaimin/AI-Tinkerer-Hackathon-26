@@ -28,7 +28,7 @@ LangGraph is not “an agent.” It is a **state object**, named functions, and 
 
 If you want to know what the system knows, open `crm/state.py`, not a prompt.
 
-Validation is ordinary Python. Missing name or image is `status="invalid"`. The run still reaches END so you can inspect the result.
+Validation is ordinary Python. An image is required. A typed name is required only when there is no image. With a card image, blank name is fine: `validate_extraction` copies `full_name` from the card. The run still reaches END so you can inspect the result.
 
 **Check:** Why can `finalize` stay on the linear path when input is invalid?
 
@@ -116,7 +116,7 @@ This is a different job from duplicate matching:
 
 The embed path runs only after `write_ok`. A failed verify must not write a vector for a row you do not trust. When notes change, DELETE + INSERT replaces that `contact_id`’s vector so search does not keep the old meaning.
 
-The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`.
+The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`. If this Groq account has no embedding model, the provider logs a warning and returns a local token-hash vector (same 768 dimensions) so the contact write is not rolled back for a search-index miss.
 
 `crm query` is not a capture-graph node. It embeds the question, asks sqlite-vec for IDs, then `ContactStore.get`.
 
@@ -162,7 +162,7 @@ The question gets a new embedding at query time. That is not the contact’s sto
 
 The bot does not sit on the graph. A DM is translated into the same payload the CLI builds, or into `query_contacts`.
 
-Pending intake is a dict keyed by Discord user id. The card waits. Voice or `save` is when `build_graph()` runs. `/query` never does that.
+Pending intake is a dict keyed by Discord user id. The card waits. Voice or `save` is when `build_graph()` runs. Typed DM text is notes, not the contact name. `/query` never does that.
 
 Guild messages are ignored. DMs only.
 

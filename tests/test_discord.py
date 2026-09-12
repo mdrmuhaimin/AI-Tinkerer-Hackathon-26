@@ -81,6 +81,23 @@ def test_follow_up_voice_runs_graph_and_stores_notes(tmp_path) -> None:
     assert "Discussed a CRM pilot." in (row["notes"] or "")
 
 
+def test_image_without_name_save_uses_card(tmp_path) -> None:
+    intake, store, extractor, transcriber = _intake(tmp_path)
+    image = _touch(tmp_path / "card.jpg")
+
+    reply = intake.handle_dm("11", "", [image], [])
+    assert "name" not in reply.lower()
+    assert "11" in intake.pending
+    assert _count(store) == 0
+
+    done = intake.handle_dm("11", "save", [], [])
+    assert "11" not in intake.pending
+    assert "Sarah Khan" in done
+    assert extractor.calls == [image]
+    assert transcriber.calls == []
+    assert store.get(1)["full_name"] == "Sarah Khan"
+
+
 def test_save_without_voice_skips_transcriber(tmp_path) -> None:
     transcriber = FakeTranscriber("should not run")
     intake, store, _, _ = _intake(tmp_path, transcriber=transcriber)

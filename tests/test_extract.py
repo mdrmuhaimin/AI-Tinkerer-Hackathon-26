@@ -136,7 +136,7 @@ def test_invalid_input_does_not_call_extractor(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor(FULL_PAYLOAD)
     result = _graph(tmp_path, fake).invoke(
-        _pending(name=None, image_path=image)
+        _pending(name=None, image_path=None)
     )
 
     assert result["status"] == "invalid"

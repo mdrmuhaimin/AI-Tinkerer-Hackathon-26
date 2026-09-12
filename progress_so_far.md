@@ -204,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after the Discord adapter: **98 passed, 2 deselected**.
+Last recorded default run after the Discord name-from-card + embed fallback fix: **101 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -294,7 +294,7 @@ LangGraph create_embedding  →  EmbeddingProvider.embed(text)  →  Groq
                                 tests: FakeEmbedder
 ```
 
-Live: `GroqEmbedder` (`nomic-embed-text-v1.5`, dim 768), `GROQ_API_KEY`. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
+Live: `GroqEmbedder` tries Groq nomic slugs (`nomic-embed-text-v1_5`, then `nomic-embed-text-v1.5`, dim 768), `GROQ_API_KEY`. If Groq returns `model_not_found`, it falls back to a local 768-d token-hash vector so capture can still complete. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
 
 **CLI:**
 
@@ -361,9 +361,9 @@ python -m crm query "Who did I speak with about data warehouse consulting?"
 
 ## Discord DM adapter
 
-**Status:** Done. Independent verifier PASS (`pytest -q` → 98 passed, 2 deselected).
+**Status:** Done. Independent verifier PASS (`pytest -q` → 101 passed, 2 deselected). Follow-up fix: name comes from the card; Groq embed 404 no longer fails the run.
 
-**What we built:** A Discord DM adapter. Image + name (+ notes) wait in memory. Follow-up voice or `save` runs the existing capture graph. `/query` searches and does not write.
+**What we built:** A Discord DM adapter. Image + optional notes wait in memory. The bot does not ask for a name. Follow-up voice or `save` runs the existing capture graph with `name=None`; `validate_extraction` copies `full_name` from the card. `/query` searches and does not write.
 
 **Graph change:** none.
 

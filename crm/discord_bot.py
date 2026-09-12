@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import tempfile
 from dataclasses import dataclass
@@ -11,25 +12,16 @@ from crm.db import DEFAULT_DB_PATH, ContactStore
 from crm.graph import build_graph
 from crm.search import _format_query_hits, query_contacts
 
-_PROMPT_NAME = "What is the contact's name?"
+log = logging.getLogger(__name__)
+
 _PROMPT_VOICE = "Card received. Send a voice message or type `save`."
 
 
 @dataclass
 class Pending:
     image_path: str
-    name: str | None = None
     typed_notes: str | None = None
     voice_path: str | None = None
-
-
-def _split_caption(text: str) -> tuple[str | None, str | None]:
-    if not (text or "").strip():
-        return None, None
-    first, *rest = text.splitlines()
-    name = first.strip() or None
-    notes = "\n".join(rest).strip() or None
-    return name, notes
 
 
 def _join_notes(old: str | None, extra: str | None) -> str | None:
@@ -89,15 +81,24 @@ class Intake:
         is_dm: bool = True,
     ) -> str | None:
         if not is_dm:
+            log.info("ignored non-dm user=%s text=%r", user_id, text)
             return None
         return self.handle_dm(user_id, text, images or [], voices or [])
 
     def handle_query(self, text: str) -> str:
+        log.info("query text=%r", text)
         return _format_query_hits(query_contacts(self._store, self._embedder, text))
 
     def handle_dm(self, user_id, text, images, voices) -> str | None:
         uid = str(user_id)
         body = text or ""
+        log.info(
+            "dm user=%s text=%r images=%s voices=%s",
+            uid,
+            body,
+            images,
+            voices,
+        )
         stripped = body.strip()
         if stripped.lower().startswith("/query"):
             return self.handle_query(stripped[6:].strip())
@@ -106,56 +107,36 @@ class Intake:
         voice = self._download(voices[0]) if voices else None
 
         if image:
-            name, notes = _split_caption(body)
-            if name and voice:
-                return self._run(uid, name, image, voice, notes)
+            notes = body.strip() or None
+            if voice:
+                return self._run(uid, image, voice, notes)
             self.pending[uid] = Pending(
-                image_path=image, name=name, typed_notes=notes, voice_path=voice
+                image_path=image, typed_notes=notes, voice_path=voice
             )
-            return _PROMPT_VOICE if name else _PROMPT_NAME
+            return _PROMPT_VOICE
 
         session = self.pending.get(uid)
         if session is None:
             return "Send a business card image first." if voice else None
 
         if stripped.lower() in {"save", "done"}:
-            if not session.name:
-                return _PROMPT_NAME
-            return self._run(
-                uid, session.name, session.image_path, None, session.typed_notes
-            )
+            return self._run(uid, session.image_path, None, session.typed_notes)
 
         if voice:
             session.voice_path = voice
-            if not session.name:
-                return _PROMPT_NAME
-            return self._run(
-                uid, session.name, session.image_path, voice, session.typed_notes
-            )
+            return self._run(uid, session.image_path, voice, session.typed_notes)
 
-        name, notes = _split_caption(body)
-        if not name:
-            return None
-        if session.name is None:
-            session.name = name
-            session.typed_notes = _join_notes(session.typed_notes, notes)
-            if session.voice_path:
-                return self._run(
-                    uid,
-                    session.name,
-                    session.image_path,
-                    session.voice_path,
-                    session.typed_notes,
-                )
-            return _PROMPT_VOICE
+        if stripped:
+            session.typed_notes = _join_notes(session.typed_notes, stripped)
+            return "Noted."
+        return None
 
-        session.typed_notes = _join_notes(session.typed_notes, stripped)
-        return "Noted."
-
-    def _run(self, uid: str, name: str, image: str, voice: str | None, notes: str | None) -> str:
+    def _run(
+        self, uid: str, image: str, voice: str | None, notes: str | None
+    ) -> str:
         result = self._build_graph().invoke(
             {
-                "name": name,
+                "name": None,
                 "image_path": image,
                 "voice_path": voice,
                 "typed_notes": notes,
@@ -212,6 +193,12 @@ def main() -> None:
 
     @tree.command(name="query", description="Search CRM contacts")
     async def query_cmd(interaction: discord.Interaction, text: str):
+        log.info(
+            "slash /query user=%s guild=%s text=%r",
+            interaction.user.id,
+            interaction.guild_id,
+            text,
+        )
         if interaction.guild is not None:
             await interaction.response.send_message("Use /query in a DM.", ephemeral=True)
             return
@@ -219,12 +206,22 @@ def main() -> None:
 
     @client.event
     async def on_ready():
+        log.info("logged in as %s", client.user)
         await tree.sync()
 
     @client.event
     async def on_message(message: discord.Message):
         if message.author.bot or message.guild is not None:
             return
+        log.info(
+            "discord message user=%s content=%r attachments=%s",
+            message.author.id,
+            message.content,
+            [
+                (att.filename, att.content_type, att.size)
+                for att in message.attachments
+            ],
+        )
         images, voices = [], []
         for att in message.attachments:
             dest = await _save_attachment(att)

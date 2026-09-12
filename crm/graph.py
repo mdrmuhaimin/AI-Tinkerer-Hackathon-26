@@ -59,12 +59,11 @@ def load_input(state: CRMState) -> CRMState:
 def validate_input(state: CRMState) -> CRMState:
     errors: list[str] = []
 
-    if _blank(state.get("name")):
-        errors.append("name is required")
-
     image_path = state.get("image_path")
     if _blank(image_path):
         errors.append("image path is required")
+        if _blank(state.get("name")):
+            errors.append("name is required")
     elif not Path(image_path).is_file():
         errors.append(f"image file not found: {image_path}")
 
@@ -110,10 +109,15 @@ def validate_extraction(state: CRMState) -> CRMState:
         return state
     try:
         evidence = ContactEvidence.model_validate(state.get("extracted_card"))
+        dumped = evidence.model_dump()
+        name = state.get("name")
+        if _blank(name):
+            name = dumped.get("full_name")
         return {
             **state,
+            "name": name,
             "status": "valid",
-            "contact_evidence": evidence.model_dump(),
+            "contact_evidence": dumped,
             "errors": [],
         }
     except ValidationError as exc:
