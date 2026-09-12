@@ -1,12 +1,12 @@
 # How to Run and Test the AI Conference CRM
 
 The project has three local interfaces: Telegram using long polling on your
-laptop, the CLI with optional voice-note transcription, and a semantic
-`crm query` command. All of them invoke the same LangGraph. The graph
+laptop, the CLI with optional voice-note transcription, and a lexical FTS
+`crm query` command. Capture invokes the LangGraph. The graph
 validates input, extracts structured business-card evidence with Groq,
 optionally transcribes a voice file, merges typed notes and the transcript,
-normalizes and persists the contact to SQLite (create or update), builds and
-stores an embedding for semantic search, and then finishes.
+normalizes, persists, and verifies the contact in SQLite (create or update),
+then finishes. SQLite FTS5 retrieves contacts for search.
 
 Repeating the same card updates the existing row. The default database is
 `data/crm.db`.
@@ -31,8 +31,8 @@ This installs:
 
 - `langgraph` — graph orchestration
 - `pydantic` — `ContactEvidence` schema
-- `groq` — card extract, voice transcription, embeddings
-- `sqlite-vec` / `apsw` — local vector KNN (`contact_embeddings`)
+- `groq` — card extraction, voice transcription, and grounded search answers
+- SQLite FTS5 — local lexical retrieval
 - `langsmith` — optional tracing and offline `evaluate()`
 - `python-telegram-bot` — the Telegram adapter
 - `pytest` — test runner
@@ -41,7 +41,7 @@ This installs:
 ## 2. Configure credentials safely
 
 The Groq key is required for real card extraction, voice transcription, and
-embeddings:
+Telegram search-answer generation:
 
 ```bash
 export GROQ_API_KEY="REPLACE_WITH_A_NEW_GROQ_KEY"
@@ -68,7 +68,7 @@ provider console and create a replacement before continuing.
 
 `LANGSMITH_API_KEY` is **optional**. When it is set, `enable_tracing()` turns
 on LangSmith tracing (`LANGSMITH_TRACING=true`, project `ai-conference-crm`)
-so live Groq extract/transcribe/embed spans nest under the graph invoke.
+so live Groq extract/transcribe spans nest under the graph invoke.
 Without the key, tracing is a no-op and nothing is uploaded.
 
 ## 3. Run automated tests
@@ -78,10 +78,10 @@ pytest -q
 ```
 
 The default suite excludes tests marked `live` (`addopts = -m "not live"`); it
-does not call Groq or Telegram. It injects a **FakeEmbedder** and fake
-card/voice providers, so it does not need a network connection,
-`GROQ_API_KEY`, or `LANGSMITH_API_KEY`, and never uploads traces or experiment
-results.
+does not call Groq or Telegram. Normal capture tests bypass embeddings. The
+retained experimental injected-embedding tests use `FakeEmbedder`; card/voice
+tests use fake providers. No network connection, `GROQ_API_KEY`, or
+`LANGSMITH_API_KEY` is needed, and tests never upload traces or results.
 
 Run only Telegram tests with:
 
@@ -125,45 +125,36 @@ Keep the terminal open and laptop awake. Stop the bot with `Ctrl-C`.
 
 From an allowlisted account in a private chat:
 
-1. Send one business-card photo (or JPEG/PNG document) and put only the person's
-   name in its caption.
+1. Send one business-card photo (or JPEG/PNG document). Its name caption is optional.
 2. Wait for `Card received.`
 3. Send one Telegram voice note, or send `/done` to process the card without voice.
 
 The bot keeps the card only while this intake is pending. Restarting the process
 loses pending intakes, so resend the card after a restart.
 
-On successful card extraction and voice transcription, Telegram displays the
-complete projected graph result as plain JSON:
+On successful processing, Telegram displays readable nonblank fields:
 
-```json
-{
-  "status": "complete",
-  "errors": [],
-  "contact_evidence": {
-    "full_name": "Ada Lovelace",
-    "company": null,
-    "job_title": null,
-    "email": null,
-    "phone": null,
-    "website": null,
-    "address": null
-  },
-  "voice_transcript": "Met at the conference.",
-  "conversation_notes": "Met at the conference."
-}
+```text
+✅ Contact processed
+
+Status: complete
+👤 Name: Ada Lovelace
+🏢 Company: Analytical Engines
+
+🎙 Conversation notes
+Met at the conference.
 ```
 
-With `/done`, `voice_transcript` and `conversation_notes` are `null`.
-Long transcripts may make the JSON arrive as several consecutive Telegram
-messages; read them in order as one complete result.
+The local terminal prints the sanitized five-key JSON result. Search inline with
+`/search Who did I meet at LEAP?`, or send `/search` and then the question.
+SQLite FTS5 retrieves up to five contacts and Groq answers only from those rows.
 
 Useful manual checks:
 
 | Action | Expected result |
 |---|---|
 | Send `/start` or `/help` privately | Card, voice, and `/done` instructions |
-| Send a supported image without a caption | Missing-caption rejection |
+| Send a supported image without a caption | Card is accepted and queued |
 | Send text without an image | Supported-format rejection |
 | Send a PDF or album | Supported-format rejection |
 | Send voice or `/done` before a card | Instructions to send a card first |
@@ -221,8 +212,8 @@ same normalized email (or phone, or name+company) **updates** that row
 instead of inserting a second one. New notes are appended. `contact_id` and
 `crm_action` (`created` or `updated`) are printed in the JSON.
 
-Semantic query against stored embeddings (needs `GROQ_API_KEY` and a database
-that already has contacts). This does **not** run the capture graph:
+Lexical FTS query against stored contacts needs no Groq key and does **not** run
+the capture graph:
 
 ```bash
 python -m crm query "Who did I meet regarding data warehouse consulting?"
@@ -284,7 +275,7 @@ On validation or extraction failure, it still prints JSON but exits with code
 
 ## 8. What the graph does today
 
-Current flow (conditional voice branch, then persistence and embedding):
+Current default flow (conditional voice branch, then verified persistence):
 
 ```text
 START → load_input → validate_input → extract_card → validate_extraction
@@ -305,17 +296,14 @@ START → load_input → validate_input → extract_card → validate_extraction
              \                              /              \
               \                     write_failed         write_ok
                \                           |                 |
-                \                          |    build_search_document
-                 \                         |    → create_embedding
-                  \                        |    → store_embedding
-                   \                       \                 /
-                    \                       finalize → END
+                \                          \                 /
+                 \                           finalize → END
 ```
 
 | Node                  | Purpose                                                                 |
 |-----------------------|-------------------------------------------------------------------------|
 | `load_input`          | Copies CLI inputs (`name`, `image_path`, `voice_path`, `typed_notes`) into graph state |
-| `validate_input`      | Checks name, image file, optional voice file                            |
+| `validate_input`      | Checks image file and optional voice file                               |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
@@ -325,10 +313,7 @@ START → load_input → validate_input → extract_card → validate_extraction
 | `create_contact`      | Inserts a new SQLite row when no match                                  |
 | `update_contact`      | Updates the matched row; blank new fields do not erase existing values  |
 | `verify_write`        | Re-reads the row and checks intended fields                             |
-| `build_search_document` | Joins non-blank `full_name`, `company`, `job_title`, `notes`          |
-| `create_embedding`    | Isolated embedder → vector (live Groq only when no embedder injected)   |
-| `store_embedding`     | Upserts `contact_embeddings` (rowid = contact_id); always replaces      |
-| `finalize`            | Sets `status` to `complete` only after verify; embedding errors stay `error` |
+| `finalize`            | Sets `status` to `complete` only after write verification               |
 
 If `validate_input` already set `status="invalid"`, `extract_card` returns
 the state unchanged and does not call the provider. Prior `invalid`/`error`
@@ -342,7 +327,7 @@ graph node.
 The following are intentionally out of scope so far:
 
 - PostgreSQL, SQLAlchemy, or migrations
-- RAG chat over Telegram (Telegram supports card capture, not query)
+- Vector/embedding retrieval (current Telegram RAG uses SQLite FTS5)
 - Reminder / task / follow-up-date extraction from the voice note
 - Duplicate detection beyond email/phone/name+company matching
 
@@ -371,7 +356,10 @@ Confirm the process is still running, the laptop is awake and online, the user
 ID is allowed, and no second process is polling the same bot token. This local
 setup uses polling, not webhooks.
 
-### No extracted data appears in the terminal for Telegram
+### Telegram and terminal show different output
 
-The structured result appears in the Telegram chat (the bot console), not the
-shell running the polling process. The shell displays operational logs only.
+The Telegram chat shows formatted contact summaries and formatted search
+answers. For each completed capture, the local shell prints one sanitized JSON
+object with exactly `status`, `errors`, `contact_evidence`, `voice_transcript`,
+and `conversation_notes`, alongside operational logs. Search answers appear in
+Telegram; they are not printed as capture JSON in the shell.

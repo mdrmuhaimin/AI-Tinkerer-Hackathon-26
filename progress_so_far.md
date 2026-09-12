@@ -24,9 +24,9 @@ A small conference CRM capture workflow. The user provides:
 - a business-card image
 - an optional voice-file path
 
-The system is built as an explicit LangGraph. Deterministic Python handles validation, matching, persistence, and write verification. Groq is used to read the card image, transcribe an optional voice note, and (after a verified write) embed the search document. Contacts live in local SQLite (`data/crm.db`). Semantic search uses `sqlite-vec`; the vector index only stores IDs, not the canonical row.
+The system is built as an explicit LangGraph. Deterministic Python handles validation, matching, persistence, write verification, and SQLite FTS5 retrieval. Groq reads card images, transcribes optional voice notes, and phrases search answers from retrieved records. Contacts and the FTS index share local SQLite (`data/crm.db`). Default capture and search do not use embeddings.
 
-No PostgreSQL or Telegram yet.
+Telegram now provides private, allowlisted card/voice capture and `/search`. PostgreSQL is not used.
 
 The full current graph (Tasks 1–8) is in [understandable_so_far.md](understandable_so_far.md). Observability wraps that graph; it does not add nodes. Search is a separate CLI path.
 
@@ -163,7 +163,8 @@ python -m crm --name "Sarah Khan" --image input/visiting_card.png
 python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
 ```
 
-Telegram is not part of this task. The CLI still takes a local voice-file path.
+At the end of this historical task, only the CLI took a local voice-file path;
+Telegram support was added later in Task 9.
 
 **Key files:** `crm/graph.py`, `crm/state.py`, `crm/providers/base.py`, `crm/providers/groq.py`, `tests/test_voice.py`, `tests/test_live_transcribe.py`
 
@@ -204,7 +205,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after Task 8: **93 passed, 2 deselected**.
+Current verified default run: **126 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -268,6 +269,12 @@ Read-back is `ContactStore.get` (SQLite). PostgreSQL was not added.
 
 ## Task 6 — Semantic Contact Retrieval with sqlite-vec
 
+> **Superseded for normal runtime:** this historical experimental path remains
+> available only when a test or caller explicitly injects an `EmbeddingProvider`.
+> Groq does not provide the documented live embeddings endpoint assumed here.
+> Default capture bypasses these nodes, and current CLI/Telegram retrieval uses
+> SQLite FTS5 as described in the latest task below.
+
 **Status:** Done. Independent verifier PASS (`pytest -q` → 65 passed, 2 deselected).
 
 **What we built:** After a verified write, build a short search document, embed it, and store the vector in `sqlite-vec`. `crm query` finds contacts by meaning, then loads the SQLite rows.
@@ -294,7 +301,9 @@ LangGraph create_embedding  →  EmbeddingProvider.embed(text)  →  Groq
                                 tests: FakeEmbedder
 ```
 
-Live: `GroqEmbedder` (`nomic-embed-text-v1.5`, dim 768), `GROQ_API_KEY`. Default tests inject `FakeEmbedder` (dim 8). No key, no network.
+Historical live assumption: `GroqEmbedder` (`nomic-embed-text-v1.5`, dim 768).
+This is not a usable supported Groq runtime path. Experimental tests inject
+`FakeEmbedder` (dim 8), so they use no key or network.
 
 **CLI:**
 
@@ -318,7 +327,7 @@ This Mac’s CPython cannot load SQLite extensions, so `crm/db.py` uses a thin A
 
 **Graph change:** none.
 
-**Tracing:** `crm/tracing.py` `enable_tracing()`. If `LANGSMITH_API_KEY` is set: `LANGSMITH_TRACING=true`, project `ai-conference-crm`. No key → no-op. Live Groq `extract_card` / `transcribe` / `embed` are `@traceable`. CLI calls `enable_tracing()` after `load_dotenv`.
+**Tracing:** `crm/tracing.py` `enable_tracing()`. If `LANGSMITH_API_KEY` is set: `LANGSMITH_TRACING=true`, project `ai-conference-crm`. No key → no-op. Live Groq card extraction and transcription are `@traceable`; the embed decorator belongs only to the retained experimental injected-provider path. CLI calls `enable_tracing()` after `load_dotenv`.
 
 **Dataset** (`eval/dataset.json`): complete-card, partial-card, missing-phone, missing-email, existing-contact, new-contact, voice-present, voice-absent, conflicting-voice, unsupported-fields.
 
@@ -332,7 +341,9 @@ This Mac’s CPython cannot load SQLite extensions, so `crm/db.py` uses a thin A
 python -m crm.eval
 ```
 
-Default pytest does not upload and does not need a LangSmith key.
+Default pytest does not upload and does not need a LangSmith key. References to
+embed spans describe the retained experimental injected-provider path, not the
+default runtime.
 
 **Key files:** `crm/eval.py`, `crm/tracing.py`, `eval/dataset.json`, `eval/latest_experiment.json`, `tests/test_eval.py`
 
@@ -359,13 +370,66 @@ python -m crm query "Who did I speak with about data warehouse consulting?"
 
 ---
 
+## Task 9 — Telegram Capture and SQLite FTS5 RAG
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 126 passed, 2 deselected).
+
+**What we built:** Telegram accepts a card image with an optional caption, then
+one voice note or `/done`. The capture graph persists and verifies the contact
+in the core `ContactStore`. Telegram shows a formatted summary while the local
+shell prints one sanitized five-key JSON object.
+
+```text
+image + optional caption → voice or /done → capture graph → data/crm.db
+                                                            ↓
+/search question → SQLite FTS5 (max 5) → grounded Groq answer → Telegram
+```
+
+`ContactStore` is the single source of truth. Its FTS5 index is synchronized in
+the same transaction as CREATE/UPDATE and backfilled for older rows. Search
+tokenizes arbitrary input, uses parameters, and caps retrieval at five. No match
+returns without Groq; otherwise Groq may phrase an answer only from retrieved
+rows. Original Telegram media remains temporary and is deleted after processing.
+
+Default successful write routing is now:
+
+```text
+create_contact/update_contact → verify_write → finalize → END
+```
+
+The historical vector nodes run only when an embedder is explicitly injected;
+the default graph never constructs or calls `GroqEmbedder`.
+
+**Key files:** `crm/telegram_bot.py`, `crm/db.py`, `crm/graph.py`, `crm/cli.py`,
+`tests/test_telegram_bot.py`, `tests/test_telegram_search.py`, `tests/test_fts.py`,
+`spec.md`, `how_to_run.md`
+
+---
+
+## Task 10 — Final-Answer-Only Telegram Search
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 135 passed, 2 deselected).
+
+**What we fixed:** Qwen search generation now requests hidden reasoning with
+`reasoning_format="hidden"`. A deterministic provider-boundary fallback removes
+one complete legacy leading `<think>...</think>` block and returns only the text
+after it. Reasoning-only, unclosed, orphaned, nested, or residual reasoning tags
+fail through Telegram's safe search-error response instead of being displayed.
+
+**Graph change:** none. FTS retrieval, grounding, and the Telegram
+`🔎 Search result` prefix are unchanged.
+
+**Key files:** `crm/providers/groq.py`, `tests/test_groq_provider.py`,
+`tests/test_telegram_search.py`, `spec.md`
+
+---
+
 ## What is intentionally not built yet
 
 These were not specified as later work:
 
 - PostgreSQL / SQLAlchemy / migrations
-- pgvector / RAG chat
-- Telegram or other chat integrations
+- PostgreSQL / pgvector retrieval
 - Structured reminders / follow-up extraction from the transcript
 - A live-vision LangSmith experiment (this task’s experiment uses fakes so it stays offline)
 
@@ -379,11 +443,13 @@ These were not specified as later work:
 | Shared graph state | `crm/state.py` |
 | Contact schema | `crm/schemas.py` |
 | SQLite store | `crm/db.py` |
-| Vector index | `crm/db.py` (`contact_embeddings`), `crm/search.py` |
+| Current FTS retrieval | `crm/db.py` (`contacts_fts`) |
+| Experimental injected-vector path | `crm/db.py` (`contact_embeddings`), `crm/search.py` |
 | Write verification | `crm/graph.py` (`verify_write`), `tests/test_verify.py` |
 | Normalization | `crm/normalize.py` |
 | Groq vision + Whisper | `crm/providers/groq.py` |
-| Groq embeddings | `crm/providers/embeddings.py` |
+| Unsupported experimental Groq embedder | `crm/providers/embeddings.py` (not default/live) |
+| Telegram capture + search | `crm/telegram_bot.py` |
 | Provider interfaces | `crm/providers/base.py` |
 | CLI (capture + query) | `crm/cli.py` |
 | Tracing | `crm/tracing.py` |

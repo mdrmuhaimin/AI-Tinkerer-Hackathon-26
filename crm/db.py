@@ -1,4 +1,5 @@
 import sqlite3
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,6 +27,12 @@ CREATE TABLE IF NOT EXISTS contacts (
   updated_at TEXT
 );
 """
+_FTS_SCHEMA = """
+CREATE VIRTUAL TABLE IF NOT EXISTS contacts_fts USING fts5(
+  contact_id UNINDEXED,
+  searchable
+);
+"""
 _DB_ERRORS = (sqlite3.Error, apsw.Error)
 
 _DISPLAY = (
@@ -37,6 +44,7 @@ _DISPLAY = (
     "website",
     "address",
 )
+_STOPWORDS = {"a", "an", "at", "did", "do", "i", "in", "is", "me", "met", "my", "of", "the", "who"}
 
 
 class StoreError(Exception):
@@ -148,10 +156,35 @@ class ContactStore:
         try:
             with self._connect() as conn:
                 conn.execute(_SCHEMA)
+                conn.execute(_FTS_SCHEMA)
+                self._backfill_fts(conn)
                 if self.embedding_dim is not None:
                     self._create_vec_table(conn, self.embedding_dim)
         except _DB_ERRORS as exc:
             raise StoreError(str(exc)) from exc
+
+    @staticmethod
+    def _searchable(row) -> str:
+        return " ".join(
+            str(row[key]).strip()
+            for key in (*_DISPLAY, "notes")
+            if row[key] is not None and str(row[key]).strip()
+        )
+
+    def _sync_fts(self, conn, contact_id: int, row) -> None:
+        conn.execute("DELETE FROM contacts_fts WHERE contact_id=?", (contact_id,))
+        conn.execute(
+            "INSERT INTO contacts_fts(contact_id, searchable) VALUES (?, ?)",
+            (contact_id, self._searchable(row)),
+        )
+
+    def _backfill_fts(self, conn) -> None:
+        rows = conn.execute(
+            "SELECT id, full_name, company, job_title, email, phone, website, address, notes "
+            "FROM contacts WHERE id NOT IN (SELECT contact_id FROM contacts_fts)"
+        ).fetchall()
+        for row in rows:
+            self._sync_fts(conn, int(row["id"]), row)
 
     def _create_vec_table(self, conn, dim: int) -> None:
         conn.execute(
@@ -227,7 +260,10 @@ class ContactStore:
                         now,
                     ),
                 )
-                return int(cur.lastrowid)
+                contact_id = int(cur.lastrowid)
+                row = conn.execute("SELECT * FROM contacts WHERE id=?", (contact_id,)).fetchone()
+                self._sync_fts(conn, contact_id, row)
+                return contact_id
         except _DB_ERRORS as exc:
             raise StoreError(str(exc)) from exc
 
@@ -264,6 +300,8 @@ class ContactStore:
                         contact_id,
                     ),
                 )
+                row = conn.execute("SELECT * FROM contacts WHERE id=?", (contact_id,)).fetchone()
+                self._sync_fts(conn, contact_id, row)
         except _DB_ERRORS as exc:
             raise StoreError(str(exc)) from exc
 
@@ -276,6 +314,27 @@ class ContactStore:
         except _DB_ERRORS as exc:
             raise StoreError(str(exc)) from exc
         return dict(row) if row else None
+
+    def search(self, query: str, limit: int = 5) -> list[dict]:
+        tokens = [
+            token for token in re.findall(r"[^\W_]+", query, flags=re.UNICODE)
+            if token.casefold() not in _STOPWORDS
+        ]
+        if not tokens:
+            return []
+        match = " OR ".join(f'"{token.replace(chr(34), chr(34) * 2)}"' for token in tokens)
+        capped_limit = min(max(limit, 1), 5)
+        try:
+            with self._connect() as conn:
+                rows = conn.execute(
+                    "SELECT c.* FROM contacts_fts f "
+                    "JOIN contacts c ON c.id=f.contact_id "
+                    "WHERE f.searchable MATCH ? ORDER BY bm25(contacts_fts) LIMIT ?",
+                    (match, capped_limit),
+                ).fetchall()
+        except _DB_ERRORS as exc:
+            raise StoreError(str(exc)) from exc
+        return [dict(row) for row in rows]
 
     def upsert_embedding(self, contact_id: int, embedding: list[float]) -> None:
         self._ensure_vec(len(embedding))

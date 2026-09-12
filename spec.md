@@ -1,37 +1,29 @@
-# Telegram Card and Voice Intake Specification
+# Telegram Capture and SQLite FTS Search Specification
 
 ## Goal and boundary
 
-An allowlisted user can submit a business-card image and name through a private
-Telegram chat, then send one Telegram voice note or `/done`. Telegram remains an
-adapter: it downloads files and invokes the existing optional-voice LangGraph.
-There is no database or contact persistence.
+An allowlisted user can submit a business-card image with an optional caption
+through a private Telegram chat, then send one voice note or `/done`. The graph
+extracts, optionally transcribes, deterministically matches, writes, and verifies
+the contact in SQLite. Telegram shows readable data and terminal prints JSON.
 
 ```text
-photo/JPEG/PNG + name caption → pending intake → voice note or /done
-                                                   ↓
-load_input → validate_input → extract_card → validate_extraction
-                                                   ↓
-                                             voice_present?
-                                            /              \
-                                     transcribe_voice     merge_context
-                                            \              /
-                                          merge_context → finalize
-                                                   ↓
-                                       projected JSON reply
+image + optional caption → voice or /done → capture graph → data/crm.db
+                                                            ↓
+/search question → SQLite FTS5 (max 5) → grounded Groq answer → Telegram
 ```
 
 ## Configuration and access
 
 Run locally with Python 3.11+, long polling, and `python -m crm.telegram_bot`.
 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USER_IDS`, and `GROQ_API_KEY` are
-required for live use. Only allowlisted users in private chats may use any
-handler. Secrets and provider details must not be logged or returned.
+required for live use. `CRM_DB_PATH` optionally overrides the single database;
+its default is `data/crm.db`. Secrets and provider details are never returned.
 
 ## Conversation
 
 `/start` and `/help` tell the user to send one photo or JPEG/PNG document with
-only the person's name in its caption, followed by one voice note or `/done`.
+an optional name caption, followed by one voice note or `/done`.
 
 A valid card is downloaded with explicit Telegram connection/read timeouts and
 stored in an in-memory, per-chat pending intake. The graph is not invoked yet.
@@ -54,50 +46,59 @@ pending intake; a failed voice download preserves the card so voice can be
 retried or skipped. All files and pending state are removed after graph success
 or failure. Restarting the local bot loses pending intakes.
 
-Albums, unsupported documents, missing captions, arbitrary audio files, group
+Albums, unsupported documents, arbitrary audio files, group
 messages, and unauthorized users are rejected. Only Telegram's voice-message
 type is accepted for the voice step.
 
 ## Graph input and output
 
-The adapter invokes the existing graph with the stored name and paths, status
-`pending`, and an empty error list. It replies with indented plain JSON containing
-exactly these top-level keys. Long JSON is delivered in consecutive, ordered
-messages whose bodies concatenate to the complete JSON without truncation:
+The adapter invokes the graph with the optional caption as a name hint. It fills
+a missing extracted name but never overwrites a valid extracted name. Telegram
+shows a human-readable summary and omits blank fields:
 
-```json
-{
-  "status": "complete",
-  "errors": [],
-  "contact_evidence": {
-    "full_name": "...",
-    "company": "...",
-    "job_title": "...",
-    "email": "...",
-    "phone": "...",
-    "website": "...",
-    "address": "..."
-  },
-  "voice_transcript": "...",
-  "conversation_notes": "..."
-}
+```text
+✅ Contact processed
+
+Status: complete
+👤 Name: Ada Lovelace
+🏢 Company: Analytical Engines
+
+🎙 Conversation notes
+Met at LEAP and discussed automation.
 ```
 
-The reply never includes local paths, `extracted_card`, API keys, or
-provider/internal error detail. Graph errors are reduced to safe categories while
-preserving graph status. Invalid or unserializable results and unexpected
-exceptions receive a generic error response.
+The terminal prints exactly one sanitized JSON object with `status`, `errors`,
+`contact_evidence`, `voice_transcript`, and `conversation_notes`. It excludes
+paths, `extracted_card`, API keys, and provider detail.
+
+## Persistence and search
+
+The graph is the only persistence path. `ContactStore` owns both the contacts
+table and FTS5 index in one SQLite database. Create and update synchronize the
+index transactionally; startup backfills older contacts. Indexed text includes
+all contact fields and appended notes. Failure prevents successful completion.
+
+`/search query` and `/search` followed by text tokenize arbitrary input safely,
+retrieve at most five FTS matches, and ask `GroqSearchAnswerer` for an answer
+grounded only in those rows. Telegram receives only the final answer, never the
+model's reasoning. No matches return directly without calling Groq.
+This is lexical RAG, not vector retrieval; normal capture never calls a Groq
+embeddings endpoint.
 
 ## Acceptance criteria
 
 - Card input queues without graph invocation; voice and `/done` invoke it once.
 - Image and voice files exist during graph execution and are then cleaned up.
-- JSON has exactly the five specified keys and real graph result values.
+- Telegram is formatted, while terminal JSON has exactly the five safe keys.
+- Captionless images are accepted; extracted full name remains authoritative.
+- Capture and search share `ContactStore` and `data/crm.db`; no duplicate save.
+- FTS is synchronized on create/update, safely backfilled, and capped at five.
+- Both search interactions use grounded Groq generation only after retrieval.
 - Per-chat isolation, deterministic replacement, retry, and restart behavior are
   explicit and tested where applicable.
 - Access, input, download, graph, serialization, and cleanup failure paths are safe.
 - Tests use fake Telegram/Groq boundaries and make no live network calls.
-- LangGraph, providers, and CLI remain unchanged.
+- Default capture completes after verified persistence without embeddings.
 
-`complete` means extraction and optional transcription completed. It does not
-mean a contact was stored.
+`complete` means extraction, optional transcription, persistence, and independent
+write verification completed.

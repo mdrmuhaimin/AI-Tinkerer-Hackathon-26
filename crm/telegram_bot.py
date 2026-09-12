@@ -10,9 +10,11 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Mapping
 
+from crm.db import DEFAULT_DB_PATH, ContactStore
 from crm.graph import build_graph
 from crm.providers.groq import GroqSearchAnswerer
-from crm.storage import FIELDS, SQLiteContactStore
+
+FIELDS = ("full_name", "company", "job_title", "email", "phone", "website", "address")
 
 LOGGER = logging.getLogger(__name__)
 HELP_MESSAGE = (
@@ -22,10 +24,8 @@ HELP_MESSAGE = (
 )
 CARD_RECEIVED_MESSAGE = "Card received.\n\nSend one voice note, or /done to continue without voice."
 NO_PENDING_MESSAGE = (
-    "No business-card intake is waiting. Send a business-card image with the "
-    "person's name in its caption first."
+    "No business-card intake is waiting. Send a business-card image first."
 )
-MISSING_CAPTION_MESSAGE = "✗ Input rejected\n\nAdd the person's name as the image caption and send it again."
 UNSUPPORTED_MESSAGE = (
     "✗ Input rejected\n\nSend one business-card photo or JPEG/PNG image document."
 )
@@ -34,7 +34,6 @@ UNAUTHORIZED_MESSAGE = "You are not authorized to use this bot."
 DOWNLOAD_ERROR_MESSAGE = "✗ Image download failed\n\nPlease send the business-card image again."
 VOICE_DOWNLOAD_ERROR_MESSAGE = "✗ Voice download failed\n\nPlease send the voice note again, or /done."
 GENERIC_ERROR_MESSAGE = "✗ Something went wrong\n\nPlease try again."
-STORE_ERROR_MESSAGE = "✗ Contact could not be stored\n\nPlease try again."
 SEARCH_PROMPT_MESSAGE = "What would you like to find?"
 NO_RESULTS_MESSAGE = "No matching contacts found."
 SEARCH_ERROR_MESSAGE = "✗ Search failed\n\nPlease try again."
@@ -47,7 +46,7 @@ _TELEGRAM_CHUNK_UNITS = 3500
 class TelegramBotConfig:
     token: str
     allowed_user_ids: frozenset[int]
-    db_path: str = "crm.sqlite3"
+    db_path: str = str(DEFAULT_DB_PATH)
 
 
 @dataclass(frozen=True)
@@ -71,7 +70,7 @@ def load_config(environ: Mapping[str, str] | None = None) -> TelegramBotConfig:
         raise ValueError("TELEGRAM_ALLOWED_USER_IDS must contain numeric IDs") from exc
     if not allowed_ids:
         raise ValueError("TELEGRAM_ALLOWED_USER_IDS must not be empty")
-    return TelegramBotConfig(token, allowed_ids, values.get("CRM_DB_PATH", "crm.sqlite3"))
+    return TelegramBotConfig(token, allowed_ids, values.get("CRM_DB_PATH", str(DEFAULT_DB_PATH)))
 
 
 async def _deny_access(update, allowed_user_ids) -> bool:
@@ -150,8 +149,8 @@ def _message_chunks(text: str):
 
 def build_handlers(allowed_user_ids: set[int] | frozenset[int], graph=None, store=None, answerer=None):
     allowed = frozenset(allowed_user_ids)
-    crm_graph = build_graph() if graph is None else graph
-    contact_store = SQLiteContactStore(os.getenv("CRM_DB_PATH", "crm.sqlite3")) if store is None else store
+    contact_store = ContactStore(os.getenv("CRM_DB_PATH", DEFAULT_DB_PATH)) if store is None else store
+    crm_graph = build_graph(store=contact_store) if graph is None else graph
     search_answerer = answerer
     pending: dict[int, PendingIntake] = {}
     pending_searches: set[int] = set()
@@ -221,13 +220,6 @@ def build_handlers(allowed_user_ids: set[int] | frozenset[int], graph=None, stor
             else:
                 output = json.dumps(projected, indent=2, ensure_ascii=False)
                 print(output, flush=True)
-                if projected.get("status") == "complete":
-                    try:
-                        contact_store.save(update.effective_user.id, projected)
-                    except Exception as exc:
-                        LOGGER.error("SQLite contact persistence failed (%s)", type(exc).__name__)
-                        await update.effective_message.reply_text(STORE_ERROR_MESSAGE)
-                        return
                 formatted = _format_contact(projected)
                 for chunk in _message_chunks(formatted):
                     await update.effective_message.reply_text(chunk)
@@ -275,7 +267,7 @@ def build_handlers(allowed_user_ids: set[int] | frozenset[int], graph=None, stor
 
     async def run_search(update, query: str) -> None:
         try:
-            records = contact_store.search(update.effective_user.id, query, limit=5)
+            records = contact_store.search(query, limit=5)
             if not records:
                 await update.effective_message.reply_text(NO_RESULTS_MESSAGE)
                 return
@@ -310,7 +302,9 @@ def build_handlers(allowed_user_ids: set[int] | frozenset[int], graph=None, stor
 def create_application(config: TelegramBotConfig, graph=None, store=None, answerer=None):
     from telegram.ext import Application, CommandHandler, MessageHandler, filters
     if store is None:
-        store = SQLiteContactStore(config.db_path)
+        store = ContactStore(config.db_path)
+    if graph is None:
+        graph = build_graph(store=store)
     callbacks = build_handlers(config.allowed_user_ids, graph, store, answerer)
     application = Application.builder().token(config.token).build()
     application.add_handler(CommandHandler(["start", "help"], callbacks.help))

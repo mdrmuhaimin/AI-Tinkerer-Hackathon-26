@@ -4,6 +4,7 @@ import base64
 import json
 import mimetypes
 import os
+import re
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -23,6 +24,22 @@ _PROMPT = (
     "Return null when a field is not visible or not supported by the card; "
     "do not guess."
 )
+
+_THINK_BLOCK = re.compile(
+    r"\A\s*<think(?:\s[^>]*)?>.*?</think\s*>\s*(.*?)\s*\Z",
+    re.DOTALL | re.IGNORECASE,
+)
+_THINK_TAG = re.compile(r"<\s*/?\s*think\b", re.IGNORECASE)
+
+
+def _clean_search_answer(content: str | None) -> str:
+    if not content:
+        raise ValueError("empty search answer")
+    match = _THINK_BLOCK.fullmatch(content)
+    answer = match.group(1).strip() if match else content.strip()
+    if not answer or _THINK_TAG.search(answer):
+        raise ValueError("empty search answer")
+    return answer
 
 
 def _encode_image(image_path: str) -> tuple[str, str]:
@@ -147,10 +164,8 @@ class GroqSearchAnswerer:
         completion = client.chat.completions.create(
             model=self._model,
             messages=[{"role": "user", "content": prompt}],
+            reasoning_format="hidden",
             temperature=0,
             max_completion_tokens=512,
         )
-        content = completion.choices[0].message.content
-        if not content:
-            raise ValueError("empty search answer")
-        return content
+        return _clean_search_answer(completion.choices[0].message.content)

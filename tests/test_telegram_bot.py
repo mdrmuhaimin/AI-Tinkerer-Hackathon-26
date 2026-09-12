@@ -13,7 +13,6 @@ from crm.telegram_bot import (
     GENERIC_ERROR_MESSAGE,
     GROUP_MESSAGE,
     HELP_MESSAGE,
-    MISSING_CAPTION_MESSAGE,
     UNAUTHORIZED_MESSAGE,
     UNSUPPORTED_MESSAGE,
     TelegramBotConfig,
@@ -73,7 +72,7 @@ def run(coro):
     return asyncio.run(coro)
 
 
-def test_photo_queues_then_voice_maps_to_graph_while_files_exist_and_cleans_up():
+def test_photo_queues_then_voice_maps_to_graph_while_files_exist_and_cleans_up(capsys):
     seen = {}
 
     class Graph:
@@ -111,12 +110,11 @@ def test_photo_queues_then_voice_maps_to_graph_while_files_exist_and_cleans_up()
     }
     assert not Path(seen["image_path"]).exists()
     assert not Path(seen["voice_path"]).exists()
-    payload = json.loads(graph_result_message.effective_message.reply_text.await_args.args[0])
-    assert list(payload) == [
-        "status", "errors", "contact_evidence", "voice_transcript", "conversation_notes"
-    ]
-    assert payload["contact_evidence"] == {"full_name": "Ada Lovelace"}
-    assert payload["voice_transcript"] == "Met at the conference."
+    reply = graph_result_message.effective_message.reply_text.await_args.args[0]
+    assert "👤 Name: Ada Lovelace" in reply
+    assert "Met at the conference." in reply
+    payload = json.loads(capsys.readouterr().out)
+    assert list(payload) == list(("status", "errors", "contact_evidence", "voice_transcript", "conversation_notes"))
 
 
 @pytest.mark.parametrize(
@@ -139,7 +137,7 @@ def test_supported_image_document_maps_to_graph(mime_type, file_name):
     run(handlers.done(make_update(text="/done", caption=None), None))
 
 
-def test_done_invokes_without_voice_and_returns_projected_json():
+def test_done_invokes_without_voice_and_returns_formatted_contact(capsys):
     graph = Mock()
     graph.invoke.return_value = {
         "status": "complete", "errors": [],
@@ -159,7 +157,8 @@ def test_done_invokes_without_voice_and_returns_projected_json():
     state = graph.invoke.call_args.args[0]
     assert state["voice_path"] is None
     assert not Path(queued_path).exists()
-    assert json.loads(done.effective_message.reply_text.await_args.args[0]) == {
+    assert "👤 Name: Ada Lovelace" in done.effective_message.reply_text.await_args.args[0]
+    assert json.loads(capsys.readouterr().out) == {
         "status": "complete", "errors": [],
         "contact_evidence": {"full_name": "Ada Lovelace"},
         "voice_transcript": None, "conversation_notes": None,
@@ -224,7 +223,8 @@ def test_application_registers_done_before_media_and_voice_handlers():
     application = create_application(TelegramBotConfig("123:TEST", frozenset({42})), Mock())
     callbacks = [handler.callback.__name__ for handler in application.handlers[0]]
     assert callbacks == [
-        "help_handler", "done_handler", "intake_handler", "voice_handler",
+        "help_handler", "done_handler", "search_handler", "intake_handler", "voice_handler",
+        "text_handler",
         "unsupported_handler",
     ]
 
@@ -242,7 +242,7 @@ def test_graph_exception_cleans_pending_files():
     voice.effective_message.reply_text.assert_awaited_once_with(GENERIC_ERROR_MESSAGE)
 
 
-def test_graph_errors_are_safe_json_without_internal_details():
+def test_graph_errors_are_safe_without_internal_details(capsys):
     graph = Mock()
     graph.invoke.return_value = {
         "status": "error",
@@ -257,10 +257,11 @@ def test_graph_errors_are_safe_json_without_internal_details():
     run(handlers.done(done, None))
     output = done.effective_message.reply_text.await_args.args[0]
     assert "/tmp" not in output and "abc" not in output
-    assert json.loads(output)["errors"] == ["voice note could not be validated"]
+    assert "voice note could not be validated" in output
+    assert json.loads(capsys.readouterr().out)["errors"] == ["voice note could not be validated"]
 
 
-def test_long_json_is_sent_in_ordered_safe_chunks_without_data_loss():
+def test_long_formatted_reply_is_sent_in_ordered_safe_chunks_without_data_loss():
     transcript = "Met at conference 🚀 " * 500
     graph = Mock()
     graph.invoke.return_value = {
@@ -279,24 +280,22 @@ def test_long_json_is_sent_in_ordered_safe_chunks_without_data_loss():
     chunks = [call.args[0] for call in done.effective_message.reply_text.await_args_list]
     assert len(chunks) > 1
     assert all(len(chunk.encode("utf-16-le")) // 2 <= 3500 for chunk in chunks)
-    payload = json.loads("".join(chunks))
-    assert list(payload) == [
-        "status", "errors", "contact_evidence", "voice_transcript", "conversation_notes"
-    ]
-    assert payload["voice_transcript"] == transcript
-    assert payload["conversation_notes"] == transcript
+    reply = "".join(chunks)
+    assert "👤 Name: Ada Lovelace" in reply
+    assert transcript in reply
 
 
-def test_missing_caption_is_rejected_without_graph_call():
+def test_missing_caption_is_accepted_and_queued():
     graph = Mock()
     update = make_update(photo=[FakeAttachment()], caption="  ")
 
-    run(build_handlers({42}, graph).intake(update, None))
+    handlers = build_handlers({42}, graph)
+    run(handlers.intake(update, None))
 
     graph.invoke.assert_not_called()
-    update.effective_message.reply_text.assert_awaited_once_with(
-        MISSING_CAPTION_MESSAGE
-    )
+    assert handlers.pending[100].name is None
+    update.effective_message.reply_text.assert_awaited_once_with(CARD_RECEIVED_MESSAGE)
+    run(handlers.done(make_update(text="/done", caption=None), None))
 
 
 def test_help_and_text_only_explain_input_format():
@@ -362,7 +361,7 @@ def test_download_error_asks_user_to_resend():
     )
 
 
-def test_graph_rejection_does_not_expose_file_path():
+def test_graph_rejection_does_not_expose_file_path(capsys):
     class Graph:
         def invoke(self, state):
             return {
@@ -380,7 +379,8 @@ def test_graph_rejection_does_not_expose_file_path():
 
     reply = done.effective_message.reply_text.await_args.args[0]
     assert "/tmp" not in reply and "/var" not in reply
-    assert json.loads(reply)["errors"] == ["image could not be validated"]
+    assert "image could not be validated" in reply
+    assert json.loads(capsys.readouterr().out)["errors"] == ["image could not be validated"]
 
 
 def test_unexpected_graph_exception_is_generic():
