@@ -158,6 +158,18 @@ The question gets a new embedding at query time. That is not the contact’s sto
 
 ---
 
+## Discord — another door, same rooms
+
+The bot does not sit on the graph. A DM is translated into the same payload the CLI builds, or into `query_contacts`.
+
+Pending intake is a dict keyed by Discord user id. The card waits. Voice or `save` is when `build_graph()` runs. `/query` never does that.
+
+Guild messages are ignored. DMs only.
+
+**Check:** You send a card image in a Discord DM, then `/query who did I meet?` before `save`. Did a contact get written?
+
+---
+
 ## Current graph (all tasks)
 
 ```text

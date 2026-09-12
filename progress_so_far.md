@@ -204,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after Task 8: **93 passed, 2 deselected**.
+Last recorded default run after the Discord adapter: **98 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -359,13 +359,33 @@ python -m crm query "Who did I speak with about data warehouse consulting?"
 
 ---
 
+## Discord DM adapter
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 98 passed, 2 deselected).
+
+**What we built:** A Discord DM adapter. Image + name (+ notes) wait in memory. Follow-up voice or `save` runs the existing capture graph. `/query` searches and does not write.
+
+**Graph change:** none.
+
+**CLI:**
+
+```bash
+python -m crm.discord_bot
+```
+
+Needs `DISCORD_BOT_TOKEN` and Message Content Intent. DMs only.
+
+**Key files:** `crm/discord_bot.py`, `tests/test_discord.py`, `how_to_run.md`
+
+---
+
 ## What is intentionally not built yet
 
 These were not specified as later work:
 
 - PostgreSQL / SQLAlchemy / migrations
 - pgvector / RAG chat
-- Telegram or other chat integrations
+- Telegram, Slack, or WhatsApp
 - Structured reminders / follow-up extraction from the transcript
 - A live-vision LangSmith experiment (this task’s experiment uses fakes so it stays offline)
 
@@ -386,6 +406,7 @@ These were not specified as later work:
 | Groq embeddings | `crm/providers/embeddings.py` |
 | Provider interfaces | `crm/providers/base.py` |
 | CLI (capture + query) | `crm/cli.py` |
+| Discord DM adapter | `crm/discord_bot.py` |
 | Tracing | `crm/tracing.py` |
 | Eval dataset + experiment | `eval/dataset.json`, `crm/eval.py`, `eval/latest_experiment.json` |
 | Sample card | `input/visiting_card.png` |

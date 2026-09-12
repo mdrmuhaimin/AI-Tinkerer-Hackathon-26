@@ -7,7 +7,7 @@ name = "ai-conference-crm"
 version = "0.1.0"
 description = "AI Conference CRM — deterministic capture graph"
 requires-python = ">=3.11"
-dependencies = ["langgraph", "pydantic", "groq", "python-dotenv", "sqlite-vec", "apsw", "langsmith"]
+dependencies = ["langgraph", "pydantic", "groq", "python-dotenv", "sqlite-vec", "apsw", "langsmith", "discord.py"]
 
 [project.optional-dependencies]
 dev = ["pytest"]

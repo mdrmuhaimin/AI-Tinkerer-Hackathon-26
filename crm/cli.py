@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from crm.db import DEFAULT_DB_PATH, ContactStore
 from crm.graph import build_graph
 from crm.providers.embeddings import GroqEmbedder
-from crm.search import query_contacts
+from crm.search import _format_query_hits, query_contacts
 from crm.tracing import enable_tracing
 
 
@@ -22,25 +22,6 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     query.add_argument("text")
     query.add_argument("--limit", type=int, default=5)
     return parser.parse_args(argv)
-
-
-def _format_query_hits(hits: list[dict]) -> str:
-    if not hits:
-        return "No matches."
-    blocks = []
-    for i, hit in enumerate(hits, 1):
-        lines = [f"{i}. {hit.get('full_name') or 'Unknown'}"]
-        for key in ("company", "job_title"):
-            value = hit.get(key)
-            if value and str(value).strip():
-                lines.append(f"   {value}")
-        notes = hit.get("notes")
-        if notes and str(notes).strip():
-            lines.append("")
-            for line in str(notes).splitlines():
-                lines.append(f"   {line}")
-        blocks.append("\n".join(lines))
-    return "\n\n".join(blocks)
 
 
 def _run_query(args: argparse.Namespace, embedder=None, store=None) -> int:

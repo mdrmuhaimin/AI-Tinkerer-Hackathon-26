@@ -4,17 +4,17 @@
   "graph": {},
   "nodes": [
     {
-      "id": "crm_providers_base_embeddererror",
-      "label": "EmbedderError",
+      "id": "crm_providers_base_cardextractor",
+      "label": "CardExtractor",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
-      "norm_label": "embeddererror",
+      "norm_label": "cardextractor",
       "source_file": "crm/providers/base.py",
-      "source_location": "L20"
+      "source_location": "L12"
     },
     {
       "id": "crm_providers_base_extractorerror",
@@ -23,7 +23,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "extractorerror",
       "source_file": "crm/providers/base.py",
@@ -36,7 +36,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "transcribererror",
       "source_file": "crm/providers/base.py",
@@ -49,24 +49,11 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "voicetranscriber",
       "source_file": "crm/providers/base.py",
       "source_location": "L16"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder",
-      "label": "GroqEmbedder",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "groqembedder",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L15"
     },
     {
       "id": "crm_providers_groq_groqcardextractor",
@@ -75,7 +62,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "groqcardextractor",
       "source_file": "crm/providers/groq.py",
@@ -88,11 +75,24 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "groqvoicetranscriber",
       "source_file": "crm/providers/groq.py",
       "source_location": "L92"
+    },
+    {
+      "id": "crm_providers_base_embeddingprovider",
+      "label": "EmbeddingProvider",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "embeddingprovider",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L24"
     },
     {
       "id": "tests_helpers_fakeembedder",
@@ -173,32 +173,6 @@
       "source_location": "L42"
     },
     {
-      "id": "crm_providers_base_cardextractor",
-      "label": "CardExtractor",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "cardextractor",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L12"
-    },
-    {
-      "id": "crm_providers_base_embeddingprovider",
-      "label": "EmbeddingProvider",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "embeddingprovider",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L24"
-    },
-    {
       "id": "crm_schemas_contactevidence",
       "label": "ContactEvidence",
       "_callable": true,
@@ -238,6 +212,58 @@
       "source_location": "L22"
     },
     {
+      "id": "crm_discord_bot_intake",
+      "label": "Intake",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "intake",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L74"
+    },
+    {
+      "id": "crm_discord_bot_pending",
+      "label": "Pending",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "pending",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "crm_providers_base_embeddererror",
+      "label": "EmbedderError",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "embeddererror",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder",
+      "label": "GroqEmbedder",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "groqembedder",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L15"
+    },
+    {
       "id": "tests_helpers_fakeextractor",
       "label": "FakeExtractor",
       "_callable": true,
@@ -251,52 +277,40 @@
       "source_location": "L4"
     },
     {
-      "id": "crm_cli_format_query_hits",
-      "label": "_format_query_hits()",
+      "id": "crm_graph_build_graph_extract_card_node",
+      "label": "extract_card_node()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
-      "norm_label": "_format_query_hits()",
-      "source_file": "crm/cli.py",
-      "source_location": "L27"
+      "norm_label": "extract_card_node()",
+      "source_file": "crm/graph.py",
+      "source_location": "L360"
     },
     {
-      "id": "crm_cli_main",
-      "label": "main()",
+      "id": "crm_graph_build_graph_transcribe_voice_node",
+      "label": "transcribe_voice_node()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "crm/cli.py",
-      "source_location": "L58"
+      "norm_label": "transcribe_voice_node()",
+      "source_file": "crm/graph.py",
+      "source_location": "L363"
     },
     {
-      "id": "crm_cli_parse_args",
-      "label": "_parse_args()",
+      "id": "crm_graph_extract_card",
+      "label": "extract_card()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
-      "norm_label": "_parse_args()",
-      "source_file": "crm/cli.py",
-      "source_location": "L14"
-    },
-    {
-      "id": "crm_cli_run_query",
-      "label": "_run_query()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "_run_query()",
-      "source_file": "crm/cli.py",
-      "source_location": "L46"
+      "norm_label": "extract_card()",
+      "source_file": "crm/graph.py",
+      "source_location": "L80"
     },
     {
       "id": "crm_graph_transcribe_voice",
@@ -304,11 +318,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "transcribe_voice()",
       "source_file": "crm/graph.py",
       "source_location": "L138"
+    },
+    {
+      "id": "crm_providers_base_cardextractor_extract_card",
+      "label": ".extract_card()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "ExtractorError",
+      "file_type": "code",
+      "norm_label": ".extract_card()",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L13"
     },
     {
       "id": "crm_providers_base_voicetranscriber_transcribe",
@@ -316,47 +342,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".transcribe()",
       "source_file": "crm/providers/base.py",
       "source_location": "L17"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder_embed",
-      "label": ".embed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": ".embed()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L31"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder_from_env",
-      "label": ".from_env()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": ".from_env()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L23"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L18"
     },
     {
       "id": "crm_providers_groq_encode_image",
@@ -364,7 +354,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "_encode_image()",
       "source_file": "crm/providers/groq.py",
@@ -376,7 +366,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".extract_card()",
       "source_file": "crm/providers/groq.py",
@@ -388,7 +378,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".from_env()",
       "source_file": "crm/providers/groq.py",
@@ -400,7 +390,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "crm/providers/groq.py",
@@ -412,7 +402,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".from_env()",
       "source_file": "crm/providers/groq.py",
@@ -424,7 +414,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "crm/providers/groq.py",
@@ -436,119 +426,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": ".transcribe()",
       "source_file": "crm/providers/groq.py",
       "source_location": "L106"
-    },
-    {
-      "id": "tests_test_cli_patch_graph",
-      "label": "_patch_graph()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "_patch_graph()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "tests_test_cli_test_cli_extractor_error_exits_1",
-      "label": "test_cli_extractor_error_exits_1()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_extractor_error_exits_1()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L205"
-    },
-    {
-      "id": "tests_test_cli_test_cli_invalid_prints_json_and_exits_1",
-      "label": "test_cli_invalid_prints_json_and_exits_1()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_invalid_prints_json_and_exits_1()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L89"
-    },
-    {
-      "id": "tests_test_cli_test_cli_module_smoke_invalid_avoids_provider",
-      "label": "test_cli_module_smoke_invalid_avoids_provider()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_module_smoke_invalid_avoids_provider()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "tests_test_cli_test_cli_notes_and_voice_merge",
-      "label": "test_cli_notes_and_voice_merge()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_notes_and_voice_merge()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L144"
-    },
-    {
-      "id": "tests_test_cli_test_cli_notes_stored",
-      "label": "test_cli_notes_stored()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_notes_stored()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L128"
-    },
-    {
-      "id": "tests_test_cli_test_cli_valid_prints_json_status",
-      "label": "test_cli_valid_prints_json_status()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_valid_prints_json_status()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L36"
-    },
-    {
-      "id": "tests_test_cli_test_cli_voice_prints_transcript_and_notes",
-      "label": "test_cli_voice_prints_transcript_and_notes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli_voice_prints_transcript_and_notes()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L105"
-    },
-    {
-      "id": "tests_test_cli_touch_image",
-      "label": "_touch_image()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "_touch_image()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L11"
     },
     {
       "id": "tests_test_groq_provider_test_from_env_reads_groq_api_key",
@@ -556,7 +438,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "test_from_env_reads_groq_api_key()",
       "source_file": "tests/test_groq_provider.py",
@@ -568,7 +450,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "test_from_env_requires_groq_api_key()",
       "source_file": "tests/test_groq_provider.py",
@@ -580,7 +462,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "test_transcribe_uses_whisper_large_v3_and_wraps_errors()",
       "source_file": "tests/test_groq_provider.py",
@@ -592,7 +474,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "create()",
       "source_file": "tests/test_groq_provider.py",
@@ -604,11 +486,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "__init__()",
       "source_file": "tests/test_groq_provider.py",
       "source_location": "L50"
+    },
+    {
+      "id": "crm_providers_base_embeddingprovider_embed",
+      "label": ".embed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": ".embed()",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L27"
     },
     {
       "id": "crm_search_build_search_document",
@@ -645,30 +539,6 @@
       "norm_label": ".embed()",
       "source_file": "tests/helpers.py",
       "source_location": "L47"
-    },
-    {
-      "id": "tests_test_cli_test_query_ranked_list_does_not_run_graph_or_write",
-      "label": "test_query_ranked_list_does_not_run_graph_or_write()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "_run",
-      "file_type": "code",
-      "norm_label": "test_query_ranked_list_does_not_run_graph_or_write()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L173"
-    },
-    {
-      "id": "tests_test_cli_test_query_ranked_list_does_not_run_graph_or_write_boom",
-      "label": "boom()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "_run",
-      "file_type": "code",
-      "norm_label": "boom()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L183"
     },
     {
       "id": "tests_test_crm_count",
@@ -971,6 +841,126 @@
       "source_location": "L49"
     },
     {
+      "id": "tests_test_discord_intake",
+      "label": "_intake()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "_intake()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L9"
+    },
+    {
+      "id": "tests_test_discord_intake_graph",
+      "label": "graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "graph()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L16"
+    },
+    {
+      "id": "tests_test_discord_test_follow_up_voice_runs_graph_and_stores_notes",
+      "label": "test_follow_up_voice_runs_graph_and_stores_notes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_follow_up_voice_runs_graph_and_stores_notes()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L62"
+    },
+    {
+      "id": "tests_test_discord_test_guild_channel_messages_ignored",
+      "label": "test_guild_channel_messages_ignored()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_guild_channel_messages_ignored()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L116"
+    },
+    {
+      "id": "tests_test_discord_test_guild_channel_messages_ignored_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L117"
+    },
+    {
+      "id": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "label": "test_image_and_name_stays_pending_without_persist()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_image_and_name_stays_pending_without_persist()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L37"
+    },
+    {
+      "id": "tests_test_discord_test_image_and_name_stays_pending_without_persist_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "label": "test_query_ranks_contact_and_never_calls_graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_query_ranks_contact_and_never_calls_graph()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L98"
+    },
+    {
+      "id": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L103"
+    },
+    {
+      "id": "tests_test_discord_test_save_without_voice_skips_transcriber",
+      "label": "test_save_without_voice_skips_transcriber()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_save_without_voice_skips_transcriber()",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L84"
+    },
+    {
       "id": "tests_test_embeddings_graph",
       "label": "_graph()",
       "_callable": true,
@@ -1161,18 +1151,6 @@
       "norm_label": "test_database_exception_on_get_is_error()",
       "source_file": "tests/test_verify.py",
       "source_location": "L48"
-    },
-    {
-      "id": "tests_test_verify_test_database_exception_on_get_is_error_boom",
-      "label": "boom()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "_run",
-      "file_type": "code",
-      "norm_label": "boom()",
-      "source_file": "tests/test_verify.py",
-      "source_location": "L51"
     },
     {
       "id": "tests_test_verify_test_final_success_contains_stored_contact_id",
@@ -1595,28 +1573,28 @@
       "source_location": "L57"
     },
     {
-      "id": "crm_graph_build_graph_store_embedding_node",
-      "label": "store_embedding_node()",
+      "id": "crm_graph_build_graph_create_contact_node",
+      "label": "create_contact_node()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
       "community_name": "ContactStore",
       "file_type": "code",
-      "norm_label": "store_embedding_node()",
+      "norm_label": "create_contact_node()",
       "source_file": "crm/graph.py",
-      "source_location": "L381"
+      "source_location": "L369"
     },
     {
-      "id": "crm_graph_store_embedding",
-      "label": "store_embedding()",
+      "id": "crm_graph_create_contact",
+      "label": "create_contact()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
       "community_name": "ContactStore",
       "file_type": "code",
-      "norm_label": "store_embedding()",
+      "norm_label": "create_contact()",
       "source_file": "crm/graph.py",
-      "source_location": "L323"
+      "source_location": "L217"
     },
     {
       "id": "crm_normalize_normalize_email",
@@ -1701,6 +1679,18 @@
       "norm_label": "test_normalize_email_phone_name()",
       "source_file": "tests/test_crm.py",
       "source_location": "L347"
+    },
+    {
+      "id": "tests_test_verify_test_database_exception_on_get_is_error_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_verify.py",
+      "source_location": "L51"
     },
     {
       "id": "crm_eval_create_vs_update",
@@ -2171,42 +2161,6 @@
       "source_location": "L346"
     },
     {
-      "id": "crm_graph_build_graph_create_contact_node",
-      "label": "create_contact_node()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "create_contact_node()",
-      "source_file": "crm/graph.py",
-      "source_location": "L369"
-    },
-    {
-      "id": "crm_graph_build_graph_create_embedding_node",
-      "label": "create_embedding_node()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "create_embedding_node()",
-      "source_file": "crm/graph.py",
-      "source_location": "L378"
-    },
-    {
-      "id": "crm_graph_build_graph_extract_card_node",
-      "label": "extract_card_node()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "extract_card_node()",
-      "source_file": "crm/graph.py",
-      "source_location": "L360"
-    },
-    {
       "id": "crm_graph_build_graph_search_crm_node",
       "label": "search_crm_node()",
       "_callable": true,
@@ -2219,16 +2173,16 @@
       "source_location": "L366"
     },
     {
-      "id": "crm_graph_build_graph_transcribe_voice_node",
-      "label": "transcribe_voice_node()",
+      "id": "crm_graph_build_graph_store_embedding_node",
+      "label": "store_embedding_node()",
       "_callable": true,
       "_origin": "ast",
       "community": 4,
       "community_name": "graph.py",
       "file_type": "code",
-      "norm_label": "transcribe_voice_node()",
+      "norm_label": "store_embedding_node()",
       "source_file": "crm/graph.py",
-      "source_location": "L363"
+      "source_location": "L381"
     },
     {
       "id": "crm_graph_build_graph_update_contact_node",
@@ -2267,30 +2221,6 @@
       "source_location": "L296"
     },
     {
-      "id": "crm_graph_create_contact",
-      "label": "create_contact()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "create_contact()",
-      "source_file": "crm/graph.py",
-      "source_location": "L217"
-    },
-    {
-      "id": "crm_graph_create_embedding",
-      "label": "create_embedding()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "create_embedding()",
-      "source_file": "crm/graph.py",
-      "source_location": "L303"
-    },
-    {
       "id": "crm_graph_display_fields",
       "label": "_display_fields()",
       "_callable": true,
@@ -2301,18 +2231,6 @@
       "norm_label": "_display_fields()",
       "source_file": "crm/graph.py",
       "source_location": "L210"
-    },
-    {
-      "id": "crm_graph_extract_card",
-      "label": "extract_card()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "extract_card()",
-      "source_file": "crm/graph.py",
-      "source_location": "L80"
     },
     {
       "id": "crm_graph_finalize",
@@ -2411,6 +2329,18 @@
       "source_location": "L189"
     },
     {
+      "id": "crm_graph_store_embedding",
+      "label": "store_embedding()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": "store_embedding()",
+      "source_file": "crm/graph.py",
+      "source_location": "L323"
+    },
+    {
       "id": "crm_graph_update_contact",
       "label": "update_contact()",
       "_callable": true,
@@ -2481,30 +2411,6 @@
       "norm_label": "write_ok()",
       "source_file": "crm/graph.py",
       "source_location": "L290"
-    },
-    {
-      "id": "crm_providers_base_cardextractor_extract_card",
-      "label": ".extract_card()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": ".extract_card()",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L13"
-    },
-    {
-      "id": "crm_providers_base_embeddingprovider_embed",
-      "label": ".embed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": ".embed()",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L27"
     },
     {
       "id": "crm_schemas_contactevidence_empty_optional_to_none",
@@ -2843,6 +2749,402 @@
       "source_location": "L50"
     },
     {
+      "id": "crm_cli_parse_args",
+      "label": "_parse_args()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_parse_args()",
+      "source_file": "crm/cli.py",
+      "source_location": "L14"
+    },
+    {
+      "id": "crm_cli_run_query",
+      "label": "_run_query()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_run_query()",
+      "source_file": "crm/cli.py",
+      "source_location": "L27"
+    },
+    {
+      "id": "crm_discord_bot_format_capture",
+      "label": "_format_capture()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_format_capture()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "crm_discord_bot_intake_handle_dm",
+      "label": ".handle_dm()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".handle_dm()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L98"
+    },
+    {
+      "id": "crm_discord_bot_intake_handle_message",
+      "label": ".handle_message()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".handle_message()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L82"
+    },
+    {
+      "id": "crm_discord_bot_intake_handle_query",
+      "label": ".handle_query()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".handle_query()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L95"
+    },
+    {
+      "id": "crm_discord_bot_intake_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L75"
+    },
+    {
+      "id": "crm_discord_bot_intake_run",
+      "label": "._run()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "._run()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L155"
+    },
+    {
+      "id": "crm_discord_bot_is_image",
+      "label": "is_image()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "is_image()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L68"
+    },
+    {
+      "id": "crm_discord_bot_is_voice",
+      "label": "is_voice()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "is_voice()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L62"
+    },
+    {
+      "id": "crm_discord_bot_join_notes",
+      "label": "_join_notes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_join_notes()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "crm_discord_bot_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L187"
+    },
+    {
+      "id": "crm_discord_bot_main_on_message",
+      "label": "on_message()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "on_message()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L225"
+    },
+    {
+      "id": "crm_discord_bot_main_on_ready",
+      "label": "on_ready()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "on_ready()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L221"
+    },
+    {
+      "id": "crm_discord_bot_main_query_cmd",
+      "label": "query_cmd()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "query_cmd()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L214"
+    },
+    {
+      "id": "crm_discord_bot_save_attachment",
+      "label": "_save_attachment()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_save_attachment()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L179"
+    },
+    {
+      "id": "crm_discord_bot_split_caption",
+      "label": "_split_caption()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_split_caption()",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "crm_graph_build_graph_create_embedding_node",
+      "label": "create_embedding_node()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "create_embedding_node()",
+      "source_file": "crm/graph.py",
+      "source_location": "L378"
+    },
+    {
+      "id": "crm_graph_create_embedding",
+      "label": "create_embedding()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "create_embedding()",
+      "source_file": "crm/graph.py",
+      "source_location": "L303"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_embed",
+      "label": ".embed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".embed()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L31"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_from_env",
+      "label": ".from_env()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".from_env()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L23"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L18"
+    },
+    {
+      "id": "crm_search_format_query_hits",
+      "label": "_format_query_hits()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "_format_query_hits()",
+      "source_file": "crm/search.py",
+      "source_location": "L32"
+    },
+    {
+      "id": "tests_test_graph_graph",
+      "label": "_graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "_graph()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L34"
+    },
+    {
+      "id": "tests_test_graph_pending",
+      "label": "_pending()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "_pending()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L8"
+    },
+    {
+      "id": "tests_test_graph_stream_node_names",
+      "label": "_stream_node_names()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "_stream_node_names()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L139"
+    },
+    {
+      "id": "tests_test_graph_test_missing_or_blank_name_is_invalid",
+      "label": "test_missing_or_blank_name_is_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_missing_or_blank_name_is_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L64"
+    },
+    {
+      "id": "tests_test_graph_test_missing_or_nonexistent_image_is_invalid",
+      "label": "test_missing_or_nonexistent_image_is_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_missing_or_nonexistent_image_is_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L82"
+    },
+    {
+      "id": "tests_test_graph_test_stream_node_order_valid_and_invalid",
+      "label": "test_stream_node_order_valid_and_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_stream_node_order_valid_and_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L143"
+    },
+    {
+      "id": "tests_test_graph_test_valid_name_and_image_completes",
+      "label": "test_valid_name_and_image_completes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_valid_name_and_image_completes()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L51"
+    },
+    {
+      "id": "tests_test_graph_test_voice_path_optional_and_kept_when_present",
+      "label": "test_voice_path_optional_and_kept_when_present()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_voice_path_optional_and_kept_when_present()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L100"
+    },
+    {
+      "id": "tests_test_graph_touch",
+      "label": "_touch()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "_touch()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L29"
+    },
+    {
+      "id": "crm_cli_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "crm/cli.py",
+      "source_location": "L39"
+    },
+    {
       "id": "tests_helpers_fakeextractor_extract_card",
       "label": ".extract_card()",
       "_callable": true,
@@ -2853,6 +3155,138 @@
       "norm_label": ".extract_card()",
       "source_file": "tests/helpers.py",
       "source_location": "L15"
+    },
+    {
+      "id": "tests_test_cli_patch_graph",
+      "label": "_patch_graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_patch_graph()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L17"
+    },
+    {
+      "id": "tests_test_cli_test_cli_extractor_error_exits_1",
+      "label": "test_cli_extractor_error_exits_1()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_extractor_error_exits_1()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L205"
+    },
+    {
+      "id": "tests_test_cli_test_cli_invalid_prints_json_and_exits_1",
+      "label": "test_cli_invalid_prints_json_and_exits_1()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_invalid_prints_json_and_exits_1()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L89"
+    },
+    {
+      "id": "tests_test_cli_test_cli_module_smoke_invalid_avoids_provider",
+      "label": "test_cli_module_smoke_invalid_avoids_provider()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_module_smoke_invalid_avoids_provider()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L64"
+    },
+    {
+      "id": "tests_test_cli_test_cli_notes_and_voice_merge",
+      "label": "test_cli_notes_and_voice_merge()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_notes_and_voice_merge()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L144"
+    },
+    {
+      "id": "tests_test_cli_test_cli_notes_stored",
+      "label": "test_cli_notes_stored()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_notes_stored()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L128"
+    },
+    {
+      "id": "tests_test_cli_test_cli_valid_prints_json_status",
+      "label": "test_cli_valid_prints_json_status()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_valid_prints_json_status()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L36"
+    },
+    {
+      "id": "tests_test_cli_test_cli_voice_prints_transcript_and_notes",
+      "label": "test_cli_voice_prints_transcript_and_notes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli_voice_prints_transcript_and_notes()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L105"
+    },
+    {
+      "id": "tests_test_cli_test_query_ranked_list_does_not_run_graph_or_write",
+      "label": "test_query_ranked_list_does_not_run_graph_or_write()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_query_ranked_list_does_not_run_graph_or_write()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L173"
+    },
+    {
+      "id": "tests_test_cli_test_query_ranked_list_does_not_run_graph_or_write_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L183"
+    },
+    {
+      "id": "tests_test_cli_touch_image",
+      "label": "_touch_image()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_touch_image()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L11"
     },
     {
       "id": "tests_test_extract_graph",
@@ -2951,114 +3385,6 @@
       "source_location": "L41"
     },
     {
-      "id": "tests_test_graph_graph",
-      "label": "_graph()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_graph()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L34"
-    },
-    {
-      "id": "tests_test_graph_pending",
-      "label": "_pending()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_pending()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L8"
-    },
-    {
-      "id": "tests_test_graph_stream_node_names",
-      "label": "_stream_node_names()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_stream_node_names()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L139"
-    },
-    {
-      "id": "tests_test_graph_test_missing_or_blank_name_is_invalid",
-      "label": "test_missing_or_blank_name_is_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_missing_or_blank_name_is_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "tests_test_graph_test_missing_or_nonexistent_image_is_invalid",
-      "label": "test_missing_or_nonexistent_image_is_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_missing_or_nonexistent_image_is_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L82"
-    },
-    {
-      "id": "tests_test_graph_test_stream_node_order_valid_and_invalid",
-      "label": "test_stream_node_order_valid_and_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_stream_node_order_valid_and_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L143"
-    },
-    {
-      "id": "tests_test_graph_test_valid_name_and_image_completes",
-      "label": "test_valid_name_and_image_completes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_valid_name_and_image_completes()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L51"
-    },
-    {
-      "id": "tests_test_graph_test_voice_path_optional_and_kept_when_present",
-      "label": "test_voice_path_optional_and_kept_when_present()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_voice_path_optional_and_kept_when_present()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L100"
-    },
-    {
-      "id": "tests_test_graph_touch",
-      "label": "_touch()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_touch()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L29"
-    },
-    {
       "id": "agents",
       "label": "AGENTS.md",
       "_origin": "ast",
@@ -3092,7 +3418,7 @@
       "node_kind": "heading",
       "norm_label": "10. what is not implemented yet",
       "source_file": "how_to_run.md",
-      "source_location": "L295"
+      "source_location": "L334"
     },
     {
       "id": "how_to_run_1_get_the_code",
@@ -3140,7 +3466,7 @@
       "node_kind": "heading",
       "norm_label": "4. run the tests",
       "source_file": "how_to_run.md",
-      "source_location": "L84"
+      "source_location": "L85"
     },
     {
       "id": "how_to_run_5_provider_environment_variables",
@@ -3152,7 +3478,7 @@
       "node_kind": "heading",
       "norm_label": "5. provider environment variables",
       "source_file": "how_to_run.md",
-      "source_location": "L96"
+      "source_location": "L97"
     },
     {
       "id": "how_to_run_5b_offline_evaluation",
@@ -3164,7 +3490,7 @@
       "node_kind": "heading",
       "norm_label": "5b. offline evaluation",
       "source_file": "how_to_run.md",
-      "source_location": "L120"
+      "source_location": "L121"
     },
     {
       "id": "how_to_run_6_run_the_cli",
@@ -3176,7 +3502,19 @@
       "node_kind": "heading",
       "norm_label": "6. run the cli",
       "source_file": "how_to_run.md",
-      "source_location": "L132"
+      "source_location": "L133"
+    },
+    {
+      "id": "how_to_run_6b_discord_dm_adapter",
+      "label": "6b. Discord DM adapter",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6b. discord dm adapter",
+      "source_file": "how_to_run.md",
+      "source_location": "L199"
     },
     {
       "id": "how_to_run_7_what_the_output_looks_like",
@@ -3188,7 +3526,7 @@
       "node_kind": "heading",
       "norm_label": "7. what the output looks like",
       "source_file": "how_to_run.md",
-      "source_location": "L198"
+      "source_location": "L237"
     },
     {
       "id": "how_to_run_8_what_the_graph_does_today",
@@ -3200,7 +3538,7 @@
       "node_kind": "heading",
       "norm_label": "8. what the graph does today",
       "source_file": "how_to_run.md",
-      "source_location": "L229"
+      "source_location": "L268"
     },
     {
       "id": "how_to_run_9_live_tests",
@@ -3212,7 +3550,7 @@
       "node_kind": "heading",
       "norm_label": "9. live tests",
       "source_file": "how_to_run.md",
-      "source_location": "L281"
+      "source_location": "L320"
     },
     {
       "id": "how_to_run_how_to_run_ai_conference_crm_task_4",
@@ -3248,7 +3586,7 @@
       "node_kind": "heading",
       "norm_label": "troubleshooting",
       "source_file": "how_to_run.md",
-      "source_location": "L305"
+      "source_location": "L344"
     },
     {
       "id": "progress_so_far",
@@ -3359,6 +3697,18 @@
       "source_location": "L313"
     },
     {
+      "id": "progress_so_far_task_8_text_notes_and_semantic_search_interface",
+      "label": "Task 8 \u2014 Text Notes and Semantic Search Interface",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "task 8 \u2014 text notes and semantic search interface",
+      "source_file": "progress_so_far.md",
+      "source_location": "L341"
+    },
+    {
       "id": "progress_so_far_tests",
       "label": "Tests",
       "_origin": "ast",
@@ -3380,7 +3730,7 @@
       "node_kind": "heading",
       "norm_label": "what is intentionally not built yet",
       "source_file": "progress_so_far.md",
-      "source_location": "L341"
+      "source_location": "L362"
     },
     {
       "id": "progress_so_far_what_this_project_is",
@@ -3404,7 +3754,7 @@
       "node_kind": "heading",
       "norm_label": "where to look",
       "source_file": "progress_so_far.md",
-      "source_location": "L353"
+      "source_location": "L374"
     },
     {
       "id": "progress_so_far_write_verification",
@@ -3440,7 +3790,7 @@
       "node_kind": "heading",
       "norm_label": "current graph (all tasks)",
       "source_file": "understandable_so_far.md",
-      "source_location": "L143"
+      "source_location": "L161"
     },
     {
       "id": "understandable_so_far_task_1_langgraph_is_state_nodes_edges",
@@ -3515,6 +3865,18 @@
       "source_location": "L127"
     },
     {
+      "id": "understandable_so_far_task_8_two_inputs_one_merge_two_jobs_two_paths",
+      "label": "Task 8 \u2014 Two inputs, one merge; two jobs, two paths",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "task 8 \u2014 two inputs, one merge; two jobs, two paths",
+      "source_file": "understandable_so_far.md",
+      "source_location": "L143"
+    },
+    {
       "id": "understandable_so_far_the_split_that_runs_through_everything",
       "label": "The split that runs through everything",
       "_origin": "ast",
@@ -3536,7 +3898,7 @@
       "node_kind": "heading",
       "norm_label": "tooling (how we work, not what the crm is)",
       "source_file": "understandable_so_far.md",
-      "source_location": "L179"
+      "source_location": "L198"
     },
     {
       "id": "understandable_so_far_what_you_should_understand_so_far",
@@ -3563,33 +3925,11 @@
       "source_location": "L90"
     },
     {
-      "id": "crm_cli",
-      "label": "cli.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "cli.py",
-      "source_file": "crm/cli.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "crm_main",
-      "label": "__main__.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "__main__.py",
-      "source_file": "crm/__main__.py",
-      "source_location": "L1"
-    },
-    {
       "id": "crm_providers_base",
       "label": "base.py",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "base.py",
       "source_file": "crm/providers/base.py",
@@ -3600,31 +3940,9 @@
       "label": "Exception",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "exception",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crm_providers_embeddings",
-      "label": "embeddings.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "embeddings.py",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "crm_providers_embeddings_py_traceable",
-      "label": "traceable",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "traceable",
       "source_file": "",
       "source_location": ""
     },
@@ -3633,7 +3951,7 @@
       "label": "groq.py",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "groq.py",
       "source_file": "crm/providers/groq.py",
@@ -3644,7 +3962,7 @@
       "label": "traceable",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "traceable",
       "source_file": "",
@@ -3655,40 +3973,29 @@
       "label": "providers/__init__.py",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "providers/__init__.py",
       "source_file": "crm/providers/__init__.py",
       "source_location": "L1"
     },
     {
-      "id": "namespace",
-      "label": "Namespace",
+      "id": "protocol",
+      "label": "Protocol",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
-      "norm_label": "namespace",
+      "norm_label": "protocol",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "tests_test_cli",
-      "label": "test_cli.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "code",
-      "norm_label": "test_cli.py",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L1"
     },
     {
       "id": "tests_test_groq_provider",
       "label": "test_groq_provider.py",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "test_groq_provider.py",
       "source_file": "tests/test_groq_provider.py",
@@ -3699,7 +4006,7 @@
       "label": "MonkeyPatch",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "monkeypatch",
       "source_file": "",
@@ -3710,29 +4017,18 @@
       "label": "Path",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "crm_providers_base_rationale_21",
-      "label": "Raised when embedding generation fails.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_cli.py",
-      "file_type": "rationale",
-      "norm_label": "raised when embedding generation fails.",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L21"
-    },
-    {
       "id": "crm_providers_base_rationale_5",
       "label": "Raised when business-card extraction fails.",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "rationale",
       "norm_label": "raised when business-card extraction fails.",
       "source_file": "crm/providers/base.py",
@@ -3743,7 +4039,7 @@
       "label": "Raised when voice transcription fails.",
       "_origin": "ast",
       "community": 1,
-      "community_name": "test_cli.py",
+      "community_name": "ExtractorError",
       "file_type": "rationale",
       "norm_label": "raised when voice transcription fails.",
       "source_file": "crm/providers/base.py",
@@ -3761,11 +4057,107 @@
       "source_location": "L1"
     },
     {
+      "id": "discord_plan",
+      "label": "discord_plan.md",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "discord_plan.md",
+      "source_file": "discord_plan.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "label": "Discord DM adapter \u2014 plan for a later build",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "discord dm adapter \u2014 plan for a later build",
+      "source_file": "discord_plan.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "discord_plan_docs_when_we_build",
+      "label": "Docs (when we build)",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "docs (when we build)",
+      "source_file": "discord_plan.md",
+      "source_location": "L78"
+    },
+    {
+      "id": "discord_plan_implementation_when_we_build",
+      "label": "Implementation (when we build)",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "implementation (when we build)",
+      "source_file": "discord_plan.md",
+      "source_location": "L53"
+    },
+    {
+      "id": "discord_plan_out_of_scope",
+      "label": "Out of scope",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "out of scope",
+      "source_file": "discord_plan.md",
+      "source_location": "L46"
+    },
+    {
+      "id": "discord_plan_process_when_building",
+      "label": "Process when building",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "process when building",
+      "source_file": "discord_plan.md",
+      "source_location": "L84"
+    },
+    {
+      "id": "discord_plan_tests_when_we_build",
+      "label": "Tests (when we build)",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "tests (when we build)",
+      "source_file": "discord_plan.md",
+      "source_location": "L67"
+    },
+    {
+      "id": "discord_plan_user_flow",
+      "label": "User flow",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "user flow",
+      "source_file": "discord_plan.md",
+      "source_location": "L24"
+    },
+    {
       "id": "telegram_plan",
       "label": "telegram_plan.md",
       "_origin": "ast",
       "community": 11,
-      "community_name": "telegram_plan.md",
+      "community_name": "Discord DM adapter \u2014 plan for a later build",
       "file_type": "document",
       "node_kind": "page",
       "norm_label": "telegram_plan.md",
@@ -3840,6 +4232,17 @@
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
+    },
+    {
+      "id": "tests_test_discord",
+      "label": "test_discord.py",
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "test_discord.py",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L1"
     },
     {
       "id": "tests_test_embeddings",
@@ -4348,17 +4751,6 @@
       "source_location": ""
     },
     {
-      "id": "protocol",
-      "label": "Protocol",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "graph.py",
-      "file_type": "code",
-      "norm_label": "protocol",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_test_live_extract",
       "label": "test_live_extract.py",
       "_origin": "ast",
@@ -4447,6 +4839,105 @@
       "source_location": ""
     },
     {
+      "id": "crm_cli",
+      "label": "cli.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "cli.py",
+      "source_file": "crm/cli.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "crm_discord_bot",
+      "label": "discord_bot.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "discord_bot.py",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "crm_main",
+      "label": "__main__.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "__main__.py",
+      "source_file": "crm/__main__.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "crm_providers_embeddings",
+      "label": "embeddings.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "embeddings.py",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "crm_providers_embeddings_py_traceable",
+      "label": "traceable",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "traceable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "namespace",
+      "label": "Namespace",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "code",
+      "norm_label": "namespace",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crm_providers_base_rationale_21",
+      "label": "Raised when embedding generation fails.",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "discord_bot.py",
+      "file_type": "rationale",
+      "norm_label": "raised when embedding generation fails.",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L21"
+    },
+    {
+      "id": "tests_test_graph",
+      "label": "test_graph.py",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "test_graph.py",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_graph_py_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "test_graph.py",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "tests_helpers",
       "label": "helpers.py",
       "_origin": "ast",
@@ -4455,6 +4946,17 @@
       "file_type": "code",
       "norm_label": "helpers.py",
       "source_file": "tests/helpers.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_cli",
+      "label": "test_cli.py",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_cli.py",
+      "source_file": "tests/test_cli.py",
       "source_location": "L1"
     },
     {
@@ -4470,28 +4972,6 @@
     },
     {
       "id": "tests_test_extract_py_path",
-      "label": "Path",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_graph",
-      "label": "test_graph.py",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_graph.py",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_graph_py_path",
       "label": "Path",
       "_origin": "ast",
       "community": 8,
@@ -4608,7 +5088,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L60",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -4620,7 +5100,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L61",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -4632,7 +5112,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L63",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -4644,7 +5124,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L64",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -4656,7 +5136,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L47",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -4668,7 +5148,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L51",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -4680,19 +5160,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L53",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
       "source": "crm_cli_run_query",
-      "target": "crm_cli_format_query_hits",
+      "target": "crm_search_format_query_hits",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L54",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -5125,6 +5605,198 @@
       "context": "call",
       "source_file": "crm/db.py",
       "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_dm",
+      "target": "crm_discord_bot_intake_handle_query",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_dm",
+      "target": "crm_discord_bot_split_caption",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_dm",
+      "target": "crm_discord_bot_intake_run",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_dm",
+      "target": "crm_discord_bot_pending",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_dm",
+      "target": "crm_discord_bot_join_notes",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_message",
+      "target": "crm_discord_bot_intake_handle_dm",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_query",
+      "target": "crm_search_format_query_hits",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_handle_query",
+      "target": "crm_search_query_contacts",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake_run",
+      "target": "crm_discord_bot_format_capture",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_providers_embeddings_groqembedder_from_env",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_db_contactstore",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L199",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_discord_bot_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L200",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_graph_build_graph",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main_on_message",
+      "target": "crm_discord_bot_save_attachment",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main_on_message",
+      "target": "crm_discord_bot_is_voice",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L231",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main_on_message",
+      "target": "crm_discord_bot_is_image",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -6793,6 +7465,270 @@
       "context": "call",
       "source_file": "tests/test_crm.py",
       "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "crm_db_contactstore",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "tests_helpers_fakeembedder",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "tests_helpers_fakeextractor",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "crm_graph_build_graph",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "crm_discord_bot_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake_graph",
+      "target": "crm_graph_build_graph",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_follow_up_voice_runs_graph_and_stores_notes",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_follow_up_voice_runs_graph_and_stores_notes",
+      "target": "tests_test_discord_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_follow_up_voice_runs_graph_and_stores_notes",
+      "target": "tests_test_crm_touch",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_guild_channel_messages_ignored",
+      "target": "tests_test_discord_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_guild_channel_messages_ignored",
+      "target": "tests_test_crm_touch",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_guild_channel_messages_ignored",
+      "target": "tests_test_crm_count",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L133",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "target": "tests_test_discord_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "target": "tests_test_crm_touch",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "target": "tests_test_crm_count",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "target": "tests_test_crm_count",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "target": "tests_test_discord_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "target": "tests_test_crm_run",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_save_without_voice_skips_transcriber",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_save_without_voice_skips_transcriber",
+      "target": "tests_test_discord_intake",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_save_without_voice_skips_transcriber",
+      "target": "tests_test_crm_touch",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -9005,6 +9941,18 @@
     },
     {
       "source": "crm_cli",
+      "target": "crm_search_format_query_hits",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/cli.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_cli",
       "target": "crm_search_query_contacts",
       "relation": "imports",
       "_origin": "ast",
@@ -9097,6 +10045,66 @@
       "context": "import",
       "source_file": "crm/db.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_db_contactstore",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_graph_build_graph",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_search_format_query_hits",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_search_query_contacts",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_providers_embeddings_groqembedder",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -9697,6 +10705,114 @@
       "context": "import",
       "source_file": "tests/test_crm.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_db_contactstore",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_discord_bot_intake",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_graph_build_graph",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_helpers_fakeembedder",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_helpers_fakeextractor",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_crm_count",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_crm_run",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_crm_touch",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L5",
       "weight": 1.0
     },
     {
@@ -10516,6 +11632,42 @@
       "weight": 1.0
     },
     {
+      "source": "crm_discord_bot",
+      "target": "crm_db",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_graph",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_search",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
       "source": "crm_eval",
       "target": "crm_db",
       "relation": "imports_from",
@@ -10825,6 +11977,78 @@
       "context": "import",
       "source_file": "tests/test_crm.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_db",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_discord_bot",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "crm_graph",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_helpers",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_crm",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_embeddings",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L6",
       "weight": 1.0
     },
     {
@@ -11232,7 +12456,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crm/cli.py",
-      "source_location": "L46",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -12498,7 +13722,7 @@
     },
     {
       "source": "crm_cli",
-      "target": "crm_cli_format_query_hits",
+      "target": "crm_cli_run_query",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12509,24 +13733,13 @@
     },
     {
       "source": "crm_cli",
-      "target": "crm_cli_run_query",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crm/cli.py",
-      "source_location": "L46",
-      "weight": 1.0
-    },
-    {
-      "source": "crm_cli",
       "target": "crm_cli_main",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/cli.py",
-      "source_location": "L58",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -12604,6 +13817,138 @@
       "confidence_score": 1.0,
       "source_file": "crm/db.py",
       "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_save_attachment",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L187",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_pending",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_split_caption",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_join_notes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_format_capture",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_is_voice",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_is_image",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot",
+      "target": "crm_discord_bot_intake",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_discord_bot_main_query_cmd",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L214",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_discord_bot_main_on_ready",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L221",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_discord_bot_main_on_message",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L225",
       "weight": 1.0
     },
     {
@@ -13224,6 +14569,17 @@
     },
     {
       "source": "crm_search",
+      "target": "crm_search_format_query_hits",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/search.py",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_search",
       "target": "crm_search_build_search_document",
       "relation": "contains",
       "_origin": "ast",
@@ -13256,6 +14612,83 @@
       "weight": 1.0
     },
     {
+      "source": "discord_plan",
+      "target": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_user_flow",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_out_of_scope",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_implementation_when_we_build",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_tests_when_we_build",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_docs_when_we_build",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan_discord_dm_adapter_plan_for_a_later_build",
+      "target": "discord_plan_process_when_building",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
       "source": "how_to_run",
       "target": "how_to_run_how_to_run_ai_conference_crm_task_4",
       "relation": "contains",
@@ -13274,7 +14707,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L120",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -13285,29 +14718,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L132",
+      "source_location": "L133",
       "weight": 1.0
     },
     {
       "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
-      "target": "how_to_run_7_what_the_output_looks_like",
+      "target": "how_to_run_6b_discord_dm_adapter",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L198",
-      "weight": 1.0
-    },
-    {
-      "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
-      "target": "how_to_run_8_what_the_graph_does_today",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "how_to_run.md",
-      "source_location": "L229",
+      "source_location": "L199",
       "weight": 1.0
     },
     {
@@ -13323,13 +14745,35 @@
     },
     {
       "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
+      "target": "how_to_run_7_what_the_output_looks_like",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "how_to_run.md",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
+      "target": "how_to_run_8_what_the_graph_does_today",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "how_to_run.md",
+      "source_location": "L268",
+      "weight": 1.0
+    },
+    {
+      "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
       "target": "how_to_run_9_live_tests",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L281",
+      "source_location": "L320",
       "weight": 1.0
     },
     {
@@ -13340,7 +14784,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L295",
+      "source_location": "L334",
       "weight": 1.0
     },
     {
@@ -13351,7 +14795,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L305",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -13384,7 +14828,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L84",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -13406,7 +14850,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L96",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -13510,7 +14954,7 @@
     },
     {
       "source": "progress_so_far_progress_so_far_ai_conference_crm",
-      "target": "progress_so_far_what_is_intentionally_not_built_yet",
+      "target": "progress_so_far_task_8_text_notes_and_semantic_search_interface",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -13532,13 +14976,24 @@
     },
     {
       "source": "progress_so_far_progress_so_far_ai_conference_crm",
+      "target": "progress_so_far_what_is_intentionally_not_built_yet",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "progress_so_far.md",
+      "source_location": "L362",
+      "weight": 1.0
+    },
+    {
+      "source": "progress_so_far_progress_so_far_ai_conference_crm",
       "target": "progress_so_far_where_to_look",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "progress_so_far.md",
-      "source_location": "L353",
+      "source_location": "L374",
       "weight": 1.0
     },
     {
@@ -14056,6 +15511,105 @@
       "confidence_score": 1.0,
       "source_file": "tests/test_crm.py",
       "source_location": "L307",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_test_guild_channel_messages_ignored",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_test_follow_up_voice_runs_graph_and_stores_notes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_test_save_without_voice_skips_transcriber",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_intake",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord",
+      "target": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_intake",
+      "target": "tests_test_discord_intake_graph",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_guild_channel_messages_ignored",
+      "target": "tests_test_discord_test_guild_channel_messages_ignored_boom",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "target": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph_boom",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_discord.py",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -14995,7 +16549,7 @@
     },
     {
       "source": "understandable_so_far_what_you_should_understand_so_far",
-      "target": "understandable_so_far_current_graph_all_tasks",
+      "target": "understandable_so_far_task_8_two_inputs_one_merge_two_jobs_two_paths",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -15006,13 +16560,24 @@
     },
     {
       "source": "understandable_so_far_what_you_should_understand_so_far",
+      "target": "understandable_so_far_current_graph_all_tasks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "understandable_so_far.md",
+      "source_location": "L161",
+      "weight": 1.0
+    },
+    {
+      "source": "understandable_so_far_what_you_should_understand_so_far",
       "target": "understandable_so_far_tooling_how_we_work_not_what_the_crm_is",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "understandable_so_far.md",
-      "source_location": "L179",
+      "source_location": "L198",
       "weight": 1.0
     },
     {
@@ -15456,6 +17021,61 @@
       "weight": 1.0
     },
     {
+      "source": "crm_discord_bot_intake",
+      "target": "crm_discord_bot_intake_run",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake",
+      "target": "crm_discord_bot_intake_init",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake",
+      "target": "crm_discord_bot_intake_handle_message",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake",
+      "target": "crm_discord_bot_intake_handle_query",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_discord_bot_intake",
+      "target": "crm_discord_bot_intake_handle_dm",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
       "source": "crm_providers_base_cardextractor",
       "target": "crm_providers_base_cardextractor_extract_card",
       "relation": "method",
@@ -15739,6 +17359,17 @@
       "confidence_score": 1.0,
       "source_file": "AGENTS.md",
       "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "discord_plan",
+      "target": "telegram_plan",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "discord_plan.md",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -16036,6 +17667,42 @@
       "context": "argument",
       "source_file": "tests/test_crm.py",
       "source_location": "L271",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_guild_channel_messages_ignored",
+      "target": "tests_test_discord_test_image_and_name_stays_pending_without_persist_boom",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_image_and_name_stays_pending_without_persist",
+      "target": "tests_test_discord_test_image_and_name_stays_pending_without_persist_boom",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_discord_test_query_ranks_contact_and_never_calls_graph",
+      "target": "tests_test_discord_test_image_and_name_stays_pending_without_persist_boom",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "tests/test_discord.py",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -16730,7 +18397,18 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "crm/cli.py",
-      "source_location": "L47",
+      "source_location": "L28",
+      "weight": 0.8
+    },
+    {
+      "source": "crm_discord_bot_main",
+      "target": "crm_providers_embeddings_groqembedder",
+      "relation": "uses",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "crm/discord_bot.py",
+      "source_location": "L198",
       "weight": 0.8
     },
     {
@@ -17098,5 +18776,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b095d830057a5747d65eea03ac23e61f639ee7ca"
+  "built_at_commit": "99fb97b04fb8f1bea8a1a2bce1d9b5dc5768a8bf"
 }
