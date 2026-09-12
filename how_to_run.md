@@ -1,8 +1,8 @@
-# How to Run — AI Conference CRM (Task 3)
+# How to Run — AI Conference CRM (Task 4)
 
-This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation, business-card extraction, and an optional voice-note transcription branch.
+This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation, business-card extraction, optional voice-note transcription, and SQLite contact create/update.
 
-CRM storage and embeddings are not used yet.
+Repeating the same card updates the existing row. The default database is `data/crm.db`.
 
 ---
 
@@ -73,7 +73,8 @@ This installs:
 
 - `langgraph` — graph orchestration
 - `pydantic` — `ContactEvidence` schema
-- `openai` — OpenAI-compatible Chat Completions client
+- `groq` — card extract, voice transcription, embeddings
+- `sqlite-vec` — local vector KNN (`contact_embeddings`)
 - `pytest` — test runner
 - the `crm` CLI entry point (optional; see below)
 
@@ -87,7 +88,7 @@ From the project root:
 pytest -q
 ```
 
-The default suite excludes live provider tests (`addopts = -m "not live"`). It does not need a network connection or API key.
+The default suite excludes live provider tests (`addopts = -m "not live"`). It injects a **FakeEmbedder** (and fake card/voice providers). It does not need a network connection or API key and never constructs the live embedder.
 
 ---
 
@@ -127,6 +128,20 @@ python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/
 
 Name + image still complete when `--voice` is omitted. Absence of a voice note is normal success.
 
+Semantic query against stored embeddings (needs `GROQ_API_KEY` and a database that already has contacts):
+
+```bash
+python -m crm query "Who did I meet regarding AI workflow automation?"
+```
+
+Same command via the console script:
+
+```bash
+crm query "Who did I meet regarding AI workflow automation?"
+```
+
+Default result limit is 5 (`--limit` to change). Output is a JSON list of contact rows plus `distance`.
+
 If you installed the package, you can also use:
 
 ```bash
@@ -134,6 +149,8 @@ crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
 The image path must point to an **existing file**. A placeholder file is enough to pass path validation, but only a real card image will extract useful fields.
+
+Successful runs persist a contact to **`data/crm.db`**. A later run with the same normalized email (or phone, or name+company) **updates** that row instead of inserting a second one. New notes are appended. `contact_id` and `crm_action` (`created` or `updated`) are printed in the JSON.
 
 ---
 
@@ -158,7 +175,9 @@ On success, the CLI prints the **final graph state as JSON** (including `contact
     "address": "London"
   },
   "voice_transcript": null,
-  "conversation_notes": null
+  "conversation_notes": null,
+  "contact_id": 1,
+  "crm_action": "created"
 }
 ```
 
@@ -177,7 +196,23 @@ START → load_input → validate_input → extract_card → validate_extraction
      no            yes
       |      transcribe_voice
       \          /
-       merge_context → finalize → END
+       merge_context → persistable?
+            /              \
+      invalid/error         valid
+            |                 |
+            |          normalize_contact → search_crm → match_found?
+            |                                 /              \
+            |                         update_contact    create_contact
+            |                                 \              /
+            \                         verify_write → write_ok?
+             \                              /              \
+              \                     write_failed         write_ok
+               \                           |                 |
+                \                          |    build_search_document
+                 \                         |    → create_embedding
+                  \                        |    → store_embedding
+                   \                       \                 /
+                    \                       finalize → END
 ```
 
 | Node                  | Purpose                                                                 |
@@ -188,7 +223,15 @@ START → load_input → validate_input → extract_card → validate_extraction
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
 | `merge_context`       | Copies a non-empty transcript into `conversation_notes`                 |
-| `finalize`            | Sets `status` to `complete` when evidence is valid                      |
+| `normalize_contact`   | Deterministic email/phone/name/company forms for matching               |
+| `search_crm`          | Looks up an existing row (email, then phone, then name+company)         |
+| `create_contact`      | Inserts a new SQLite row when no match                                  |
+| `update_contact`      | Updates the matched row; blank new fields do not erase existing values  |
+| `verify_write`        | Re-reads the row and checks intended fields                             |
+| `build_search_document` | Joins non-blank `full_name`, `company`, `job_title`, `notes`          |
+| `create_embedding`    | Isolated embedder → vector (live Groq only when no embedder injected)   |
+| `store_embedding`     | Upserts `contact_embeddings` (rowid = contact_id); always replaces      |
+| `finalize`            | Sets `status` to `complete` only after verify; embedding errors stay `error` |
 
 If `validate_input` already set `status="invalid"`, `extract_card` returns the state unchanged and does not call the provider. Prior `invalid`/`error` status also skips `transcribe_voice`.
 
@@ -210,12 +253,10 @@ The live tests are skipped unless `GROQ_API_KEY` is set. Default `pytest` never 
 
 ## 10. What is not implemented yet
 
-The following are intentionally out of scope for Task 3:
+The following are intentionally out of scope for this task:
 
-- PostgreSQL or any database
-- Embeddings / semantic search
-- Duplicate detection
-- Contact create/update storage
+- PostgreSQL, SQLAlchemy, or migrations
+- RAG chat / Telegram or other chat integrations
 - Reminder / task / follow-up-date extraction from the voice note
 
 ---

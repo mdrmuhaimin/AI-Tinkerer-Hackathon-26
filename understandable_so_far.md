@@ -1,0 +1,168 @@
+# What You Should Understand So Far
+
+Last updated: 2026-09-12
+
+This is the learning notebook for the AI Conference CRM. It is the accumulated **What You Should Understand Now** after each completed task.
+
+What was built (files, tests, CLI): [progress_so_far.md](progress_so_far.md).  
+How to run: [how_to_run.md](how_to_run.md).
+
+After every later task that passes verification, the orchestrator must update **this file** and `progress_so_far.md` before stopping.
+
+---
+
+## The split that runs through everything
+
+| Kind | Examples | Who does it |
+| --- | --- | --- |
+| Probabilistic | Read a card image, transcribe voice, turn text into an embedding | Groq, behind a small interface |
+| Deterministic | Validate paths, normalize, match, CREATE/UPDATE, verify the row, KNN lookup, load rows by id | Python + SQLite + sqlite-vec |
+
+Do not ask a model to decide something ordinary code can decide.
+
+---
+
+## Task 1 — LangGraph is state + nodes + edges
+
+LangGraph is not “an agent.” It is a **state object**, named functions, and explicit edges.
+
+If you want to know what the system knows, open `crm/state.py`, not a prompt.
+
+Validation is ordinary Python. Missing name or image is `status="invalid"`. The run still reaches END so you can inspect the result.
+
+**Check:** Why can `finalize` stay on the linear path when input is invalid?
+
+---
+
+## Task 2 — The model does not own the result
+
+The vision model returns a dict. `ContactEvidence.model_validate` decides if that dict is usable.
+
+The graph talks only to `CardExtractor.extract_card(path)`. Groq lives in the provider. Tests inject `FakeExtractor`.
+
+Failure is a state: missing env or a dead API → `error`. Bad JSON → `invalid`.
+
+**Check:** If `validate_input` already set `invalid`, what actually prevents the API call?
+
+---
+
+## Task 3 — Voice is optional context, not identity
+
+A missing `--voice` is a **route**, not an error. `voice_present` skips `transcribe_voice`. Whisper is not called. Notes stay `None`.
+
+Both paths meet at `merge_context`.
+
+```text
+business card → ContactEvidence (who)
+voice note    → conversation_notes (what we discussed)
+```
+
+Voice never overwrites company, email, or other card fields.
+
+**Check:** After `validate_extraction` with no `--voice`, which nodes run, and is Whisper called?
+
+---
+
+## Task 4 — Persistence, keys, and notes
+
+A successful capture is a **row** in SQLite (`data/crm.db`), not only JSON.
+
+Normalize before search: email lowercased, phone as digits, name/company stripped and casefolded.
+
+Match in this order, first hit wins:
+
+1. normalized email
+2. else normalized phone
+3. else normalized name **and** company
+
+Name alone is not a key. Two Sarahs with `sarah@nexatech.com` and `sarah@other.com` are two people. Same name, different company, no email/phone → two rows.
+
+CREATE vs UPDATE is an explicit graph fork (`match_found`). Failed UPDATE does not CREATE.
+
+Notes append (`old` + blank line + `new`). No new notes → leave old notes. A new `null` field does not erase a stored value.
+
+The LLM does not detect duplicates.
+
+**Check:** Why match on email (or name+company) instead of “they sound like the same person”?
+
+---
+
+## Write verification — proof vs hope
+
+`create()` returning an id is a claim. `store.get(id)` is evidence.
+
+`verify_write` re-reads the row and compares intended non-empty fields. Missing row, wrong values, or a get exception → `error`.
+
+`finalize` sets `complete` only when `contact_id` **and** `verified_contact` are present.
+
+The read goes through `ContactStore` (SQLite today). The graph does not need to know the engine.
+
+**Check:** If create returns `contact_id=7` but `get(7)` is missing, what is `status`? Is the CLI allowed to print `complete`?
+
+---
+
+## Task 6 — The vector is an index, not the record
+
+An embedding is a list of numbers that represents the *meaning* of a short document. Nearby vectors mean similar meaning. The CRM still stores the person in `contacts`. `contact_embeddings` only answers: “which `contact_id`s are closest to this question?”
+
+The searchable document is not the whole row. It is `full_name`, `company`, `job_title`, and `notes`. Email and phone help *find the same person later*. They do not help *“who talked about automation?”*
+
+This is a different job from duplicate matching:
+
+| Job | Tool | Example |
+| --- | --- | --- |
+| Same person? | Deterministic keys | same email → UPDATE |
+| Related conversation? | Vector similarity | “workflow automation” → Sarah’s notes |
+
+The embed path runs only after `write_ok`. A failed verify must not write a vector for a row you do not trust. When notes change, DELETE + INSERT replaces that `contact_id`’s vector so search does not keep the old meaning.
+
+The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`.
+
+`crm query` is not a capture-graph node. It embeds the question, asks sqlite-vec for IDs, then `ContactStore.get`.
+
+**Check:** After a notes update, why must the old vector be replaced — and why is that not the same as changing the `contacts` row?
+
+---
+
+## Current graph (all tasks)
+
+```text
+START
+  ↓
+load_input → validate_input → extract_card → validate_extraction
+  ↓
+voice_present?
+   /        \
+ no          yes → transcribe_voice
+  \          /
+   merge_context
+        ↓
+   persistable?
+      /      \
+ finalize  normalize_contact → search_crm → match_found?
+                                    /              \
+                          update_contact      create_contact
+                                    \              /
+                                     verify_write
+                                          ↓
+                                      write_ok?
+                                       /        \
+                                 fail            ok
+                                  |               |
+                                  |    build_search_document
+                                  |         ↓
+                                  |    create_embedding
+                                  |         ↓
+                                  |    store_embedding
+                                   \        /
+                                    finalize → END
+```
+
+---
+
+## Tooling (how we work, not what the CRM is)
+
+- **Ponytail:** smallest **code**. Does not skip teaching.
+- **Graphify-Labs Graphify** (https://github.com/Graphify-Labs/graphify): query `graphify-out/` before exploring files, then teach from what you found.
+
+Required reports after every specified task: Learning Step → Implementation Update → Evaluation → What You Should Understand Now. Then update this file and `progress_so_far.md`.

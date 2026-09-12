@@ -15,3 +15,13 @@ class CardExtractor(Protocol):
 
 class VoiceTranscriber(Protocol):
     def transcribe(self, voice_path: str) -> str: ...
+
+
+class EmbedderError(Exception):
+    """Raised when embedding generation fails."""
+
+
+class EmbeddingProvider(Protocol):
+    dimension: int
+
+    def embed(self, text: str) -> list[float]: ...

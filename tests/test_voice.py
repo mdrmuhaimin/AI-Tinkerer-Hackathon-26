@@ -6,7 +6,7 @@ from crm.graph import build_graph
 from crm.providers.base import ExtractorError, TranscriberError
 from crm.schemas import ContactEvidence
 from crm.state import CRMState
-from tests.helpers import FakeExtractor, FakeTranscriber
+from tests.helpers import FakeEmbedder, FakeExtractor, FakeTranscriber
 
 FULL_PAYLOAD = {
     "full_name": "Sarah Khan",
@@ -51,6 +51,7 @@ def _touch(path: Path) -> str:
 
 
 def _graph(
+    tmp_path: Path,
     extractor: FakeExtractor | None = None,
     transcriber: FakeTranscriber | None = None,
 ):
@@ -58,7 +59,12 @@ def _graph(
         extractor = FakeExtractor(FULL_PAYLOAD)
     if transcriber is None:
         transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
-    return build_graph(extractor=extractor, transcriber=transcriber)
+    return build_graph(
+        extractor=extractor,
+        transcriber=transcriber,
+        db_path=tmp_path / "crm.db",
+        embedder=FakeEmbedder(),
+    )
 
 
 def _stream_node_names(graph, state: CRMState) -> list[str]:
@@ -68,7 +74,7 @@ def _stream_node_names(graph, state: CRMState) -> list[str]:
 def test_name_and_image_without_voice_completes(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
-    result = _graph(transcriber=transcriber).invoke(
+    result = _graph(tmp_path, transcriber=transcriber).invoke(
         _pending(name="Sarah Khan", image_path=image)
     )
 
@@ -85,7 +91,7 @@ def test_no_voice_skips_transcribe_node_and_leaves_transcript_none(
 ) -> None:
     image = _touch(tmp_path / "card.jpg")
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
-    graph = _graph(transcriber=transcriber)
+    graph = _graph(tmp_path, transcriber=transcriber)
     state = _pending(name="Sarah Khan", image_path=image)
 
     nodes = _stream_node_names(graph, state)
@@ -96,6 +102,13 @@ def test_no_voice_skips_transcribe_node_and_leaves_transcript_none(
         "extract_card",
         "validate_extraction",
         "merge_context",
+        "normalize_contact",
+        "search_crm",
+        "create_contact",
+        "verify_write",
+        "build_search_document",
+        "create_embedding",
+        "store_embedding",
         "finalize",
     ]
 
@@ -110,7 +123,7 @@ def test_voice_file_transcribes_and_sets_conversation_notes(tmp_path: Path) -> N
     image = _touch(tmp_path / "card.jpg")
     voice = _touch(tmp_path / "sarah_note.ogg")
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
-    graph = _graph(transcriber=transcriber)
+    graph = _graph(tmp_path, transcriber=transcriber)
     state = _pending(name="Sarah Khan", image_path=image, voice_path=voice)
 
     events = list(graph.stream(state))
@@ -122,6 +135,13 @@ def test_voice_file_transcribes_and_sets_conversation_notes(tmp_path: Path) -> N
         "validate_extraction",
         "transcribe_voice",
         "merge_context",
+        "normalize_contact",
+        "search_crm",
+        "create_contact",
+        "verify_write",
+        "build_search_document",
+        "create_embedding",
+        "store_embedding",
         "finalize",
     ]
     assert transcriber.calls == [voice]
@@ -137,7 +157,7 @@ def test_voice_does_not_overwrite_contact_evidence(tmp_path: Path) -> None:
     voice = _touch(tmp_path / "sarah_note.ogg")
     extractor = FakeExtractor(FULL_PAYLOAD)
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
-    result = _graph(extractor=extractor, transcriber=transcriber).invoke(
+    result = _graph(tmp_path, extractor=extractor, transcriber=transcriber).invoke(
         _pending(name="Sarah Khan", image_path=image, voice_path=voice)
     )
 
@@ -152,7 +172,7 @@ def test_transcriber_error_only_when_voice_supplied(tmp_path: Path) -> None:
     voice = _touch(tmp_path / "sarah_note.ogg")
 
     failing = FakeTranscriber(error=TranscriberError("stt unavailable"))
-    with_voice = _graph(transcriber=failing).invoke(
+    with_voice = _graph(tmp_path, transcriber=failing).invoke(
         _pending(name="Sarah Khan", image_path=image, voice_path=voice)
     )
     assert with_voice["status"] == "error"
@@ -162,7 +182,7 @@ def test_transcriber_error_only_when_voice_supplied(tmp_path: Path) -> None:
     assert with_voice["conversation_notes"] is None
 
     unused = FakeTranscriber(error=TranscriberError("stt unavailable"))
-    without_voice = _graph(transcriber=unused).invoke(
+    without_voice = _graph(tmp_path, transcriber=unused).invoke(
         _pending(name="Sarah Khan", image_path=image)
     )
     assert without_voice["status"] == "complete"
@@ -175,7 +195,7 @@ def test_prior_failure_does_not_call_transcriber(tmp_path: Path) -> None:
     voice = _touch(tmp_path / "sarah_note.ogg")
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
 
-    invalid = _graph(transcriber=transcriber).invoke(
+    invalid = _graph(tmp_path, transcriber=transcriber).invoke(
         _pending(name=None, image_path=image, voice_path=voice)
     )
     assert invalid["status"] == "invalid"
@@ -183,7 +203,7 @@ def test_prior_failure_does_not_call_transcriber(tmp_path: Path) -> None:
 
     extract_fail = FakeExtractor(error=ExtractorError("provider unavailable"))
     unused = FakeTranscriber(FAKE_TRANSCRIPT)
-    errored = _graph(extractor=extract_fail, transcriber=unused).invoke(
+    errored = _graph(tmp_path, extractor=extract_fail, transcriber=unused).invoke(
         _pending(name="Sarah Khan", image_path=image, voice_path=voice)
     )
     assert errored["status"] == "error"
@@ -205,10 +225,14 @@ def test_default_suite_does_not_construct_live_groq(
         "crm.graph.GroqVoiceTranscriber.from_env",
         classmethod(lambda cls: boom()),
     )
+    monkeypatch.setattr(
+        "crm.graph.GroqEmbedder.from_env",
+        classmethod(lambda cls: boom()),
+    )
 
     image = _touch(tmp_path / "card.jpg")
     voice = _touch(tmp_path / "sarah_note.ogg")
-    result = _graph().invoke(
+    result = _graph(tmp_path).invoke(
         _pending(name="Sarah Khan", image_path=image, voice_path=voice)
     )
     assert result["status"] == "complete"

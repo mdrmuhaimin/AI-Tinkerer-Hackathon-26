@@ -5,7 +5,7 @@ import sys
 from crm.cli import main
 from crm.graph import build_graph
 from crm.providers.base import ExtractorError
-from tests.helpers import FakeExtractor, FakeTranscriber
+from tests.helpers import FakeEmbedder, FakeExtractor, FakeTranscriber
 
 
 def _touch_image(tmp_path) -> str:
@@ -16,6 +16,7 @@ def _touch_image(tmp_path) -> str:
 
 def _patch_graph(
     monkeypatch,
+    tmp_path,
     extractor: FakeExtractor,
     transcriber: FakeTranscriber | None = None,
 ) -> None:
@@ -23,7 +24,12 @@ def _patch_graph(
         transcriber = FakeTranscriber()
     monkeypatch.setattr(
         "crm.cli.build_graph",
-        lambda: build_graph(extractor=extractor, transcriber=transcriber),
+        lambda: build_graph(
+            extractor=extractor,
+            transcriber=transcriber,
+            db_path=tmp_path / "crm.db",
+            embedder=FakeEmbedder(),
+        ),
     )
 
 
@@ -40,7 +46,7 @@ def test_cli_valid_prints_json_status(tmp_path, capsys, monkeypatch) -> None:
             "address": None,
         }
     )
-    _patch_graph(monkeypatch, fake)
+    _patch_graph(monkeypatch, tmp_path, fake)
 
     code = main(["--name", "Ada Lovelace", "--image", image])
     captured = capsys.readouterr()
@@ -83,7 +89,7 @@ def test_cli_module_smoke_invalid_avoids_provider(tmp_path) -> None:
 def test_cli_invalid_prints_json_and_exits_1(tmp_path, capsys, monkeypatch) -> None:
     image = _touch_image(tmp_path)
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
-    _patch_graph(monkeypatch, fake)
+    _patch_graph(monkeypatch, tmp_path, fake)
 
     code = main(["--name", "   ", "--image", image])
     captured = capsys.readouterr()
@@ -107,7 +113,7 @@ def test_cli_voice_prints_transcript_and_notes(tmp_path, capsys, monkeypatch) ->
         "We discussed a possible pilot.\n"
         "Follow up next week and send her the demo."
     )
-    _patch_graph(monkeypatch, fake, transcriber)
+    _patch_graph(monkeypatch, tmp_path, fake, transcriber)
 
     code = main(["--name", "Ada Lovelace", "--image", image, "--voice", str(voice)])
     payload = json.loads(capsys.readouterr().out)
@@ -122,7 +128,7 @@ def test_cli_voice_prints_transcript_and_notes(tmp_path, capsys, monkeypatch) ->
 def test_cli_extractor_error_exits_1(tmp_path, capsys, monkeypatch) -> None:
     image = _touch_image(tmp_path)
     fake = FakeExtractor(error=ExtractorError("provider unavailable"))
-    _patch_graph(monkeypatch, fake)
+    _patch_graph(monkeypatch, tmp_path, fake)
 
     code = main(["--name", "Ada Lovelace", "--image", image])
     captured = capsys.readouterr()
