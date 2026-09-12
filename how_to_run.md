@@ -1,8 +1,8 @@
-# How to Run — AI Conference CRM (Task 1)
+# How to Run — AI Conference CRM (Task 2)
 
-This document describes how to set up and run what has been built so far: the **LangGraph skeleton** with a CLI and deterministic input validation.
+This document describes how to set up and run what has been built so far: the **LangGraph capture graph** with deterministic input validation and business-card extraction.
 
-No LLM, database, or embeddings are used yet.
+Voice transcription, CRM storage, and embeddings are not used yet.
 
 ---
 
@@ -72,6 +72,8 @@ pip install -e ".[dev]"
 This installs:
 
 - `langgraph` — graph orchestration
+- `pydantic` — `ContactEvidence` schema
+- `openai` — OpenAI-compatible Chat Completions client
 - `pytest` — test runner
 - the `crm` CLI entry point (optional; see below)
 
@@ -85,31 +87,37 @@ From the project root:
 pytest -q
 ```
 
-Expected result:
-
-```text
-8 passed
-```
-
-The tests cover:
-
-- Valid name + existing image path → `status: complete`
-- Missing or blank name → `status: invalid`
-- Missing or nonexistent image → `status: invalid`
-- Optional voice path (absent, blank, or valid file)
-- Graph node order via `graph.stream()`
+The default suite excludes live provider tests (`addopts = -m "not live"`). It does not need a network connection or API key.
 
 ---
 
-## 5. Run the CLI
+## 5. Provider environment variables
 
-The main way to run the app:
+Live extraction uses the official Groq Python client and reads **only** `GROQ_API_KEY`.
+
+The key may be set in the system environment or in a local `.env` file (gitignored). The app loads `.env` via `python-dotenv`; do not put keys in source files.
+
+```bash
+# .env
+GROQ_API_KEY=...
+
+# or in the shell
+export GROQ_API_KEY=...
+```
+
+The vision call follows Groq's documented API: `from groq import Groq`, local image as a base64 `data:` URL, model `qwen/qwen3.6-27b`, and `response_format={"type": "json_object"}`.
+
+If `GROQ_API_KEY` is missing on a live CLI run, extraction fails and the graph finishes with `status: error`.
+
+---
+
+## 6. Run the CLI
 
 ```bash
 python -m crm --name "Ada Lovelace" --image /path/to/card.jpg
 ```
 
-With an optional voice file:
+With an optional voice file (path is stored; transcription is not implemented yet):
 
 ```bash
 python -m crm --name "Ada Lovelace" --image /path/to/card.jpg --voice /path/to/note.wav
@@ -121,20 +129,13 @@ If you installed the package, you can also use:
 crm --name "Ada Lovelace" --image /path/to/card.jpg
 ```
 
-### Use a real file for the image
-
-The image path must point to an **existing file**. For a quick test, create a placeholder:
-
-```bash
-echo "placeholder" > /tmp/card.jpg
-python -m crm --name "Ada Lovelace" --image /tmp/card.jpg
-```
+The image path must point to an **existing file**. A placeholder file is enough to pass path validation, but only a real card image will extract useful fields.
 
 ---
 
-## 6. What the output looks like
+## 7. What the output looks like
 
-On success, the CLI prints the **final graph state as JSON** and exits with code `0`:
+On success, the CLI prints the **final graph state as JSON** (including `contact_evidence`) and exits with code `0`:
 
 ```json
 {
@@ -142,70 +143,66 @@ On success, the CLI prints the **final graph state as JSON** and exits with code
   "image_path": "/tmp/card.jpg",
   "voice_path": null,
   "status": "complete",
-  "errors": []
+  "errors": [],
+  "contact_evidence": {
+    "full_name": "Ada Lovelace",
+    "company": "Analytical Engines",
+    "job_title": "Mathematician",
+    "email": "ada@example.com",
+    "phone": "+44 20 0000 0000",
+    "website": "https://ada.example",
+    "address": "London"
+  }
 }
 ```
 
-On validation failure, it still prints JSON but exits with code `1`:
-
-```json
-{
-  "name": "   ",
-  "image_path": "/tmp/card.jpg",
-  "voice_path": null,
-  "status": "invalid",
-  "errors": [
-    "name is required"
-  ]
-}
-```
-
-Check the exit code:
-
-```bash
-python -m crm --name "Ada Lovelace" --image /tmp/card.jpg
-echo $?   # 0 on success
-
-python -m crm --name "" --image /tmp/card.jpg
-echo $?   # 1 on validation failure
-```
+On validation or extraction failure, it still prints JSON but exits with code `1` (`status` is `invalid` or `error`).
 
 ---
 
-## 7. What the graph does today
+## 8. What the graph does today
 
-Current flow:
+Current flow (linear edges only):
 
 ```text
-START → load_input → validate_input → finalize → END
+START → load_input → validate_input → extract_card → validate_extraction → finalize → END
 ```
 
-| Node            | Purpose                                              |
-|-----------------|------------------------------------------------------|
-| `load_input`    | Copies CLI inputs into graph state                   |
-| `validate_input`| Checks name, image file, optional voice file         |
-| `finalize`      | Sets `status` to `complete` when validation passed   |
+| Node                  | Purpose                                                                 |
+|-----------------------|-------------------------------------------------------------------------|
+| `load_input`          | Copies CLI inputs into graph state                                      |
+| `validate_input`      | Checks name, image file, optional voice file                            |
+| `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
+| `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
+| `finalize`            | Sets `status` to `complete` when evidence is valid                      |
 
-Validation rules:
-
-- **Name** — required; blank or whitespace-only names fail
-- **Image** — required; path must exist as a file
-- **Voice** — optional; if provided, path must exist as a file
+If `validate_input` already set `status="invalid"`, `extract_card` returns the state unchanged and does not call the provider.
 
 ---
 
-## 8. What is not implemented yet
+## 9. Live extraction test
 
-The following are intentionally out of scope for Task 1:
+Requires `GROQ_API_KEY` (environment or `.env`) and `input/visiting_card.png`.
 
-- LLM / business-card extraction
+Because the default pytest config is `-m "not live"`, override it:
+
+```bash
+pytest -q -m live --override-ini addopts=
+```
+
+The live test is skipped unless `GROQ_API_KEY` is set.
+
+---
+
+## 10. What is not implemented yet
+
+The following are intentionally out of scope for Task 2:
+
 - Voice transcription
 - PostgreSQL or any database
 - Embeddings / semantic search
 - Duplicate detection
 - Contact create/update storage
-
-Those will come in later tasks when specified.
 
 ---
 
@@ -219,6 +216,10 @@ Those will come in later tasks when specified.
 
 - Use an absolute path or a path relative to your current directory.
 - Confirm the file exists: `ls -l /path/to/card.jpg`
+
+**`status: error` and missing environment variables**
+
+- Set `GROQ_API_KEY` in `.env` or export it in your shell before a live run.
 
 **Tests fail after pulling new code**
 
