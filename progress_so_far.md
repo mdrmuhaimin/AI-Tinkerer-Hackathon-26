@@ -28,7 +28,7 @@ The system is built as an explicit LangGraph. Deterministic Python handles valid
 
 No PostgreSQL or Telegram yet.
 
-The full current graph (Tasks 1–7) is in [understandable_so_far.md](understandable_so_far.md). Observability wraps that graph; it does not add nodes.
+The full current graph (Tasks 1–8) is in [understandable_so_far.md](understandable_so_far.md). Observability wraps that graph; it does not add nodes. Search is a separate CLI path.
 
 ---
 
@@ -204,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after Task 7: **83 passed, 2 deselected**.
+Last recorded default run after Task 8: **93 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -335,6 +335,27 @@ python -m crm.eval
 Default pytest does not upload and does not need a LangSmith key.
 
 **Key files:** `crm/eval.py`, `crm/tracing.py`, `eval/dataset.json`, `eval/latest_experiment.json`, `tests/test_eval.py`
+
+---
+
+## Task 8 — Text Notes and Semantic Search Interface
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 93 passed, 2 deselected).
+
+**What we built:** Optional `--notes` on capture. Typed and voice context merge in ordinary Python. `crm query` prints a short ranked list from SQLite rows. Search does not run the capture graph.
+
+**Graph:** same nodes. `load_input` now copies `typed_notes`. `merge_context` joins typed and/or voice (`"\n\n"` when both). No notes AI node.
+
+**CLI:**
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Potential consulting lead."
+python -m crm query "Who did I speak with about data warehouse consulting?"
+```
+
+`--notes` and `--voice` are both optional. Query default `--limit` 5. Results are name, company, title, notes from `contacts`.
+
+**Key files:** `crm/graph.py` (`merge_context`), `crm/cli.py`, `crm/state.py`, `crm/search.py`, `tests/test_voice.py`, `tests/test_crm.py`, `tests/test_cli.py`
 
 ---
 

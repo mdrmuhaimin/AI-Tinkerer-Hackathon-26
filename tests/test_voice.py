@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from crm.graph import build_graph
+from crm.graph import build_graph, merge_context
 from crm.providers.base import ExtractorError, TranscriberError
 from crm.schemas import ContactEvidence
 from crm.state import CRMState
@@ -31,11 +31,13 @@ def _pending(
     name: str | None,
     image_path: str | None,
     voice_path: str | None = None,
+    typed_notes: str | None = None,
 ) -> CRMState:
     return {
         "name": name,
         "image_path": image_path,
         "voice_path": voice_path,
+        "typed_notes": typed_notes,
         "status": "pending",
         "errors": [],
         "contact_evidence": None,
@@ -69,6 +71,62 @@ def _graph(
 
 def _stream_node_names(graph, state: CRMState) -> list[str]:
     return [next(iter(chunk)) for chunk in graph.stream(state)]
+
+
+def test_merge_context_typed_and_voice_rules() -> None:
+    base = {"status": "valid", "typed_notes": None, "voice_transcript": None}
+    assert merge_context(base)["conversation_notes"] is None
+    assert merge_context({**base, "typed_notes": "   "})["conversation_notes"] is None
+    assert merge_context({**base, "typed_notes": "hello"})["conversation_notes"] == "hello"
+    assert merge_context({**base, "voice_transcript": "voice"})["conversation_notes"] == "voice"
+    assert (
+        merge_context({**base, "typed_notes": "hello", "voice_transcript": "voice"})[
+            "conversation_notes"
+        ]
+        == "hello\n\nvoice"
+    )
+    assert (
+        merge_context({**base, "typed_notes": "  ", "voice_transcript": "voice"})[
+            "conversation_notes"
+        ]
+        == "voice"
+    )
+
+
+def test_typed_notes_only_does_not_call_transcriber(tmp_path: Path) -> None:
+    image = _touch(tmp_path / "card.jpg")
+    transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
+    graph = _graph(tmp_path, transcriber=transcriber)
+    state = _pending(
+        name="Sarah Khan",
+        image_path=image,
+        typed_notes="Potential consulting opportunity.",
+    )
+    nodes = _stream_node_names(graph, state)
+    result = graph.invoke(state)
+    assert "transcribe_voice" not in nodes
+    assert transcriber.calls == []
+    assert result["status"] == "complete"
+    assert result["voice_transcript"] is None
+    assert result["conversation_notes"] == "Potential consulting opportunity."
+
+
+def test_typed_and_voice_both_in_conversation_notes(tmp_path: Path) -> None:
+    image = _touch(tmp_path / "card.jpg")
+    voice = _touch(tmp_path / "sarah_note.ogg")
+    typed = "Potential consulting opportunity."
+    transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
+    result = _graph(tmp_path, transcriber=transcriber).invoke(
+        _pending(
+            name="Sarah Khan",
+            image_path=image,
+            voice_path=voice,
+            typed_notes=typed,
+        )
+    )
+    assert transcriber.calls == [voice]
+    assert result["voice_transcript"] == FAKE_TRANSCRIPT
+    assert result["conversation_notes"] == f"{typed}\n\n{FAKE_TRANSCRIPT}"
 
 
 def test_name_and_image_without_voice_completes(tmp_path: Path) -> None:

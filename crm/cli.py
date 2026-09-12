@@ -16,6 +16,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--name", default=None)
     parser.add_argument("--image", default=None)
     parser.add_argument("--voice", default=None)
+    parser.add_argument("--notes", default=None)
     sub = parser.add_subparsers(dest="command")
     query = sub.add_parser("query")
     query.add_argument("text")
@@ -23,26 +24,50 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def _run_query(args: argparse.Namespace) -> int:
-    embedder = GroqEmbedder.from_env()
-    store = ContactStore(DEFAULT_DB_PATH, embedding_dim=embedder.dimension)
-    hits = query_contacts(store, embedder, args.text, args.limit)
-    print(json.dumps(hits, indent=2))
+def _format_query_hits(hits: list[dict]) -> str:
+    if not hits:
+        return "No matches."
+    blocks = []
+    for i, hit in enumerate(hits, 1):
+        lines = [f"{i}. {hit.get('full_name') or 'Unknown'}"]
+        for key in ("company", "job_title"):
+            value = hit.get(key)
+            if value and str(value).strip():
+                lines.append(f"   {value}")
+        notes = hit.get("notes")
+        if notes and str(notes).strip():
+            lines.append("")
+            for line in str(notes).splitlines():
+                lines.append(f"   {line}")
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)
+
+
+def _run_query(args: argparse.Namespace, embedder=None, store=None) -> int:
+    active_embedder = embedder if embedder is not None else GroqEmbedder.from_env()
+    active_store = (
+        store
+        if store is not None
+        else ContactStore(DEFAULT_DB_PATH, embedding_dim=active_embedder.dimension)
+    )
+    hits = query_contacts(active_store, active_embedder, args.text, args.limit)
+    print(_format_query_hits(hits))
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, embedder=None, store=None) -> int:
     load_dotenv()
     enable_tracing()
     args = _parse_args(argv)
     if args.command == "query":
-        return _run_query(args)
+        return _run_query(args, embedder=embedder, store=store)
     graph = build_graph()
     result = graph.invoke(
         {
             "name": args.name,
             "image_path": args.image,
             "voice_path": args.voice,
+            "typed_notes": args.notes,
             "status": "pending",
             "errors": [],
             "contact_evidence": None,
@@ -60,6 +85,7 @@ def main(argv: list[str] | None = None) -> int:
         "name": result.get("name"),
         "image_path": result.get("image_path"),
         "voice_path": result.get("voice_path"),
+        "typed_notes": result.get("typed_notes"),
         "status": result.get("status"),
         "errors": result.get("errors", []),
         "contact_evidence": result.get("contact_evidence"),

@@ -125,6 +125,83 @@ def test_cli_voice_prints_transcript_and_notes(tmp_path, capsys, monkeypatch) ->
     assert transcriber.calls == [str(voice)]
 
 
+def test_cli_notes_stored(tmp_path, capsys, monkeypatch) -> None:
+    image = _touch_image(tmp_path)
+    fake = FakeExtractor({"full_name": "Ada Lovelace"})
+    _patch_graph(monkeypatch, tmp_path, fake)
+
+    code = main(
+        ["--name", "Ada Lovelace", "--image", image, "--notes", "Met at AI Tinkerer."]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert code == 0
+    assert payload["status"] == "complete"
+    assert payload["conversation_notes"] == "Met at AI Tinkerer."
+    assert payload["voice_transcript"] is None
+
+
+def test_cli_notes_and_voice_merge(tmp_path, capsys, monkeypatch) -> None:
+    image = _touch_image(tmp_path)
+    voice = tmp_path / "sarah_note.ogg"
+    voice.write_bytes(b"placeholder")
+    fake = FakeExtractor({"full_name": "Ada Lovelace"})
+    transcriber = FakeTranscriber("Met at LEAP. Discussed data warehouse modernization.")
+    _patch_graph(monkeypatch, tmp_path, fake, transcriber)
+
+    code = main(
+        [
+            "--name",
+            "Ada Lovelace",
+            "--image",
+            image,
+            "--notes",
+            "Potential consulting lead.",
+            "--voice",
+            str(voice),
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert code == 0
+    assert payload["voice_transcript"] == transcriber.transcript
+    assert payload["conversation_notes"] == (
+        "Potential consulting lead.\n\n" + transcriber.transcript
+    )
+
+
+def test_query_ranked_list_does_not_run_graph_or_write(
+    tmp_path, capsys, monkeypatch
+) -> None:
+    from tests.test_crm import SARAH, _count, _run
+    from tests.test_embeddings import DECOY, DECOY_NOTES, RELATED_QUERY, WORKFLOW_NOTES
+
+    first, store = _run(tmp_path, SARAH, transcript=WORKFLOW_NOTES)
+    _run(tmp_path, DECOY, transcript=DECOY_NOTES, store=store)
+    before = _count(store)
+
+    def boom(*_args, **_kwargs):
+        raise AssertionError("capture graph invoked")
+
+    monkeypatch.setattr("crm.cli.build_graph", boom)
+
+    code = main(
+        ["query", RELATED_QUERY],
+        embedder=FakeEmbedder(),
+        store=store,
+    )
+    out = capsys.readouterr().out
+
+    assert code == 0
+    assert "1. Sarah Khan" in out
+    assert "NexaTech Solutions" in out
+    assert WORKFLOW_NOTES.split()[0] in out or "workflow" in out.lower()
+    assert not out.lstrip().startswith("{")
+    assert not out.lstrip().startswith("[")
+    assert _count(store) == before
+    assert store.get(first["contact_id"])["full_name"] == "Sarah Khan"
+
+
 def test_cli_extractor_error_exits_1(tmp_path, capsys, monkeypatch) -> None:
     image = _touch_image(tmp_path)
     fake = FakeExtractor(error=ExtractorError("provider unavailable"))

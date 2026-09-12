@@ -30,11 +30,13 @@ def _pending(
     name: str | None,
     image_path: str | None,
     voice_path: str | None = None,
+    typed_notes: str | None = None,
 ) -> CRMState:
     return {
         "name": name,
         "image_path": image_path,
         "voice_path": voice_path,
+        "typed_notes": typed_notes,
         "status": "pending",
         "errors": [],
         "contact_evidence": None,
@@ -58,6 +60,7 @@ def _run(
     payload: dict,
     *,
     transcript: str | None = None,
+    typed_notes: str | None = None,
     store: ContactStore | None = None,
     name: str | None = None,
 ):
@@ -79,6 +82,7 @@ def _run(
             name=name or payload.get("full_name") or "Someone",
             image_path=image,
             voice_path=voice,
+            typed_notes=typed_notes,
         )
     )
     return result, active
@@ -189,7 +193,34 @@ def test_create_without_voice_notes_null_and_complete(tmp_path: Path) -> None:
     result, store = _run(tmp_path, SARAH)
     assert result["status"] == "complete"
     assert result["conversation_notes"] is None
+    assert result.get("typed_notes") in (None, "")
     assert store.get(result["contact_id"])["notes"] is None
+
+
+def test_typed_notes_stored_in_notes(tmp_path: Path) -> None:
+    result, store = _run(tmp_path, SARAH, typed_notes="Met at AI Tinkerer.")
+    assert result["status"] == "complete"
+    assert result["conversation_notes"] == "Met at AI Tinkerer."
+    assert store.get(result["contact_id"])["notes"] == "Met at AI Tinkerer."
+
+
+def test_typed_and_voice_notes_both_stored(tmp_path: Path) -> None:
+    typed = "Potential consulting opportunity."
+    voice = "Met at LEAP and discussed data warehouse modernization."
+    result, store = _run(tmp_path, SARAH, transcript=voice, typed_notes=typed)
+    expected = f"{typed}\n\n{voice}"
+    assert result["conversation_notes"] == expected
+    assert store.get(result["contact_id"])["notes"] == expected
+
+
+def test_later_typed_notes_append_not_replace(tmp_path: Path) -> None:
+    first, store = _run(tmp_path, SARAH, typed_notes="First meeting notes.")
+    second, _ = _run(tmp_path, SARAH, typed_notes="Follow up next week.", store=store)
+    assert second["contact_id"] == first["contact_id"]
+    assert _count(store) == 1
+    assert store.get(first["contact_id"])["notes"] == (
+        "First meeting notes.\n\nFollow up next week."
+    )
 
 
 def test_conversation_notes_stored_in_notes(tmp_path: Path) -> None:

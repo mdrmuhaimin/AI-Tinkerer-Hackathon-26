@@ -39,6 +39,7 @@ def load_input(state: CRMState) -> CRMState:
         "name": state.get("name"),
         "image_path": state.get("image_path"),
         "voice_path": state.get("voice_path"),
+        "typed_notes": state.get("typed_notes"),
         "status": "loaded",
         "errors": [],
         "contact_evidence": None,
@@ -158,10 +159,19 @@ def transcribe_voice(state: CRMState, transcriber: VoiceTranscriber | None) -> C
 
 
 def merge_context(state: CRMState) -> CRMState:
+    typed = state.get("typed_notes")
     transcript = state.get("voice_transcript")
-    if isinstance(transcript, str) and transcript.strip():
-        return {**state, "conversation_notes": transcript}
-    return {**state, "conversation_notes": None}
+    has_typed = isinstance(typed, str) and typed.strip()
+    has_voice = isinstance(transcript, str) and transcript.strip()
+    if has_typed and has_voice:
+        notes = f"{typed}\n\n{transcript}"
+    elif has_typed:
+        notes = typed
+    elif has_voice:
+        notes = transcript
+    else:
+        notes = None
+    return {**state, "conversation_notes": notes}
 
 
 def persistable(state: CRMState) -> str:

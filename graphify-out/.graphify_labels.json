@@ -1,11 +1,10 @@
 {
   "0": "How to Run — AI Conference CRM (Task 4)",
-  "1": "ExtractorError",
+  "1": "test_cli.py",
   "2": "AI Conference CRM — Learning-First Development Harness",
   "3": "test_eval.py",
   "4": "graph.py",
   "5": "FakeTranscriber",
-  "6": "test_cli.py",
   "8": "FakeExtractor",
   "9": "AI Conference CRM Agent",
   "10": "crm/__init__.py",

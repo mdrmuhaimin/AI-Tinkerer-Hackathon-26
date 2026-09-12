@@ -10,11 +10,13 @@ def _pending(
     name: str | None,
     image_path: str | None,
     voice_path: str | None = None,
+    typed_notes: str | None = None,
 ) -> CRMState:
     return {
         "name": name,
         "image_path": image_path,
         "voice_path": voice_path,
+        "typed_notes": typed_notes,
         "status": "pending",
         "errors": [],
         "contact_evidence": None,

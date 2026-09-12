@@ -135,27 +135,53 @@ This writes `eval/latest_experiment.json` with per-example evaluator scores and 
 python -m crm --name "Sarah Khan" --image input/visiting_card.png
 ```
 
+With optional typed notes (no transcription):
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Met at AI Tinkerer. Interested in workflow automation."
+```
+
 With an optional local voice file (transcribed when the path is a real file):
 
 ```bash
 python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
 ```
 
-Name + image still complete when `--voice` is omitted. Absence of a voice note is normal success.
-
-Semantic query against stored embeddings (needs `GROQ_API_KEY` and a database that already has contacts):
+Typed notes and voice can be combined. Merge is deterministic (typed, blank line, then transcript):
 
 ```bash
-python -m crm query "Who did I meet regarding AI workflow automation?"
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --notes "Potential consulting lead." --voice input/6134386456120009929.ogg
+```
+
+Name + image still complete when `--voice` and `--notes` are omitted. Absence of notes is normal success.
+
+Semantic query against stored embeddings (needs `GROQ_API_KEY` and a database that already has contacts). This does **not** run the capture graph:
+
+```bash
+python -m crm query "Who did I meet regarding data warehouse consulting?"
 ```
 
 Same command via the console script:
 
 ```bash
-crm query "Who did I meet regarding AI workflow automation?"
+crm query "Who did I meet regarding data warehouse consulting?"
 ```
 
-Default result limit is 5 (`--limit` to change). Output is a JSON list of contact rows plus `distance`.
+Default result limit is 5 (`--limit` to change). Output is a ranked text list from SQLite contact rows:
+
+```text
+1. Sarah Khan
+   NexaTech Solutions
+   Director of Product
+
+   Met at LEAP.
+   Discussed data warehouse modernization.
+
+2. Omar Rahman
+   DataWorks
+
+   Discussed analytics infrastructure.
+```
 
 If you installed the package, you can also use:
 
@@ -232,12 +258,12 @@ START → load_input → validate_input → extract_card → validate_extraction
 
 | Node                  | Purpose                                                                 |
 |-----------------------|-------------------------------------------------------------------------|
-| `load_input`          | Copies CLI inputs into graph state                                      |
+| `load_input`          | Copies CLI inputs (`name`, `image_path`, `voice_path`, `typed_notes`) into graph state |
 | `validate_input`      | Checks name, image file, optional voice file                            |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
-| `merge_context`       | Copies a non-empty transcript into `conversation_notes`                 |
+| `merge_context`       | Deterministic: typed only / voice only / both (`typed\\n\\nvoice`) / neither → `None` |
 | `normalize_contact`   | Deterministic email/phone/name/company forms for matching               |
 | `search_crm`          | Looks up an existing row (email, then phone, then name+company)         |
 | `create_contact`      | Inserts a new SQLite row when no match                                  |

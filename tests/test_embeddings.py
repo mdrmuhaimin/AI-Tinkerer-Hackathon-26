@@ -79,6 +79,32 @@ def test_query_returns_related_contact_not_decoy(tmp_path: Path) -> None:
     assert RELATED_QUERY not in (store.get(first["contact_id"])["notes"] or "")
 
 
+def test_e2e_typed_voice_query_ranks_sarah(tmp_path: Path) -> None:
+    typed = "Potential consulting opportunity."
+    voice = (
+        "Met at LEAP and discussed data warehouse modernization "
+        "and analytics architecture."
+    )
+    first, store = _run(tmp_path, SARAH, transcript=voice, typed_notes=typed)
+    second, _ = _run(tmp_path, DECOY, transcript=DECOY_NOTES, store=store)
+    assert first["contact_id"] != second["contact_id"]
+
+    hits = query_contacts(
+        store,
+        FakeEmbedder(),
+        "Who did I speak with about data warehouse consulting?",
+    )
+    assert hits
+    assert hits[0]["full_name"] == "Sarah Khan"
+    assert hits[0]["id"] == first["contact_id"]
+    assert hits[0]["company"] == SARAH["company"]
+    assert typed in (hits[0]["notes"] or "")
+    assert "data warehouse" in (hits[0]["notes"] or "")
+    names = [h["full_name"] for h in hits]
+    if "Bob Mariner" in names:
+        assert names.index("Sarah Khan") < names.index("Bob Mariner")
+
+
 def test_related_phrasing_ranks_above_decoy(tmp_path: Path) -> None:
     _, store = _run(tmp_path, SARAH, transcript=WORKFLOW_NOTES)
     _run(tmp_path, DECOY, transcript=DECOY_NOTES, store=store)

@@ -140,18 +140,37 @@ The hardest labeled case is still `conflicting-voice`. The voice says she works 
 
 ---
 
+## Task 8 — Two inputs, one merge; two jobs, two paths
+
+Typed notes and a voice transcript are two sources of the same kind of thing: conversation context. They enter state separately (`typed_notes`, `voice_transcript`). `merge_context` joins them with a blank line. No model rewrites that.
+
+Absence of `--notes` or `--voice` is normal. Text-only never calls Whisper. Voice-only never needs typed text.
+
+Search is a different path:
+
+```text
+question → query embedding → sqlite-vec IDs → contacts row → print
+```
+
+The question gets a new embedding at query time. That is not the contact’s stored vector. The stored vector was built from the search document after a verified write. Results are CRM rows, not vec-table metadata.
+
+**Check:** You type `--notes` and also pass `--voice`. Which node combines them, and does `crm query` run that node?
+
+---
+
 ## Current graph (all tasks)
 
 ```text
 START
   ↓
-load_input → validate_input → extract_card → validate_extraction
+load_input (name, image, optional voice, optional typed_notes)
+  → validate_input → extract_card → validate_extraction
   ↓
 voice_present?
    /        \
  no          yes → transcribe_voice
   \          /
-   merge_context
+   merge_context   ← typed and/or voice, no LLM
         ↓
    persistable?
       /      \

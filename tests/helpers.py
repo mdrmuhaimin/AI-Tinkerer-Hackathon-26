@@ -49,7 +49,10 @@ class FakeEmbedder:
         if self.error is not None:
             raise self.error
         vec = [0.0] * self.dimension
-        for token in text.lower().split():
+        for raw in text.lower().split():
+            token = raw.strip(".,!?;:\"'")
+            if not token:
+                continue
             digest = hashlib.md5(token.encode()).digest()
             vec[digest[0] % self.dimension] += 1.0
             vec[digest[1] % self.dimension] += 0.5
