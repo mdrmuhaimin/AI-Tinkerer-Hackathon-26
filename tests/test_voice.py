@@ -254,7 +254,7 @@ def test_prior_failure_does_not_call_transcriber(tmp_path: Path) -> None:
     transcriber = FakeTranscriber(FAKE_TRANSCRIPT)
 
     invalid = _graph(tmp_path, transcriber=transcriber).invoke(
-        _pending(name=None, image_path=image, voice_path=voice)
+        _pending(name="Sarah Khan", image_path=None, voice_path=voice)
     )
     assert invalid["status"] == "invalid"
     assert transcriber.calls == []

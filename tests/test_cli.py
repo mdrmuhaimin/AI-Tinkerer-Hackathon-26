@@ -62,7 +62,7 @@ def test_cli_valid_prints_json_status(tmp_path, capsys, monkeypatch) -> None:
 
 
 def test_cli_module_smoke_invalid_avoids_provider(tmp_path) -> None:
-    image = _touch_image(tmp_path)
+    missing_image = str(tmp_path / "does-not-exist.jpg")
 
     result = subprocess.run(
         [
@@ -70,9 +70,9 @@ def test_cli_module_smoke_invalid_avoids_provider(tmp_path) -> None:
             "-m",
             "crm",
             "--name",
-            "   ",
+            "Ada Lovelace",
             "--image",
-            image,
+            missing_image,
         ],
         check=False,
         capture_output=True,
@@ -87,11 +87,11 @@ def test_cli_module_smoke_invalid_avoids_provider(tmp_path) -> None:
 
 
 def test_cli_invalid_prints_json_and_exits_1(tmp_path, capsys, monkeypatch) -> None:
-    image = _touch_image(tmp_path)
+    missing_image = str(tmp_path / "does-not-exist.jpg")
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
     _patch_graph(monkeypatch, tmp_path, fake)
 
-    code = main(["--name", "   ", "--image", image])
+    code = main(["--name", "Ada Lovelace", "--image", missing_image])
     captured = capsys.readouterr()
     payload = json.loads(captured.out)
 
