@@ -75,6 +75,7 @@ This installs:
 - `pydantic` — `ContactEvidence` schema
 - `groq` — card extract, voice transcription, embeddings
 - `sqlite-vec` — local vector KNN (`contact_embeddings`)
+- `langsmith` — optional tracing and offline `evaluate()`
 - `pytest` — test runner
 - the `crm` CLI entry point (optional; see below)
 
@@ -88,7 +89,7 @@ From the project root:
 pytest -q
 ```
 
-The default suite excludes live provider tests (`addopts = -m "not live"`). It injects a **FakeEmbedder** (and fake card/voice providers). It does not need a network connection or API key and never constructs the live embedder.
+The default suite excludes live provider tests (`addopts = -m "not live"`). It injects a **FakeEmbedder** (and fake card/voice providers). It does not need a network connection, `GROQ_API_KEY`, or `LANGSMITH_API_KEY`, never constructs the live embedder, and never uploads traces or experiment results.
 
 ---
 
@@ -111,6 +112,20 @@ The vision call follows Groq's documented API: `from groq import Groq`, local im
 Voice transcription uses the same `GROQ_API_KEY` and Groq Speech-to-Text: `client.audio.transcriptions.create(file=..., model="whisper-large-v3")`. The original audio file is sent as-is (ogg is accepted; no FFmpeg or conversion).
 
 If `GROQ_API_KEY` is missing on a live CLI run, card extraction fails with `status: error`. If a voice file was also supplied, a missing key fails transcription the same way after a valid card extract.
+
+`LANGSMITH_API_KEY` is **optional**. When it is set, `enable_tracing()` turns on LangSmith tracing (`LANGSMITH_TRACING=true`, project `ai-conference-crm`) so live Groq extract/transcribe/embed spans nest under the graph invoke. Without the key, tracing is a no-op and nothing is uploaded.
+
+---
+
+## 5b. Offline evaluation
+
+Run the capture graph against the checked-in dataset (fake providers, temp SQLite — no LangSmith account required):
+
+```bash
+python -m crm.eval
+```
+
+This writes `eval/latest_experiment.json` with per-example evaluator scores and means. If `LANGSMITH_API_KEY` is present, the same command also uploads the experiment and records the URL in that file. Default `pytest` stays offline and never needs a LangSmith key.
 
 ---
 

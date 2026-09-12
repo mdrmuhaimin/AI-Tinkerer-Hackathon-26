@@ -8,6 +8,7 @@ from crm.db import DEFAULT_DB_PATH, ContactStore
 from crm.graph import build_graph
 from crm.providers.embeddings import GroqEmbedder
 from crm.search import query_contacts
+from crm.tracing import enable_tracing
 
 
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
@@ -32,6 +33,7 @@ def _run_query(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     load_dotenv()
+    enable_tracing()
     args = _parse_args(argv)
     if args.command == "query":
         return _run_query(args)

@@ -28,7 +28,7 @@ The system is built as an explicit LangGraph. Deterministic Python handles valid
 
 No PostgreSQL or Telegram yet.
 
-The full current graph (Tasks 1–6) is in [understandable_so_far.md](understandable_so_far.md).
+The full current graph (Tasks 1–7) is in [understandable_so_far.md](understandable_so_far.md). Observability wraps that graph; it does not add nodes.
 
 ---
 
@@ -204,7 +204,7 @@ Default (no live API):
 pytest -q
 ```
 
-Last recorded default run after Task 6: **65 passed, 2 deselected**.
+Last recorded default run after Task 7: **83 passed, 2 deselected**.
 
 Optional live smoke tests (need `GROQ_API_KEY`; card image and/or `input/6134386456120009929.ogg`):
 
@@ -310,6 +310,34 @@ This Mac’s CPython cannot load SQLite extensions, so `crm/db.py` uses a thin A
 
 ---
 
+## Task 7 — LangSmith Observability and Evaluation
+
+**Status:** Done. Independent verifier PASS (`pytest -q` → 83 passed, 2 deselected).
+
+**What we built:** Optional LangSmith tracing on live model calls. An offline dataset of 10 capture cases. Five deterministic evaluators. `python -m crm.eval` runs the real graph (fakes + temp SQLite) through `langsmith.evaluate` and writes scores.
+
+**Graph change:** none.
+
+**Tracing:** `crm/tracing.py` `enable_tracing()`. If `LANGSMITH_API_KEY` is set: `LANGSMITH_TRACING=true`, project `ai-conference-crm`. No key → no-op. Live Groq `extract_card` / `transcribe` / `embed` are `@traceable`. CLI calls `enable_tracing()` after `load_dotenv`.
+
+**Dataset** (`eval/dataset.json`): complete-card, partial-card, missing-phone, missing-email, existing-contact, new-contact, voice-present, voice-absent, conflicting-voice, unsupported-fields.
+
+**Evaluators** (code, not LLM judges): extraction correctness; unsupported-field hallucination; CREATE vs UPDATE; duplicate avoidance; post-write verification.
+
+**Experiment:** `eval/latest_experiment.json`. All means 1.0 with fakes. `experiment_url` is null (no LangSmith key). Weakest/hardest labeled case: `conflicting-voice`.
+
+**CLI:**
+
+```bash
+python -m crm.eval
+```
+
+Default pytest does not upload and does not need a LangSmith key.
+
+**Key files:** `crm/eval.py`, `crm/tracing.py`, `eval/dataset.json`, `eval/latest_experiment.json`, `tests/test_eval.py`
+
+---
+
 ## What is intentionally not built yet
 
 These were not specified as later work:
@@ -318,6 +346,7 @@ These were not specified as later work:
 - pgvector / RAG chat
 - Telegram or other chat integrations
 - Structured reminders / follow-up extraction from the transcript
+- A live-vision LangSmith experiment (this task’s experiment uses fakes so it stays offline)
 
 ---
 
@@ -336,6 +365,8 @@ These were not specified as later work:
 | Groq embeddings | `crm/providers/embeddings.py` |
 | Provider interfaces | `crm/providers/base.py` |
 | CLI (capture + query) | `crm/cli.py` |
+| Tracing | `crm/tracing.py` |
+| Eval dataset + experiment | `eval/dataset.json`, `crm/eval.py`, `eval/latest_experiment.json` |
 | Sample card | `input/visiting_card.png` |
 | Sample voice | `input/6134386456120009929.ogg` |
 | How to run | `how_to_run.md` |

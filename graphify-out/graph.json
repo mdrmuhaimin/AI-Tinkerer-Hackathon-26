@@ -30,19 +30,6 @@
       "source_location": "L20"
     },
     {
-      "id": "crm_providers_base_embeddingprovider",
-      "label": "EmbeddingProvider",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "embeddingprovider",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L24"
-    },
-    {
       "id": "crm_providers_base_extractorerror",
       "label": "ExtractorError",
       "_callable": true,
@@ -82,19 +69,6 @@
       "source_location": "L16"
     },
     {
-      "id": "crm_providers_embeddings_groqembedder",
-      "label": "GroqEmbedder",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "groqembedder",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L14"
-    },
-    {
       "id": "crm_providers_groq_groqcardextractor",
       "label": "GroqCardExtractor",
       "_callable": true,
@@ -105,7 +79,7 @@
       "file_type": "code",
       "norm_label": "groqcardextractor",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L35"
+      "source_location": "L36"
     },
     {
       "id": "crm_providers_groq_groqvoicetranscriber",
@@ -118,7 +92,7 @@
       "file_type": "code",
       "norm_label": "groqvoicetranscriber",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L90"
+      "source_location": "L92"
     },
     {
       "id": "tests_helpers_fakeembedder",
@@ -147,6 +121,19 @@
       "source_location": "L125"
     },
     {
+      "id": "crm_db_cursor",
+      "label": "_Cursor",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": "_cursor",
+      "source_file": "crm/db.py",
+      "source_location": "L61"
+    },
+    {
       "id": "crm_db_extconnection",
       "label": "_ExtConnection",
       "_callable": true,
@@ -158,6 +145,19 @@
       "norm_label": "_extconnection",
       "source_file": "crm/db.py",
       "source_location": "L92"
+    },
+    {
+      "id": "crm_db_row",
+      "label": "_Row",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": "_row",
+      "source_file": "crm/db.py",
+      "source_location": "L46"
     },
     {
       "id": "crm_db_storeerror",
@@ -173,30 +173,17 @@
       "source_location": "L42"
     },
     {
-      "id": "crm_db_cursor",
-      "label": "_Cursor",
+      "id": "crm_providers_base_embeddingprovider",
+      "label": "EmbeddingProvider",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "_Cursor",
+      "community": 4,
+      "community_name": "graph.py",
       "file_type": "code",
-      "norm_label": "_cursor",
-      "source_file": "crm/db.py",
-      "source_location": "L61"
-    },
-    {
-      "id": "crm_db_row",
-      "label": "_Row",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "_Cursor",
-      "file_type": "code",
-      "norm_label": "_row",
-      "source_file": "crm/db.py",
-      "source_location": "L46"
+      "norm_label": "embeddingprovider",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L24"
     },
     {
       "id": "crm_schemas_contactevidence",
@@ -238,6 +225,19 @@
       "source_location": "L22"
     },
     {
+      "id": "crm_providers_embeddings_groqembedder",
+      "label": "GroqEmbedder",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "groqembedder",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L15"
+    },
+    {
       "id": "tests_helpers_fakeextractor",
       "label": "FakeExtractor",
       "_callable": true,
@@ -249,42 +249,6 @@
       "norm_label": "fakeextractor",
       "source_file": "tests/helpers.py",
       "source_location": "L4"
-    },
-    {
-      "id": "crm_cli_parse_args",
-      "label": "_parse_args()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "_parse_args()",
-      "source_file": "crm/cli.py",
-      "source_location": "L13"
-    },
-    {
-      "id": "crm_cli_run_query",
-      "label": "_run_query()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "_run_query()",
-      "source_file": "crm/cli.py",
-      "source_location": "L25"
-    },
-    {
-      "id": "crm_graph_build_graph_create_embedding_node",
-      "label": "create_embedding_node()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "create_embedding_node()",
-      "source_file": "crm/graph.py",
-      "source_location": "L368"
     },
     {
       "id": "crm_graph_build_graph_extract_card_node",
@@ -309,18 +273,6 @@
       "norm_label": "transcribe_voice_node()",
       "source_file": "crm/graph.py",
       "source_location": "L353"
-    },
-    {
-      "id": "crm_graph_create_embedding",
-      "label": "create_embedding()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "create_embedding()",
-      "source_file": "crm/graph.py",
-      "source_location": "L293"
     },
     {
       "id": "crm_graph_extract_card",
@@ -359,18 +311,6 @@
       "source_location": "L13"
     },
     {
-      "id": "crm_providers_base_embeddingprovider_embed",
-      "label": ".embed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": ".embed()",
-      "source_file": "crm/providers/base.py",
-      "source_location": "L27"
-    },
-    {
       "id": "crm_providers_base_voicetranscriber_transcribe",
       "label": ".transcribe()",
       "_callable": true,
@@ -383,42 +323,6 @@
       "source_location": "L17"
     },
     {
-      "id": "crm_providers_embeddings_groqembedder_embed",
-      "label": ".embed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": ".embed()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder_from_env",
-      "label": ".from_env()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": ".from_env()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L22"
-    },
-    {
-      "id": "crm_providers_embeddings_groqembedder_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "crm/providers/embeddings.py",
-      "source_location": "L17"
-    },
-    {
       "id": "crm_providers_groq_encode_image",
       "label": "_encode_image()",
       "_callable": true,
@@ -428,7 +332,7 @@
       "file_type": "code",
       "norm_label": "_encode_image()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L27"
+      "source_location": "L28"
     },
     {
       "id": "crm_providers_groq_groqcardextractor_extract_card",
@@ -440,7 +344,7 @@
       "file_type": "code",
       "norm_label": ".extract_card()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L48"
+      "source_location": "L50"
     },
     {
       "id": "crm_providers_groq_groqcardextractor_from_env",
@@ -452,7 +356,7 @@
       "file_type": "code",
       "norm_label": ".from_env()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "crm_providers_groq_groqcardextractor_init",
@@ -464,7 +368,7 @@
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L36"
+      "source_location": "L37"
     },
     {
       "id": "crm_providers_groq_groqvoicetranscriber_from_env",
@@ -476,7 +380,7 @@
       "file_type": "code",
       "norm_label": ".from_env()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L96"
+      "source_location": "L98"
     },
     {
       "id": "crm_providers_groq_groqvoicetranscriber_init",
@@ -488,7 +392,7 @@
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L91"
+      "source_location": "L93"
     },
     {
       "id": "crm_providers_groq_groqvoicetranscriber_transcribe",
@@ -500,19 +404,7 @@
       "file_type": "code",
       "norm_label": ".transcribe()",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L103"
-    },
-    {
-      "id": "crm_search_query_contacts",
-      "label": "query_contacts()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "query_contacts()",
-      "source_file": "crm/search.py",
-      "source_location": "L16"
+      "source_location": "L106"
     },
     {
       "id": "tests_test_groq_provider_test_from_env_reads_groq_api_key",
@@ -585,6 +477,18 @@
       "norm_label": "build_search_document()",
       "source_file": "crm/search.py",
       "source_location": "L7"
+    },
+    {
+      "id": "crm_search_query_contacts",
+      "label": "query_contacts()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "_run",
+      "file_type": "code",
+      "norm_label": "query_contacts()",
+      "source_file": "crm/search.py",
+      "source_location": "L16"
     },
     {
       "id": "tests_helpers_fakeembedder_embed",
@@ -1043,18 +947,6 @@
       "source_location": "L48"
     },
     {
-      "id": "tests_test_verify_test_database_exception_on_get_is_error_boom",
-      "label": "boom()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "_run",
-      "file_type": "code",
-      "norm_label": "boom()",
-      "source_file": "tests/test_verify.py",
-      "source_location": "L51"
-    },
-    {
       "id": "tests_test_verify_test_final_success_contains_stored_contact_id",
       "label": "test_final_success_contains_stored_contact_id()",
       "_callable": true,
@@ -1283,6 +1175,66 @@
       "source_location": "L280"
     },
     {
+      "id": "crm_db_cursor_fetchall",
+      "label": ".fetchall()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".fetchall()",
+      "source_file": "crm/db.py",
+      "source_location": "L73"
+    },
+    {
+      "id": "crm_db_cursor_fetchone",
+      "label": ".fetchone()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".fetchone()",
+      "source_file": "crm/db.py",
+      "source_location": "L66"
+    },
+    {
+      "id": "crm_db_cursor_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "crm/db.py",
+      "source_location": "L62"
+    },
+    {
+      "id": "crm_db_cursor_lastrowid",
+      "label": ".lastrowid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".lastrowid()",
+      "source_file": "crm/db.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "crm_db_cursor_names",
+      "label": "._names()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": "._names()",
+      "source_file": "crm/db.py",
+      "source_location": "L80"
+    },
+    {
       "id": "crm_db_extconnection_enable_load_extension",
       "label": ".enable_load_extension()",
       "_callable": true,
@@ -1305,6 +1257,18 @@
       "norm_label": ".__enter__()",
       "source_file": "crm/db.py",
       "source_location": "L107"
+    },
+    {
+      "id": "crm_db_extconnection_execute",
+      "label": ".execute()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".execute()",
+      "source_file": "crm/db.py",
+      "source_location": "L104"
     },
     {
       "id": "crm_db_extconnection_exit",
@@ -1367,28 +1331,40 @@
       "source_location": "L119"
     },
     {
-      "id": "crm_graph_build_graph_search_crm_node",
-      "label": "search_crm_node()",
+      "id": "crm_db_row_getitem",
+      "label": ".__getitem__()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
       "community_name": "ContactStore",
       "file_type": "code",
-      "norm_label": "search_crm_node()",
-      "source_file": "crm/graph.py",
-      "source_location": "L356"
+      "norm_label": ".__getitem__()",
+      "source_file": "crm/db.py",
+      "source_location": "L52"
     },
     {
-      "id": "crm_graph_search_crm",
-      "label": "search_crm()",
+      "id": "crm_db_row_init",
+      "label": ".__init__()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
       "community_name": "ContactStore",
       "file_type": "code",
-      "norm_label": "search_crm()",
-      "source_file": "crm/graph.py",
-      "source_location": "L179"
+      "norm_label": ".__init__()",
+      "source_file": "crm/db.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "crm_db_row_keys",
+      "label": ".keys()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "ContactStore",
+      "file_type": "code",
+      "norm_label": ".keys()",
+      "source_file": "crm/db.py",
+      "source_location": "L57"
     },
     {
       "id": "crm_normalize_normalize_email",
@@ -1475,112 +1451,424 @@
       "source_location": "L316"
     },
     {
-      "id": "crm_db_cursor_fetchall",
-      "label": ".fetchall()",
+      "id": "tests_test_verify_test_database_exception_on_get_is_error_boom",
+      "label": "boom()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "_Cursor",
+      "community": 15,
+      "community_name": "ContactStore",
       "file_type": "code",
-      "norm_label": ".fetchall()",
-      "source_file": "crm/db.py",
-      "source_location": "L73"
+      "norm_label": "boom()",
+      "source_file": "tests/test_verify.py",
+      "source_location": "L51"
     },
     {
-      "id": "crm_db_cursor_fetchone",
-      "label": ".fetchone()",
+      "id": "crm_eval_create_vs_update",
+      "label": "create_vs_update()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".fetchone()",
-      "source_file": "crm/db.py",
-      "source_location": "L66"
+      "norm_label": "create_vs_update()",
+      "source_file": "crm/eval.py",
+      "source_location": "L117"
     },
     {
-      "id": "crm_db_cursor_init",
-      "label": ".__init__()",
+      "id": "crm_eval_duplicate_avoidance",
+      "label": "duplicate_avoidance()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "crm/db.py",
-      "source_location": "L62"
+      "norm_label": "duplicate_avoidance()",
+      "source_file": "crm/eval.py",
+      "source_location": "L130"
     },
     {
-      "id": "crm_db_cursor_lastrowid",
-      "label": ".lastrowid()",
+      "id": "crm_eval_eval_items",
+      "label": "_eval_items()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".lastrowid()",
-      "source_file": "crm/db.py",
-      "source_location": "L87"
+      "norm_label": "_eval_items()",
+      "source_file": "crm/eval.py",
+      "source_location": "L175"
     },
     {
-      "id": "crm_db_cursor_names",
-      "label": "._names()",
+      "id": "crm_eval_example_id",
+      "label": "_example_id()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": "._names()",
-      "source_file": "crm/db.py",
-      "source_location": "L80"
+      "norm_label": "_example_id()",
+      "source_file": "crm/eval.py",
+      "source_location": "L190"
     },
     {
-      "id": "crm_db_extconnection_execute",
-      "label": ".execute()",
+      "id": "crm_eval_experiment_url",
+      "label": "_experiment_url()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".execute()",
-      "source_file": "crm/db.py",
+      "norm_label": "_experiment_url()",
+      "source_file": "crm/eval.py",
+      "source_location": "L198"
+    },
+    {
+      "id": "crm_eval_extraction_correctness",
+      "label": "extraction_correctness()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "extraction_correctness()",
+      "source_file": "crm/eval.py",
+      "source_location": "L91"
+    },
+    {
+      "id": "crm_eval_load_dataset",
+      "label": "load_dataset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "load_dataset()",
+      "source_file": "crm/eval.py",
+      "source_location": "L36"
+    },
+    {
+      "id": "crm_eval_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "crm/eval.py",
+      "source_location": "L277"
+    },
+    {
+      "id": "crm_eval_post_write_verification",
+      "label": "post_write_verification()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "post_write_verification()",
+      "source_file": "crm/eval.py",
+      "source_location": "L156"
+    },
+    {
+      "id": "crm_eval_print_table",
+      "label": "_print_table()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "_print_table()",
+      "source_file": "crm/eval.py",
+      "source_location": "L255"
+    },
+    {
+      "id": "crm_eval_run_capture",
+      "label": "run_capture()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "run_capture()",
+      "source_file": "crm/eval.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "crm_eval_run_experiment",
+      "label": "run_experiment()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "run_experiment()",
+      "source_file": "crm/eval.py",
+      "source_location": "L209"
+    },
+    {
+      "id": "crm_eval_scores_from_item",
+      "label": "_scores_from_item()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "_scores_from_item()",
+      "source_file": "crm/eval.py",
+      "source_location": "L179"
+    },
+    {
+      "id": "crm_eval_unsupported_field_hallucination",
+      "label": "unsupported_field_hallucination()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "unsupported_field_hallucination()",
+      "source_file": "crm/eval.py",
       "source_location": "L104"
     },
     {
-      "id": "crm_db_row_getitem",
-      "label": ".__getitem__()",
+      "id": "crm_tracing_enable_tracing",
+      "label": "enable_tracing()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".__getitem__()",
-      "source_file": "crm/db.py",
-      "source_location": "L52"
+      "norm_label": "enable_tracing()",
+      "source_file": "crm/tracing.py",
+      "source_location": "L8"
     },
     {
-      "id": "crm_db_row_init",
-      "label": ".__init__()",
+      "id": "tests_test_eval_test_create_vs_update_fail",
+      "label": "test_create_vs_update_fail()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "crm/db.py",
-      "source_location": "L47"
+      "norm_label": "test_create_vs_update_fail()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L97"
     },
     {
-      "id": "crm_db_row_keys",
-      "label": ".keys()",
+      "id": "tests_test_eval_test_create_vs_update_pass",
+      "label": "test_create_vs_update_pass()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "_Cursor",
+      "community_name": "test_eval.py",
       "file_type": "code",
-      "norm_label": ".keys()",
-      "source_file": "crm/db.py",
+      "norm_label": "test_create_vs_update_pass()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L88"
+    },
+    {
+      "id": "tests_test_eval_test_dataset_contains_all_scenario_tags",
+      "label": "test_dataset_contains_all_scenario_tags()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_dataset_contains_all_scenario_tags()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "label": "test_default_eval_does_not_upload_or_create_dataset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_default_eval_does_not_upload_or_create_dataset()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L196"
+    },
+    {
+      "id": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset_boom",
+      "label": "boom()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "boom()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L202"
+    },
+    {
+      "id": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset_wrapped",
+      "label": "wrapped()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "wrapped()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L211"
+    },
+    {
+      "id": "tests_test_eval_test_duplicate_avoidance_fail_existing",
+      "label": "test_duplicate_avoidance_fail_existing()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_duplicate_avoidance_fail_existing()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L120"
+    },
+    {
+      "id": "tests_test_eval_test_duplicate_avoidance_fail_new",
+      "label": "test_duplicate_avoidance_fail_new()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_duplicate_avoidance_fail_new()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L148"
+    },
+    {
+      "id": "tests_test_eval_test_duplicate_avoidance_pass_existing",
+      "label": "test_duplicate_avoidance_pass_existing()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_duplicate_avoidance_pass_existing()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L106"
+    },
+    {
+      "id": "tests_test_eval_test_duplicate_avoidance_pass_new",
+      "label": "test_duplicate_avoidance_pass_new()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_duplicate_avoidance_pass_new()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L134"
+    },
+    {
+      "id": "tests_test_eval_test_enable_tracing_noop_without_key",
+      "label": "test_enable_tracing_noop_without_key()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_enable_tracing_noop_without_key()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L222"
+    },
+    {
+      "id": "tests_test_eval_test_enable_tracing_sets_flags_when_key_present",
+      "label": "test_enable_tracing_sets_flags_when_key_present()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_enable_tracing_sets_flags_when_key_present()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L230"
+    },
+    {
+      "id": "tests_test_eval_test_extraction_correctness_fail",
+      "label": "test_extraction_correctness_fail()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_extraction_correctness_fail()",
+      "source_file": "tests/test_eval.py",
       "source_location": "L57"
+    },
+    {
+      "id": "tests_test_eval_test_extraction_correctness_pass",
+      "label": "test_extraction_correctness_pass()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_extraction_correctness_pass()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L48"
+    },
+    {
+      "id": "tests_test_eval_test_local_eval_scores_every_example",
+      "label": "test_local_eval_scores_every_example()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_local_eval_scores_every_example()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L180"
+    },
+    {
+      "id": "tests_test_eval_test_post_write_verification_fail",
+      "label": "test_post_write_verification_fail()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_post_write_verification_fail()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L171"
+    },
+    {
+      "id": "tests_test_eval_test_post_write_verification_pass",
+      "label": "test_post_write_verification_pass()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_post_write_verification_pass()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L162"
+    },
+    {
+      "id": "tests_test_eval_test_unsupported_field_hallucination_fail",
+      "label": "test_unsupported_field_hallucination_fail()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_unsupported_field_hallucination_fail()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L77"
+    },
+    {
+      "id": "tests_test_eval_test_unsupported_field_hallucination_pass",
+      "label": "test_unsupported_field_hallucination_pass()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_unsupported_field_hallucination_pass()",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L68"
     },
     {
       "id": "crm_graph_blank",
@@ -1617,6 +1905,30 @@
       "norm_label": "create_contact_node()",
       "source_file": "crm/graph.py",
       "source_location": "L359"
+    },
+    {
+      "id": "crm_graph_build_graph_create_embedding_node",
+      "label": "create_embedding_node()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": "create_embedding_node()",
+      "source_file": "crm/graph.py",
+      "source_location": "L368"
+    },
+    {
+      "id": "crm_graph_build_graph_search_crm_node",
+      "label": "search_crm_node()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": "search_crm_node()",
+      "source_file": "crm/graph.py",
+      "source_location": "L356"
     },
     {
       "id": "crm_graph_build_graph_store_embedding_node",
@@ -1677,6 +1989,18 @@
       "norm_label": "create_contact()",
       "source_file": "crm/graph.py",
       "source_location": "L207"
+    },
+    {
+      "id": "crm_graph_create_embedding",
+      "label": "create_embedding()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": "create_embedding()",
+      "source_file": "crm/graph.py",
+      "source_location": "L293"
     },
     {
       "id": "crm_graph_display_fields",
@@ -1775,6 +2099,18 @@
       "source_location": "L167"
     },
     {
+      "id": "crm_graph_search_crm",
+      "label": "search_crm()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": "search_crm()",
+      "source_file": "crm/graph.py",
+      "source_location": "L179"
+    },
+    {
       "id": "crm_graph_store_embedding",
       "label": "store_embedding()",
       "_callable": true,
@@ -1857,6 +2193,18 @@
       "norm_label": "write_ok()",
       "source_file": "crm/graph.py",
       "source_location": "L280"
+    },
+    {
+      "id": "crm_providers_base_embeddingprovider_embed",
+      "label": ".embed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "graph.py",
+      "file_type": "code",
+      "norm_label": ".embed()",
+      "source_file": "crm/providers/base.py",
+      "source_location": "L27"
     },
     {
       "id": "crm_schemas_contactevidence_empty_optional_to_none",
@@ -2159,124 +2507,160 @@
       "source_location": "L48"
     },
     {
-      "id": "tests_test_graph_graph",
-      "label": "_graph()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "_graph()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L32"
-    },
-    {
-      "id": "tests_test_graph_pending",
-      "label": "_pending()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "_pending()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L8"
-    },
-    {
-      "id": "tests_test_graph_stream_node_names",
-      "label": "_stream_node_names()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "_stream_node_names()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L137"
-    },
-    {
-      "id": "tests_test_graph_test_missing_or_blank_name_is_invalid",
-      "label": "test_missing_or_blank_name_is_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "test_missing_or_blank_name_is_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L62"
-    },
-    {
-      "id": "tests_test_graph_test_missing_or_nonexistent_image_is_invalid",
-      "label": "test_missing_or_nonexistent_image_is_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "test_missing_or_nonexistent_image_is_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L80"
-    },
-    {
-      "id": "tests_test_graph_test_stream_node_order_valid_and_invalid",
-      "label": "test_stream_node_order_valid_and_invalid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "test_stream_node_order_valid_and_invalid()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L141"
-    },
-    {
-      "id": "tests_test_graph_test_valid_name_and_image_completes",
-      "label": "test_valid_name_and_image_completes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "test_valid_name_and_image_completes()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L49"
-    },
-    {
-      "id": "tests_test_graph_test_voice_path_optional_and_kept_when_present",
-      "label": "test_voice_path_optional_and_kept_when_present()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "test_voice_path_optional_and_kept_when_present()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L98"
-    },
-    {
-      "id": "tests_test_graph_touch",
-      "label": "_touch()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "_touch()",
-      "source_file": "tests/test_graph.py",
-      "source_location": "L27"
-    },
-    {
       "id": "crm_cli_main",
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
+      "community": 6,
+      "community_name": "test_cli.py",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "crm/cli.py",
-      "source_location": "L33"
+      "source_location": "L34"
+    },
+    {
+      "id": "crm_cli_parse_args",
+      "label": "_parse_args()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "_parse_args()",
+      "source_file": "crm/cli.py",
+      "source_location": "L14"
+    },
+    {
+      "id": "crm_cli_run_query",
+      "label": "_run_query()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "_run_query()",
+      "source_file": "crm/cli.py",
+      "source_location": "L26"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_embed",
+      "label": ".embed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": ".embed()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L31"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_from_env",
+      "label": ".from_env()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": ".from_env()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L23"
+    },
+    {
+      "id": "crm_providers_embeddings_groqembedder_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L18"
+    },
+    {
+      "id": "tests_test_cli_patch_graph",
+      "label": "_patch_graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "_patch_graph()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L17"
+    },
+    {
+      "id": "tests_test_cli_test_cli_extractor_error_exits_1",
+      "label": "test_cli_extractor_error_exits_1()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli_extractor_error_exits_1()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L128"
+    },
+    {
+      "id": "tests_test_cli_test_cli_invalid_prints_json_and_exits_1",
+      "label": "test_cli_invalid_prints_json_and_exits_1()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli_invalid_prints_json_and_exits_1()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L89"
+    },
+    {
+      "id": "tests_test_cli_test_cli_module_smoke_invalid_avoids_provider",
+      "label": "test_cli_module_smoke_invalid_avoids_provider()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli_module_smoke_invalid_avoids_provider()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L64"
+    },
+    {
+      "id": "tests_test_cli_test_cli_valid_prints_json_status",
+      "label": "test_cli_valid_prints_json_status()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli_valid_prints_json_status()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L36"
+    },
+    {
+      "id": "tests_test_cli_test_cli_voice_prints_transcript_and_notes",
+      "label": "test_cli_voice_prints_transcript_and_notes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli_voice_prints_transcript_and_notes()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L105"
+    },
+    {
+      "id": "tests_test_cli_touch_image",
+      "label": "_touch_image()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "_touch_image()",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L11"
     },
     {
       "id": "tests_helpers_fakeextractor_extract_card",
@@ -2289,90 +2673,6 @@
       "norm_label": ".extract_card()",
       "source_file": "tests/helpers.py",
       "source_location": "L15"
-    },
-    {
-      "id": "tests_test_cli_patch_graph",
-      "label": "_patch_graph()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_patch_graph()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "tests_test_cli_test_cli_extractor_error_exits_1",
-      "label": "test_cli_extractor_error_exits_1()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_cli_extractor_error_exits_1()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L128"
-    },
-    {
-      "id": "tests_test_cli_test_cli_invalid_prints_json_and_exits_1",
-      "label": "test_cli_invalid_prints_json_and_exits_1()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_cli_invalid_prints_json_and_exits_1()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L89"
-    },
-    {
-      "id": "tests_test_cli_test_cli_module_smoke_invalid_avoids_provider",
-      "label": "test_cli_module_smoke_invalid_avoids_provider()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_cli_module_smoke_invalid_avoids_provider()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L64"
-    },
-    {
-      "id": "tests_test_cli_test_cli_valid_prints_json_status",
-      "label": "test_cli_valid_prints_json_status()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_cli_valid_prints_json_status()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L36"
-    },
-    {
-      "id": "tests_test_cli_test_cli_voice_prints_transcript_and_notes",
-      "label": "test_cli_voice_prints_transcript_and_notes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "test_cli_voice_prints_transcript_and_notes()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L105"
-    },
-    {
-      "id": "tests_test_cli_touch_image",
-      "label": "_touch_image()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
-      "file_type": "code",
-      "norm_label": "_touch_image()",
-      "source_file": "tests/test_cli.py",
-      "source_location": "L11"
     },
     {
       "id": "tests_test_extract_graph",
@@ -2471,6 +2771,114 @@
       "source_location": "L39"
     },
     {
+      "id": "tests_test_graph_graph",
+      "label": "_graph()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_graph()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L32"
+    },
+    {
+      "id": "tests_test_graph_pending",
+      "label": "_pending()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_pending()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L8"
+    },
+    {
+      "id": "tests_test_graph_stream_node_names",
+      "label": "_stream_node_names()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_stream_node_names()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L137"
+    },
+    {
+      "id": "tests_test_graph_test_missing_or_blank_name_is_invalid",
+      "label": "test_missing_or_blank_name_is_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_missing_or_blank_name_is_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L62"
+    },
+    {
+      "id": "tests_test_graph_test_missing_or_nonexistent_image_is_invalid",
+      "label": "test_missing_or_nonexistent_image_is_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_missing_or_nonexistent_image_is_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L80"
+    },
+    {
+      "id": "tests_test_graph_test_stream_node_order_valid_and_invalid",
+      "label": "test_stream_node_order_valid_and_invalid()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_stream_node_order_valid_and_invalid()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L141"
+    },
+    {
+      "id": "tests_test_graph_test_valid_name_and_image_completes",
+      "label": "test_valid_name_and_image_completes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_valid_name_and_image_completes()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "tests_test_graph_test_voice_path_optional_and_kept_when_present",
+      "label": "test_voice_path_optional_and_kept_when_present()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_voice_path_optional_and_kept_when_present()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L98"
+    },
+    {
+      "id": "tests_test_graph_touch",
+      "label": "_touch()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "_touch()",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L27"
+    },
+    {
       "id": "agents",
       "label": "AGENTS.md",
       "_origin": "ast",
@@ -2504,7 +2912,7 @@
       "node_kind": "heading",
       "norm_label": "10. what is not implemented yet",
       "source_file": "how_to_run.md",
-      "source_location": "L254"
+      "source_location": "L269"
     },
     {
       "id": "how_to_run_1_get_the_code",
@@ -2552,7 +2960,7 @@
       "node_kind": "heading",
       "norm_label": "4. run the tests",
       "source_file": "how_to_run.md",
-      "source_location": "L83"
+      "source_location": "L84"
     },
     {
       "id": "how_to_run_5_provider_environment_variables",
@@ -2564,7 +2972,19 @@
       "node_kind": "heading",
       "norm_label": "5. provider environment variables",
       "source_file": "how_to_run.md",
-      "source_location": "L95"
+      "source_location": "L96"
+    },
+    {
+      "id": "how_to_run_5b_offline_evaluation",
+      "label": "5b. Offline evaluation",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5b. offline evaluation",
+      "source_file": "how_to_run.md",
+      "source_location": "L120"
     },
     {
       "id": "how_to_run_6_run_the_cli",
@@ -2576,7 +2996,7 @@
       "node_kind": "heading",
       "norm_label": "6. run the cli",
       "source_file": "how_to_run.md",
-      "source_location": "L117"
+      "source_location": "L132"
     },
     {
       "id": "how_to_run_7_what_the_output_looks_like",
@@ -2588,7 +3008,7 @@
       "node_kind": "heading",
       "norm_label": "7. what the output looks like",
       "source_file": "how_to_run.md",
-      "source_location": "L157"
+      "source_location": "L172"
     },
     {
       "id": "how_to_run_8_what_the_graph_does_today",
@@ -2600,7 +3020,7 @@
       "node_kind": "heading",
       "norm_label": "8. what the graph does today",
       "source_file": "how_to_run.md",
-      "source_location": "L188"
+      "source_location": "L203"
     },
     {
       "id": "how_to_run_9_live_tests",
@@ -2612,7 +3032,7 @@
       "node_kind": "heading",
       "norm_label": "9. live tests",
       "source_file": "how_to_run.md",
-      "source_location": "L240"
+      "source_location": "L255"
     },
     {
       "id": "how_to_run_how_to_run_ai_conference_crm_task_4",
@@ -2648,7 +3068,7 @@
       "node_kind": "heading",
       "norm_label": "troubleshooting",
       "source_file": "how_to_run.md",
-      "source_location": "L264"
+      "source_location": "L279"
     },
     {
       "id": "progress_so_far",
@@ -2735,6 +3155,18 @@
       "source_location": "L217"
     },
     {
+      "id": "progress_so_far_task_6_semantic_contact_retrieval_with_sqlite_vec",
+      "label": "Task 6 \u2014 Semantic Contact Retrieval with sqlite-vec",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "task 6 \u2014 semantic contact retrieval with sqlite-vec",
+      "source_file": "progress_so_far.md",
+      "source_location": "L269"
+    },
+    {
       "id": "progress_so_far_tests",
       "label": "Tests",
       "_origin": "ast",
@@ -2756,7 +3188,7 @@
       "node_kind": "heading",
       "norm_label": "what is intentionally not built yet",
       "source_file": "progress_so_far.md",
-      "source_location": "L269"
+      "source_location": "L313"
     },
     {
       "id": "progress_so_far_what_this_project_is",
@@ -2780,7 +3212,7 @@
       "node_kind": "heading",
       "norm_label": "where to look",
       "source_file": "progress_so_far.md",
-      "source_location": "L280"
+      "source_location": "L324"
     },
     {
       "id": "progress_so_far_write_verification",
@@ -2816,7 +3248,7 @@
       "node_kind": "heading",
       "norm_label": "current graph (all tasks)",
       "source_file": "understandable_so_far.md",
-      "source_location": "L104"
+      "source_location": "L127"
     },
     {
       "id": "understandable_so_far_task_1_langgraph_is_state_nodes_edges",
@@ -2867,6 +3299,18 @@
       "source_location": "L66"
     },
     {
+      "id": "understandable_so_far_task_6_the_vector_is_an_index_not_the_record",
+      "label": "Task 6 \u2014 The vector is an index, not the record",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "How to Run \u2014 AI Conference CRM (Task 4)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "task 6 \u2014 the vector is an index, not the record",
+      "source_file": "understandable_so_far.md",
+      "source_location": "L104"
+    },
+    {
       "id": "understandable_so_far_the_split_that_runs_through_everything",
       "label": "The split that runs through everything",
       "_origin": "ast",
@@ -2888,7 +3332,7 @@
       "node_kind": "heading",
       "norm_label": "tooling (how we work, not what the crm is)",
       "source_file": "understandable_so_far.md",
-      "source_location": "L132"
+      "source_location": "L163"
     },
     {
       "id": "understandable_so_far_what_you_should_understand_so_far",
@@ -2913,17 +3357,6 @@
       "norm_label": "write verification \u2014 proof vs hope",
       "source_file": "understandable_so_far.md",
       "source_location": "L90"
-    },
-    {
-      "id": "crm_cli",
-      "label": "cli.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "cli.py",
-      "source_file": "crm/cli.py",
-      "source_location": "L1"
     },
     {
       "id": "crm_providers_base",
@@ -2970,6 +3403,17 @@
       "source_location": "L1"
     },
     {
+      "id": "crm_providers_groq_py_traceable",
+      "label": "traceable",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "ExtractorError",
+      "file_type": "code",
+      "norm_label": "traceable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "crm_providers_init",
       "label": "providers/__init__.py",
       "_origin": "ast",
@@ -2979,28 +3423,6 @@
       "norm_label": "providers/__init__.py",
       "source_file": "crm/providers/__init__.py",
       "source_location": "L1"
-    },
-    {
-      "id": "crm_search",
-      "label": "search.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "search.py",
-      "source_file": "crm/search.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "namespace",
-      "label": "Namespace",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ExtractorError",
-      "file_type": "code",
-      "norm_label": "namespace",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "protocol",
@@ -3128,14 +3550,14 @@
       "version": "0.1.0"
     },
     {
-      "id": "tests_helpers",
-      "label": "helpers.py",
+      "id": "crm_search",
+      "label": "search.py",
       "_origin": "ast",
       "community": 14,
       "community_name": "_run",
       "file_type": "code",
-      "norm_label": "helpers.py",
-      "source_file": "tests/helpers.py",
+      "norm_label": "search.py",
+      "source_file": "crm/search.py",
       "source_location": "L1"
     },
     {
@@ -3546,6 +3968,72 @@
       "source_location": "L17"
     },
     {
+      "id": "crm_eval",
+      "label": "eval.py",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "eval.py",
+      "source_file": "crm/eval.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "crm_eval_py_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crm_tracing",
+      "label": "tracing.py",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "tracing.py",
+      "source_file": "crm/tracing.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_eval",
+      "label": "test_eval.py",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "test_eval.py",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_eval_py_monkeypatch",
+      "label": "MonkeyPatch",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "monkeypatch",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_eval_py_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "test_eval.py",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "basemodel",
       "label": "BaseModel",
       "_origin": "ast",
@@ -3700,47 +4188,69 @@
       "source_location": ""
     },
     {
-      "id": "tests_test_graph",
-      "label": "test_graph.py",
+      "id": "crm_cli",
+      "label": "cli.py",
       "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
+      "community": 6,
+      "community_name": "test_cli.py",
       "file_type": "code",
-      "norm_label": "test_graph.py",
-      "source_file": "tests/test_graph.py",
+      "norm_label": "cli.py",
+      "source_file": "crm/cli.py",
       "source_location": "L1"
-    },
-    {
-      "id": "tests_test_graph_py_path",
-      "label": "Path",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "test_graph.py",
-      "file_type": "code",
-      "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "crm_main",
       "label": "__main__.py",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "FakeExtractor",
+      "community": 6,
+      "community_name": "test_cli.py",
       "file_type": "code",
       "norm_label": "__main__.py",
       "source_file": "crm/__main__.py",
       "source_location": "L1"
     },
     {
+      "id": "crm_providers_embeddings_py_traceable",
+      "label": "traceable",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "traceable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "namespace",
+      "label": "Namespace",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "namespace",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "tests_test_cli",
       "label": "test_cli.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "test_cli.py",
+      "file_type": "code",
+      "norm_label": "test_cli.py",
+      "source_file": "tests/test_cli.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_helpers",
+      "label": "helpers.py",
       "_origin": "ast",
       "community": 8,
       "community_name": "FakeExtractor",
       "file_type": "code",
-      "norm_label": "test_cli.py",
-      "source_file": "tests/test_cli.py",
+      "norm_label": "helpers.py",
+      "source_file": "tests/helpers.py",
       "source_location": "L1"
     },
     {
@@ -3756,6 +4266,28 @@
     },
     {
       "id": "tests_test_extract_py_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_graph",
+      "label": "test_graph.py",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "FakeExtractor",
+      "file_type": "code",
+      "norm_label": "test_graph.py",
+      "source_file": "tests/test_graph.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_graph_py_path",
       "label": "Path",
       "_origin": "ast",
       "community": 8,
@@ -3865,19 +4397,19 @@
   "links": [
     {
       "source": "crm_cli_main",
-      "target": "crm_cli_parse_args",
+      "target": "crm_tracing_enable_tracing",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
       "source": "crm_cli_main",
-      "target": "crm_cli_run_query",
+      "target": "crm_cli_parse_args",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -3889,6 +4421,18 @@
     },
     {
       "source": "crm_cli_main",
+      "target": "crm_cli_run_query",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/cli.py",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_cli_main",
       "target": "crm_graph_build_graph",
       "relation": "calls",
       "_origin": "ast",
@@ -3896,7 +4440,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L38",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -3908,7 +4452,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -3920,7 +4464,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -3932,7 +4476,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/cli.py",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -4368,6 +4912,174 @@
       "weight": 1.0
     },
     {
+      "source": "crm_eval_main",
+      "target": "crm_eval_print_table",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L278",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_main",
+      "target": "crm_eval_run_experiment",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L278",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "crm_eval_py_path",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "crm_db_contactstore",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "crm_graph_build_graph",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "tests_helpers_fakeextractor",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_capture",
+      "target": "tests_helpers_fakeembedder",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_load_dataset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L221",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_eval_items",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_scores_from_item",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L238",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_example_id",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_experiment_url",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_py_path",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crm/eval.py",
+      "source_location": "L249",
+      "weight": 1.0
+    },
+    {
       "source": "crm_graph_build_graph",
       "target": "crm_db_contactstore",
       "relation": "calls",
@@ -4676,7 +5388,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L35",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -4688,7 +5400,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -4700,7 +5412,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -4712,7 +5424,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L76",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -4724,7 +5436,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -4736,7 +5448,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L100",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -4748,7 +5460,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L113",
+      "source_location": "L116",
       "weight": 1.0
     },
     {
@@ -5985,6 +6697,222 @@
       "context": "call",
       "source_file": "tests/test_embeddings.py",
       "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_create_vs_update_fail",
+      "target": "crm_eval_create_vs_update",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_create_vs_update_pass",
+      "target": "crm_eval_create_vs_update",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_dataset_contains_all_scenario_tags",
+      "target": "crm_eval_load_dataset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "target": "crm_eval_run_experiment",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_duplicate_avoidance_fail_existing",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_duplicate_avoidance_fail_new",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_duplicate_avoidance_pass_existing",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_duplicate_avoidance_pass_new",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_enable_tracing_noop_without_key",
+      "target": "crm_tracing_enable_tracing",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L226",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_enable_tracing_sets_flags_when_key_present",
+      "target": "crm_tracing_enable_tracing",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L235",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_extraction_correctness_fail",
+      "target": "crm_eval_extraction_correctness",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_extraction_correctness_pass",
+      "target": "crm_eval_extraction_correctness",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_local_eval_scores_every_example",
+      "target": "crm_eval_run_experiment",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L184",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_local_eval_scores_every_example",
+      "target": "crm_eval_load_dataset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L185",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_post_write_verification_fail",
+      "target": "crm_eval_post_write_verification",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L172",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_post_write_verification_pass",
+      "target": "crm_eval_post_write_verification",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L163",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_unsupported_field_hallucination_fail",
+      "target": "crm_eval_unsupported_field_hallucination",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_unsupported_field_hallucination_pass",
+      "target": "crm_eval_unsupported_field_hallucination",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -7380,6 +8308,42 @@
       "weight": 1.0
     },
     {
+      "source": "crm_providers_embeddings_groqembedder_embed",
+      "target": "crm_providers_embeddings_py_traceable",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "decorator",
+      "source_file": "crm/providers/embeddings.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_providers_groq_groqcardextractor_extract_card",
+      "target": "crm_providers_groq_py_traceable",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "decorator",
+      "source_file": "crm/providers/groq.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_providers_groq_groqvoicetranscriber_transcribe",
+      "target": "crm_providers_groq_py_traceable",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "decorator",
+      "source_file": "crm/providers/groq.py",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
       "source": "crm_schemas_contactevidence_empty_optional_to_none",
       "target": "field_validator",
       "relation": "references",
@@ -7437,6 +8401,18 @@
       "context": "import",
       "source_file": "crm/cli.py",
       "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_cli",
+      "target": "crm_tracing_enable_tracing",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/cli.py",
+      "source_location": "L11",
       "weight": 1.0
     },
     {
@@ -7509,6 +8485,66 @@
       "context": "import",
       "source_file": "crm/db.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_db_contactstore",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_graph_build_graph",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "tests_helpers_fakeembedder",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "tests_helpers_fakeextractor",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "tests_helpers_faketranscriber",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -7712,7 +8748,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -7724,7 +8760,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -7736,7 +8772,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -8181,6 +9217,102 @@
       "context": "import",
       "source_file": "tests/test_embeddings.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_tracing_enable_tracing",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_create_vs_update",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_extraction_correctness",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_load_dataset",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_post_write_verification",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_run_experiment",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval_unsupported_field_hallucination",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -8665,6 +9797,18 @@
     },
     {
       "source": "crm_cli",
+      "target": "crm_tracing",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/cli.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_cli",
       "target": "crm_db",
       "relation": "imports_from",
       "_origin": "ast",
@@ -8709,6 +9853,42 @@
       "context": "import",
       "source_file": "crm/db.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_db",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_graph",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "tests_helpers",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "crm/eval.py",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -8840,7 +10020,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -8852,7 +10032,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crm/providers/groq.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -9057,6 +10237,30 @@
       "context": "import",
       "source_file": "tests/test_embeddings.py",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_tracing",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "crm_eval",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -9368,7 +10572,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crm/cli.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -9381,6 +10585,18 @@
       "context": "parameter_type",
       "source_file": "crm/db.py",
       "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_load_dataset",
+      "target": "crm_eval_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "crm/eval.py",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -9804,6 +11020,78 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "target": "tests_test_eval_py_monkeypatch",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "target": "tests_test_eval_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_enable_tracing_noop_without_key",
+      "target": "tests_test_eval_py_monkeypatch",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_enable_tracing_sets_flags_when_key_present",
+      "target": "tests_test_eval_py_monkeypatch",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_local_eval_scores_every_example",
+      "target": "tests_test_eval_py_monkeypatch",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L180",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_local_eval_scores_every_example",
+      "target": "tests_test_eval_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L180",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_extract_graph",
       "target": "tests_test_extract_py_path",
       "relation": "references",
@@ -10220,7 +11508,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crm/cli.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -10473,7 +11761,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/cli.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -10484,7 +11772,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/cli.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -10495,7 +11783,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/cli.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -10573,6 +11861,160 @@
       "confidence_score": 1.0,
       "source_file": "crm/db.py",
       "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_unsupported_field_hallucination",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_create_vs_update",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_post_write_verification",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_eval_items",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L175",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_scores_from_item",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_example_id",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_experiment_url",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_run_experiment",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L209",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_print_table",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L255",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L277",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_load_dataset",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_run_capture",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval",
+      "target": "crm_eval_extraction_correctness",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/eval.py",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -10957,7 +12399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -10968,7 +12410,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -10979,7 +12421,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -10990,7 +12432,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L90",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -11038,6 +12480,17 @@
       "weight": 1.0
     },
     {
+      "source": "crm_tracing",
+      "target": "crm_tracing_enable_tracing",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crm/tracing.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
       "source": "how_to_run",
       "target": "how_to_run_how_to_run_ai_conference_crm_task_4",
       "relation": "contains",
@@ -11050,13 +12503,24 @@
     },
     {
       "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
+      "target": "how_to_run_5b_offline_evaluation",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "how_to_run.md",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "how_to_run_how_to_run_ai_conference_crm_task_4",
       "target": "how_to_run_6_run_the_cli",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L117",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -11067,7 +12531,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L157",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -11078,7 +12542,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L188",
+      "source_location": "L203",
       "weight": 1.0
     },
     {
@@ -11100,7 +12564,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L240",
+      "source_location": "L255",
       "weight": 1.0
     },
     {
@@ -11111,7 +12575,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L254",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -11122,7 +12586,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L264",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -11155,7 +12619,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L83",
+      "source_location": "L84",
       "weight": 1.0
     },
     {
@@ -11177,7 +12641,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "how_to_run.md",
-      "source_location": "L95",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -11259,7 +12723,7 @@
     },
     {
       "source": "progress_so_far_progress_so_far_ai_conference_crm",
-      "target": "progress_so_far_what_is_intentionally_not_built_yet",
+      "target": "progress_so_far_task_6_semantic_contact_retrieval_with_sqlite_vec",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11270,13 +12734,24 @@
     },
     {
       "source": "progress_so_far_progress_so_far_ai_conference_crm",
+      "target": "progress_so_far_what_is_intentionally_not_built_yet",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "progress_so_far.md",
+      "source_location": "L313",
+      "weight": 1.0
+    },
+    {
+      "source": "progress_so_far_progress_so_far_ai_conference_crm",
       "target": "progress_so_far_where_to_look",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "progress_so_far.md",
-      "source_location": "L280",
+      "source_location": "L324",
       "weight": 1.0
     },
     {
@@ -11863,6 +13338,193 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_duplicate_avoidance_pass_existing",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_duplicate_avoidance_fail_existing",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_duplicate_avoidance_pass_new",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L134",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_duplicate_avoidance_fail_new",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_post_write_verification_pass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L162",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_post_write_verification_fail",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_local_eval_scores_every_example",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L180",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L196",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_enable_tracing_noop_without_key",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_enable_tracing_sets_flags_when_key_present",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_dataset_contains_all_scenario_tags",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_extraction_correctness_pass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_extraction_correctness_fail",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_unsupported_field_hallucination_pass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_unsupported_field_hallucination_fail",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_create_vs_update_pass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval",
+      "target": "tests_test_eval_test_create_vs_update_fail",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_eval.py",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_extract",
       "target": "tests_test_extract_test_fake_extractor_error_sets_error_status",
       "relation": "contains",
@@ -12403,7 +14065,7 @@
     },
     {
       "source": "understandable_so_far_what_you_should_understand_so_far",
-      "target": "understandable_so_far_current_graph_all_tasks",
+      "target": "understandable_so_far_task_6_the_vector_is_an_index_not_the_record",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12414,13 +14076,13 @@
     },
     {
       "source": "understandable_so_far_what_you_should_understand_so_far",
-      "target": "understandable_so_far_tooling_how_we_work_not_what_the_crm_is",
+      "target": "understandable_so_far_current_graph_all_tasks",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "understandable_so_far.md",
-      "source_location": "L132",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
@@ -12432,6 +14094,17 @@
       "confidence_score": 1.0,
       "source_file": "understandable_so_far.md",
       "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "understandable_so_far_what_you_should_understand_so_far",
+      "target": "understandable_so_far_tooling_how_we_work_not_what_the_crm_is",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "understandable_so_far.md",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -12915,7 +14588,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -12926,7 +14599,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -12937,7 +14610,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L29",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -12948,7 +14621,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -12959,7 +14632,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -12970,7 +14643,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L48",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -12981,7 +14654,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L103",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -12992,7 +14665,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -13003,7 +14676,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L96",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -13191,6 +14864,18 @@
       "confidence_score": 1.0,
       "source_file": "understandable_so_far.md",
       "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_run_capture",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "crm/eval.py",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -13446,6 +15131,30 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "target": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset_boom",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset",
+      "target": "tests_test_eval_test_default_eval_does_not_upload_or_create_dataset_wrapped",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "argument",
+      "source_file": "tests/test_eval.py",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_voice_test_default_suite_does_not_construct_live_groq",
       "target": "tests_test_voice_test_default_suite_does_not_construct_live_groq_boom",
       "relation": "indirect_call",
@@ -13503,6 +15212,66 @@
       "context": "assignment",
       "source_file": "tests/test_verify.py",
       "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_extraction_correctness",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "collection",
+      "source_file": "crm/eval.py",
+      "source_location": "L227",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_unsupported_field_hallucination",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "collection",
+      "source_file": "crm/eval.py",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_create_vs_update",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "collection",
+      "source_file": "crm/eval.py",
+      "source_location": "L229",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_duplicate_avoidance",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "collection",
+      "source_file": "crm/eval.py",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "crm_eval_run_experiment",
+      "target": "crm_eval_post_write_verification",
+      "relation": "indirect_call",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "collection",
+      "source_file": "crm/eval.py",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -14041,7 +15810,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "crm/cli.py",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 0.8
     },
     {
@@ -14195,7 +15964,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "crm/providers/embeddings.py",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 0.8
     },
     {
@@ -14206,7 +15975,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 0.8
     },
     {
@@ -14217,7 +15986,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "crm/providers/groq.py",
-      "source_location": "L100",
+      "source_location": "L102",
       "weight": 0.8
     },
     {
@@ -14409,5 +16178,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "cd0f0e640c3fd63126c48d41f77cff3cb504f174"
+  "built_at_commit": "5254531cc9bfa125d24bd1a3fcca41ce77a9206b"
 }

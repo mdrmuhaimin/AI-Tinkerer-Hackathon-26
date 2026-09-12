@@ -4,6 +4,7 @@ import os
 
 from dotenv import load_dotenv
 from groq import Groq
+from langsmith import traceable
 
 from crm.providers.base import EmbedderError
 
@@ -26,6 +27,7 @@ class GroqEmbedder:
             raise EmbedderError("missing environment variable: GROQ_API_KEY")
         return cls(api_key=api_key)
 
+    @traceable(name="embed")
     def embed(self, text: str) -> list[float]:
         try:
             client = Groq(api_key=self._api_key)

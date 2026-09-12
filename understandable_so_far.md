@@ -124,6 +124,22 @@ The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider
 
 ---
 
+## Task 7 — A trace is not a score
+
+Tracing answers “what ran?” Evaluation answers “was it right?”
+
+LangSmith traces (when `LANGSMITH_API_KEY` is set) wrap live Groq extract / transcribe / embed under the graph invoke. They do not add CRM nodes.
+
+The experiment is a **labeled dataset** plus **code evaluators**. Each example has expected `contact_evidence`, `crm_action`, `null_fields`, and `verified`. The target is the real capture graph. Fakes stand in for Groq so default eval needs no key.
+
+All five scores being 1.0 is honest, not success theater: the fake extractor returns the labeled card. The graph’s job is matching, CREATE vs UPDATE, verify, and “voice does not overwrite identity.” That path is deterministic.
+
+The hardest labeled case is still `conflicting-voice`. The voice says she works at Google. The card says Analytical Engines. A live model (or a sloppy merge) could copy the voice onto the card. Our graph must keep card identity and put the voice in notes.
+
+**Check:** If traces appear in LangSmith but `unsupported-fields` invents an email, did evaluation pass? Which evaluator should fail?
+
+---
+
 ## Current graph (all tasks)
 
 ```text
