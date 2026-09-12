@@ -1,0 +1,359 @@
+{
+  "communities": {
+    "0": [
+      "how_to_run",
+      "how_to_run_10_what_is_not_implemented_yet",
+      "how_to_run_1_get_the_code",
+      "how_to_run_2_create_a_virtual_environment",
+      "how_to_run_3_install_the_package",
+      "how_to_run_4_run_the_tests",
+      "how_to_run_5_provider_environment_variables",
+      "how_to_run_6_run_the_cli",
+      "how_to_run_7_what_the_output_looks_like",
+      "how_to_run_8_what_the_graph_does_today",
+      "how_to_run_9_live_tests",
+      "how_to_run_how_to_run_ai_conference_crm_task_3",
+      "how_to_run_prerequisites",
+      "how_to_run_troubleshooting",
+      "progress_so_far",
+      "progress_so_far_live_checks",
+      "progress_so_far_progress_so_far_ai_conference_crm",
+      "progress_so_far_task_1_langgraph_skeleton",
+      "progress_so_far_task_2_business_card_extraction",
+      "progress_so_far_task_3_optional_voice_note_branch_and_transcription",
+      "progress_so_far_tests",
+      "progress_so_far_what_is_intentionally_not_built_yet",
+      "progress_so_far_what_this_project_is",
+      "progress_so_far_where_to_look"
+    ],
+    "1": [
+      "crm_providers_base",
+      "crm_providers_base_extractorerror",
+      "crm_providers_base_py_exception",
+      "crm_providers_base_rationale_5",
+      "crm_providers_base_rationale_9",
+      "crm_providers_base_transcribererror",
+      "crm_providers_groq",
+      "crm_providers_groq_encode_image",
+      "crm_providers_groq_groqcardextractor",
+      "crm_providers_groq_groqcardextractor_extract_card",
+      "crm_providers_groq_groqcardextractor_from_env",
+      "crm_providers_groq_groqcardextractor_init",
+      "crm_providers_groq_groqvoicetranscriber",
+      "crm_providers_groq_groqvoicetranscriber_from_env",
+      "crm_providers_groq_groqvoicetranscriber_init",
+      "crm_providers_groq_groqvoicetranscriber_transcribe",
+      "crm_providers_init",
+      "tests_test_groq_provider",
+      "tests_test_groq_provider_py_monkeypatch",
+      "tests_test_groq_provider_py_path",
+      "tests_test_groq_provider_test_from_env_reads_groq_api_key",
+      "tests_test_groq_provider_test_from_env_requires_groq_api_key",
+      "tests_test_groq_provider_test_transcribe_uses_whisper_large_v3_and_wraps_errors"
+    ],
+    "2": [
+      "agents",
+      "agents_after_every_implementation",
+      "agents_after_verification",
+      "agents_ai_conference_crm_learning_first_development_harness",
+      "agents_architecture_constraints",
+      "agents_completed",
+      "agents_engineering_principle",
+      "agents_evaluation",
+      "agents_graph_engineering_principle",
+      "agents_implementation_update",
+      "agents_implementer_sub_agent",
+      "agents_learning_checkpoint",
+      "agents_learning_first_rule",
+      "agents_learning_step",
+      "agents_next",
+      "agents_progress",
+      "agents_scope_discipline",
+      "agents_tooling",
+      "agents_verifier_sub_agent",
+      "agents_what_you_should_understand_now",
+      "agents_your_role"
+    ],
+    "3": [
+      "crm_cli",
+      "crm_cli_main",
+      "crm_cli_parse_args",
+      "crm_main",
+      "namespace",
+      "tests_helpers",
+      "tests_helpers_fakeextractor",
+      "tests_helpers_fakeextractor_extract_card",
+      "tests_helpers_fakeextractor_init",
+      "tests_helpers_faketranscriber_init",
+      "tests_helpers_py_exception",
+      "tests_test_cli",
+      "tests_test_cli_patch_graph",
+      "tests_test_cli_test_cli_extractor_error_exits_1",
+      "tests_test_cli_test_cli_invalid_prints_json_and_exits_1",
+      "tests_test_cli_test_cli_module_smoke_invalid_avoids_provider",
+      "tests_test_cli_test_cli_valid_prints_json_status",
+      "tests_test_cli_test_cli_voice_prints_transcript_and_notes",
+      "tests_test_cli_touch_image",
+      "tests_test_live_transcribe",
+      "tests_test_live_transcribe_test_live_transcribe_voice_note"
+    ],
+    "4": [
+      "crm_graph",
+      "crm_graph_blank",
+      "crm_graph_build_graph",
+      "crm_graph_extract_card",
+      "crm_graph_finalize",
+      "crm_graph_load_input",
+      "crm_graph_merge_context",
+      "crm_graph_transcribe_voice",
+      "crm_graph_validate_extraction",
+      "crm_graph_validate_input",
+      "crm_graph_voice_present",
+      "crm_providers_base_cardextractor",
+      "crm_providers_base_cardextractor_extract_card",
+      "crm_providers_base_voicetranscriber",
+      "crm_providers_base_voicetranscriber_transcribe",
+      "crm_state",
+      "crm_state_crmstate",
+      "protocol",
+      "typeddict"
+    ],
+    "5": [
+      "tests_helpers_faketranscriber",
+      "tests_helpers_faketranscriber_transcribe",
+      "tests_test_voice",
+      "tests_test_voice_graph",
+      "tests_test_voice_pending",
+      "tests_test_voice_py_monkeypatch",
+      "tests_test_voice_py_path",
+      "tests_test_voice_stream_node_names",
+      "tests_test_voice_test_default_suite_does_not_construct_live_groq",
+      "tests_test_voice_test_name_and_image_without_voice_completes",
+      "tests_test_voice_test_no_voice_skips_transcribe_node_and_leaves_transcript_none",
+      "tests_test_voice_test_prior_failure_does_not_call_transcriber",
+      "tests_test_voice_test_transcriber_error_only_when_voice_supplied",
+      "tests_test_voice_test_voice_does_not_overwrite_contact_evidence",
+      "tests_test_voice_test_voice_file_transcribes_and_sets_conversation_notes",
+      "tests_test_voice_touch"
+    ],
+    "6": [
+      "basemodel",
+      "crm_schemas",
+      "crm_schemas_contactevidence",
+      "crm_schemas_contactevidence_empty_optional_to_none",
+      "crm_schemas_contactevidence_full_name_not_blank",
+      "tests_test_live_extract",
+      "tests_test_live_extract_test_live_extract_visiting_card",
+      "tests_test_schema",
+      "tests_test_schema_test_empty_optional_strings_normalize_to_null",
+      "tests_test_schema_test_full_name_required_and_blank_fails",
+      "tests_test_schema_test_full_valid_payload",
+      "tests_test_schema_test_no_email_or_phone_format_validators",
+      "tests_test_schema_test_omitted_optional_fields_are_null"
+    ],
+    "7": [
+      "tests_test_graph",
+      "tests_test_graph_graph",
+      "tests_test_graph_pending",
+      "tests_test_graph_py_path",
+      "tests_test_graph_stream_node_names",
+      "tests_test_graph_test_missing_or_blank_name_is_invalid",
+      "tests_test_graph_test_missing_or_nonexistent_image_is_invalid",
+      "tests_test_graph_test_stream_node_order_valid_and_invalid",
+      "tests_test_graph_test_valid_name_and_image_completes",
+      "tests_test_graph_test_voice_path_optional_and_kept_when_present",
+      "tests_test_graph_touch"
+    ],
+    "8": [
+      "tests_test_extract",
+      "tests_test_extract_pending",
+      "tests_test_extract_py_path",
+      "tests_test_extract_test_fake_extractor_error_sets_error_status",
+      "tests_test_extract_test_fake_full_payload_matches_contact_evidence",
+      "tests_test_extract_test_fake_invalid_payload_is_schema_invalid",
+      "tests_test_extract_test_fake_only_full_name_does_not_invent_fields",
+      "tests_test_extract_test_invalid_input_does_not_call_extractor",
+      "tests_test_extract_touch"
+    ],
+    "9": [
+      "readme",
+      "readme_ai_conference_crm_agent",
+      "readme_context",
+      "readme_first_version_boundary",
+      "readme_success",
+      "readme_the_intended_experience",
+      "readme_what_we_are_solving",
+      "readme_why_ai_is_useful_here"
+    ],
+    "10": [
+      "crm_init"
+    ],
+    "11": [
+      "telegram_plan"
+    ],
+    "12": [
+      "tests_init"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08333333333333333,
+    "1": 0.20948616600790515,
+    "2": 0.09523809523809523,
+    "3": 0.20952380952380953,
+    "4": 0.23976608187134502,
+    "5": 0.425,
+    "6": 0.1794871794871795,
+    "7": 0.5272727272727272,
+    "8": 0.6388888888888888,
+    "9": 0.25,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0
+  },
+  "gods": [
+    {
+      "id": "crm_graph_build_graph",
+      "label": "build_graph()",
+      "degree": 28
+    },
+    {
+      "id": "tests_helpers_fakeextractor",
+      "label": "FakeExtractor",
+      "degree": 27
+    },
+    {
+      "id": "crm_state_crmstate",
+      "label": "CRMState",
+      "degree": 20
+    },
+    {
+      "id": "crm_providers_base_extractorerror",
+      "label": "ExtractorError",
+      "degree": 18
+    },
+    {
+      "id": "tests_helpers_faketranscriber",
+      "label": "FakeTranscriber",
+      "degree": 16
+    },
+    {
+      "id": "crm_providers_base_transcribererror",
+      "label": "TranscriberError",
+      "degree": 15
+    },
+    {
+      "id": "agents_ai_conference_crm_learning_first_development_harness",
+      "label": "AI Conference CRM — Learning-First Development Harness",
+      "degree": 14
+    },
+    {
+      "id": "how_to_run_how_to_run_ai_conference_crm_task_3",
+      "label": "How to Run — AI Conference CRM (Task 3)",
+      "degree": 13
+    },
+    {
+      "id": "tests_test_voice_graph",
+      "label": "_graph()",
+      "degree": 11
+    },
+    {
+      "id": "crm_providers_groq_groqvoicetranscriber",
+      "label": "GroqVoiceTranscriber",
+      "degree": 10
+    }
+  ],
+  "surprises": [
+    {
+      "source": "test_live_extract_visiting_card()",
+      "target": "build_graph()",
+      "source_files": [
+        "tests/test_live_extract.py",
+        "crm/graph.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `test_live_extract_visiting_card()` unexpectedly reaches hub `build_graph()`"
+    },
+    {
+      "source": "_patch_graph()",
+      "target": "build_graph()",
+      "source_files": [
+        "tests/test_cli.py",
+        "crm/graph.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "test_fake_extractor_error_sets_error_status()",
+      "target": "build_graph()",
+      "source_files": [
+        "tests/test_extract.py",
+        "crm/graph.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "test_fake_full_payload_matches_contact_evidence()",
+      "target": "build_graph()",
+      "source_files": [
+        "tests/test_extract.py",
+        "crm/graph.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "test_fake_invalid_payload_is_schema_invalid()",
+      "target": "build_graph()",
+      "source_files": [
+        "tests/test_extract.py",
+        "crm/graph.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `FakeExtractor` connect `Community 3` to `Community 8`, `Community 5`, `Community 7`?",
+      "why": "High betweenness centrality (0.064) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `build_graph()` connect `Community 4` to `Community 3`, `Community 5`, `Community 6`, `Community 7`, `Community 8`?",
+      "why": "High betweenness centrality (0.063) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `ExtractorError` connect `Community 1` to `Community 8`, `Community 3`, `Community 4`, `Community 5`?",
+      "why": "High betweenness centrality (0.048) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 7 inferred relationships involving `build_graph()` (e.g. with `finalize()` and `load_input()`) actually correct?",
+      "why": "`build_graph()` has 7 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 3 inferred relationships involving `ExtractorError` (e.g. with `GroqCardExtractor` and `GroqVoiceTranscriber`) actually correct?",
+      "why": "`ExtractorError` has 3 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Raised when business-card extraction fails.`, `Raised when voice transcription fails.`, `Your Role` to the rest of the system?",
+      "why": "42 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08333333333333333 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

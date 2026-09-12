@@ -1,110 +1,87 @@
 # How to Run and Test the AI Conference CRM
 
-This guide covers the current local interfaces:
+The project has two local interfaces: Telegram using long polling on your
+laptop, and the CLI with optional voice-note transcription. Both invoke the
+same LangGraph. The graph validates input, extracts structured business-card
+evidence with Groq, optionally transcribes a voice file, and then finishes. It
+does not save contacts to a database.
 
-- the Telegram input adapter, which runs on your laptop using long polling; and
-- the original command-line interface (CLI), which invokes the same LangGraph.
+## 1. Create a Python 3.11+ environment
 
-The current graph validates inputs only. It does not yet read a business card or save a contact.
-
-## Prerequisites
-
-- Python 3.11 or newer
-- A terminal (the commands below use macOS/Linux `zsh` syntax)
-- A Telegram account
-- A Telegram bot token obtained by creating a bot through the official [@BotFather](https://t.me/BotFather) account
-- Your own numeric Telegram user ID, obtained through a trusted method
-
-Never put a real bot token or user ID in source code, documentation, screenshots, commits, or messages to other people. The examples below use deliberately fake placeholders.
-
-## 1. Set up the project
-
-Run these commands from the repository root:
+From the repository root:
 
 ```bash
-cd /Users/apple/Documents/projects/AI-Tinkerer-Hackathon-26
-python3 --version
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 python --version
+python -m pip install --upgrade pip setuptools wheel
 python -m pip install -e ".[dev]"
 ```
 
-Both version commands should report Python 3.11 or newer. Activating `.venv` keeps this project's packages separate from system Python. The editable install includes LangGraph, `python-telegram-bot`, and the `pytest` development dependency.
+`python --version` must report Python 3.11 or newer. If `python3.11` is not
+installed on macOS with Homebrew, install it with `brew install python@3.11`.
+When returning in a new terminal, run `source .venv/bin/activate` again.
 
-When returning to the project in a new terminal, activate the environment again:
+## 2. Configure credentials safely
+
+The Groq key is required for real card extraction and voice transcription:
 
 ```bash
-cd /Users/apple/Documents/projects/AI-Tinkerer-Hackathon-26
-source .venv/bin/activate
+export GROQ_API_KEY="REPLACE_WITH_A_NEW_GROQ_KEY"
 ```
 
-## 2. Run automated tests
+For Telegram, also export the BotFather token and private-chat allowlist:
 
-Run the complete test suite:
+```bash
+export TELEGRAM_BOT_TOKEN="REPLACE_WITH_YOUR_TELEGRAM_BOT_TOKEN"
+export TELEGRAM_ALLOWED_USER_IDS="111111111"
+```
+
+Use comma-separated numeric IDs to allow multiple users. Never put real keys in
+source files, commits, screenshots, or shared logs. `.env` and `.env.local` are
+gitignored; the Groq provider and CLI load `.env`, while Telegram configuration
+is most clearly supplied by exporting all three values in the launching shell.
+
+If a key has been pasted into chat or otherwise exposed, revoke it in the
+provider console and create a replacement before continuing.
+
+## 3. Run automated tests
 
 ```bash
 pytest -q
 ```
 
-The exact number of passing tests may grow as the project evolves. The important result is that the command ends with no failures or errors.
-
-Run only the Telegram adapter tests:
+The default suite excludes tests marked `live`; it does not call Groq or
+Telegram. Run only Telegram tests with:
 
 ```bash
 pytest -q tests/test_telegram_bot.py
 ```
 
-These tests use fake Telegram updates and files; they do not contact Telegram or require a real bot token.
-
-## 3. Configure Telegram
-
-In the same terminal that will run the bot, export both required variables:
+Live Groq tests are optional and consume API access:
 
 ```bash
-export TELEGRAM_BOT_TOKEN="123456789:FAKE_REPLACE_WITH_YOUR_BOT_TOKEN"
-export TELEGRAM_ALLOWED_USER_IDS="111111111"
+pytest -q -m live --override-ini addopts=
 ```
 
-Replace both fake values with your real values locally. To allow more than one private Telegram account, use comma-separated numeric IDs:
+They require `GROQ_API_KEY` and the sample files under `input/`.
 
-```bash
-export TELEGRAM_ALLOWED_USER_IDS="111111111,222222222"
-```
+## 4. Run and manually test Telegram
 
-This variable is a private-chat allowlist. A message must come from one of those numeric user IDs and from a private chat. Group and channel use is not supported.
-
-The application does not automatically load a `.env` file, so exporting the variables in the active shell is the clearest supported setup. Do not commit secrets to the repository.
-
-### Find your numeric Telegram user ID
-
-One simple option is to message the commonly used [@userinfobot](https://t.me/userinfobot) and copy the numeric user ID it returns. This is a third-party bot: it receives the message and basic Telegram account information you share with it. Verify the username before using it, and do not send it your CRM bot token or any private content.
-
-If you do not want to use a third-party bot, use Telegram's official Bot API `getUpdates` method after sending a private message to your newly created bot, and read `message.from.id` from the response. Take care not to put the token in shell history, screenshots, logs, or shared URLs. This project does not provide a `/myid` command.
-
-## 4. Start and stop the Telegram bot
-
-Start the bot from the repository root with the virtual environment active:
+Start the bot with the environment active and all three variables exported:
 
 ```bash
 python -m crm.telegram_bot
 ```
 
-The process stays running and receives updates from Telegram through long polling. Keep the terminal open, keep the laptop awake and connected to the internet, and leave the process running while using the bot. No webhook, public server, Docker container, or cloud deployment is required.
+Keep the terminal open and laptop awake. Stop the bot with `Ctrl-C`.
 
-Stop it with `Ctrl-C`. The bot cannot respond while the process is stopped, the laptop is asleep, or the laptop has no network connection.
+From an allowlisted account in a private chat, send one business-card photo (or
+JPEG/PNG document) and put only the person's name in its caption. The bot
+downloads the image temporarily, runs Groq card extraction through the graph,
+and deletes the temporary image after processing.
 
-## 5. Manually test the Telegram bot
-
-Use an allowlisted Telegram account in a private chat with the bot. Use a fake or non-sensitive sample business-card image while testing.
-
-### Happy path: Telegram photo
-
-1. Send one image using Telegram's normal photo option.
-2. Put only `Ada Lovelace` in the image caption.
-3. Send the message.
-
-Expected reply, exactly:
+On successful extraction and schema validation:
 
 ```text
 ✓ Input accepted
@@ -113,163 +90,88 @@ Name: Ada Lovelace
 Status: complete
 ```
 
-### Happy path: image document
+Useful manual checks:
 
-1. Send one JPEG or PNG using Telegram's file/document option.
-2. Put only `Ada Lovelace` in the document caption.
-3. Send the message.
+| Action | Expected result |
+|---|---|
+| Send `/start` or `/help` privately | Input instructions |
+| Send a supported image without a caption | Missing-caption rejection |
+| Send text without an image | Supported-format rejection |
+| Send a PDF or album | Supported-format rejection |
+| Message from an unlisted account | Authorization rejection |
+| Use the bot in a group | Private-chat-only rejection |
 
-Expected reply, exactly:
+Telegram currently sends `voice_path=None`; voice files are supported by the
+CLI graph, not by a multi-message Telegram conversation.
+
+## 5. Run and manually test the CLI
+
+Card only:
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png
+```
+
+Card plus optional voice note:
+
+```bash
+python -m crm --name "Sarah Khan" --image input/visiting_card.png --voice input/6134386456120009929.ogg
+```
+
+The installed `crm` command is equivalent. On success, JSON includes
+`contact_evidence`; with voice it also includes `voice_transcript` and copies
+that transcript into `conversation_notes`. It exits `0` on completion and `1`
+for invalid input or provider errors.
+
+## Current graph
 
 ```text
-✓ Input accepted
-
-Name: Ada Lovelace
-Status: complete
+START → load_input → validate_input → extract_card → validate_extraction
+  → voice_present?
+       /          \
+     no            yes
+      |      transcribe_voice
+      \          /
+       merge_context → finalize → END
 ```
 
-### Rejection and access checks
-
-| Check | Action | Expected reply or behavior |
-|---|---|---|
-| `/start` | Send `/start` from an allowlisted private account. | Instructions say to send one business-card photo or JPEG/PNG document and use only the person's name as its caption. |
-| `/help` | Send `/help` from an allowlisted private account. | The same usage instructions appear. |
-| Missing caption | Send a photo or supported image document without a caption. | `✗ Input rejected`, followed by `Add the person's name as the image caption and send it again.` |
-| Text only | Send `Ada Lovelace` as an ordinary text message. | `✗ Input rejected`, followed by the accepted photo/document format. |
-| Unsupported document | Send a PDF or another non-JPEG/PNG document with a caption. | `✗ Input rejected`, followed by the accepted photo/document format. |
-| Album | Select and send multiple photos as one Telegram album. | The album items are rejected with the accepted single-image format; no intake is processed. |
-| Group chat | Add the bot to a group and send `/start@YourBotUsername`, replacing the placeholder with its username. | If Telegram delivers the command, the bot replies `This bot only works in private chats.` Ordinary group messages may not be delivered while BotFather privacy mode is enabled. |
-| Unauthorized account | From a different account whose numeric ID is not in the allowlist, message the bot privately. | `You are not authorized to use this bot.` |
-
-Do not deliberately corrupt credentials, intercept requests, or expose the token to simulate internal or download failures. Automated tests safely cover download and graph failure paths.
-
-## What `Status: complete` means
-
-`Status: complete` means only that the existing deterministic graph accepted the name and temporary image-file inputs. It does **not** mean that the card was read or that a contact was saved.
-
-The current MVP has no:
-
-- OCR or business-card field extraction
-- voice-note flow or transcription
-- database save
-- duplicate detection
-- persistent image/contact storage
-- RAG or semantic retrieval
-
-The downloaded Telegram image is temporary and is removed after the graph runs.
-
-## Run the CLI manually
-
-The CLI remains available and uses the existing graph directly. The image path must point to an existing file:
-
-```bash
-python -m crm --name "Ada Lovelace" --image /path/to/card.jpg
-```
-
-The graph also still accepts an optional existing voice-file path through the CLI, although Telegram has no voice workflow:
-
-```bash
-python -m crm --name "Ada Lovelace" --image /path/to/card.jpg --voice /path/to/note.wav
-```
-
-After the editable install, the equivalent console command is:
-
-```bash
-crm --name "Ada Lovelace" --image /path/to/card.jpg
-```
-
-For a quick validation-only CLI test, an ordinary placeholder file is sufficient because the current graph checks file existence rather than image contents:
-
-```bash
-echo "placeholder" > /tmp/card.jpg
-python -m crm --name "Ada Lovelace" --image /tmp/card.jpg
-```
-
-On success, the CLI prints the final graph state as JSON and exits with code `0`:
-
-```json
-{
-  "name": "Ada Lovelace",
-  "image_path": "/tmp/card.jpg",
-  "voice_path": null,
-  "status": "complete",
-  "errors": []
-}
-```
-
-On validation failure, it prints an invalid state and exits with code `1`. For example, a blank name produces `name is required` in `errors`.
-
-```bash
-python -m crm --name "" --image /tmp/card.jpg
-echo $?
-```
-
-## Current graph flow
-
-```text
-START → load_input → validate_input → finalize → END
-```
-
-The Telegram adapter handles access control, supported media, download, response formatting, and temporary-file cleanup. It then maps an accepted message to the same graph input used by the CLI. Telegram is not a graph node.
+The Telegram adapter handles access control, media download, formatting, and
+cleanup. It is not a graph node.
 
 ## Troubleshooting
 
-### `TELEGRAM_BOT_TOKEN is required`
+### `ModuleNotFoundError`
 
-The variable is missing or blank in the terminal running the bot. Export it in that terminal, then run the bot again:
-
-```bash
-export TELEGRAM_BOT_TOKEN="123456789:FAKE_REPLACE_WITH_YOUR_BOT_TOKEN"
-```
-
-### `TELEGRAM_ALLOWED_USER_IDS is required`
-
-Export at least one numeric Telegram user ID in the same terminal:
-
-```bash
-export TELEGRAM_ALLOWED_USER_IDS="111111111"
-```
-
-### `TELEGRAM_ALLOWED_USER_IDS must contain numeric IDs`
-
-Remove usernames, `@` signs, spaces used as separators, and other text. Supply numeric IDs separated by commas, for example `111111111,222222222`.
-
-### `You are not authorized to use this bot.`
-
-The sending account's numeric user ID does not match the allowlist. Verify the ID through a trusted method, correct `TELEGRAM_ALLOWED_USER_IDS`, stop the running process, and restart it so configuration is reloaded. The bot does not implement a `/myid` command.
-
-### The bot does not respond
-
-Check that:
-
-- `python -m crm.telegram_bot` is still running without a startup error;
-- the virtual environment is active and dependencies are installed;
-- the laptop is awake and online;
-- you opened the correct bot and sent it a message; and
-- no other process is polling the same bot token.
-
-This implementation uses polling, not webhooks. Its polling startup normally clears an existing webhook automatically. Another active polling process using the same token can still cause a conflict, so stop the other process and retry. Only investigate webhook configuration separately if Telegram reports an actual webhook-related error. Do not paste the token into logs, issue reports, screenshots, or chat messages while diagnosing it.
-
-### Import, dependency, or Python-version errors
-
-Confirm the active interpreter and reinstall the package:
+Confirm the active interpreter and reinstall:
 
 ```bash
 source .venv/bin/activate
 python --version
+python -m pip install --upgrade pip setuptools wheel
 python -m pip install -e ".[dev]"
 ```
 
-Python must be 3.11 or newer. If `.venv` was created with an older Python, create a new environment using an installed Python 3.11+ interpreter.
+### Missing environment variable or `status: error`
 
-### A bot token may have been exposed
+Export `GROQ_API_KEY` in the same terminal before starting the CLI or Telegram
+bot. Telegram also requires `TELEGRAM_BOT_TOKEN` and
+`TELEGRAM_ALLOWED_USER_IDS`. Restart the bot after changing variables.
 
-Treat it as compromised. Revoke/regenerate it through the official @BotFather, replace the exported value, and restart the bot. Do not commit the replacement.
+### Telegram does not respond
 
-### CLI reports `image file not found`
+Confirm the process is still running, the laptop is awake and online, the user
+ID is allowed, and no second process is polling the same bot token. This local
+setup uses polling, not webhooks.
 
-Use an absolute path or a path relative to the directory where the command runs, and confirm that it points to a file:
+### No extracted data appears in the terminal for Telegram
 
-```bash
-ls -l /path/to/card.jpg
-```
+The Telegram adapter returns only its user-facing acceptance/rejection message;
+it does not print contact evidence to the terminal or save it. Use the CLI when
+you need to inspect the complete graph result as JSON.
+
+## Not implemented
+
+- Telegram voice-message conversations
+- PostgreSQL/contact persistence
+- duplicate detection
+- embeddings or RAG

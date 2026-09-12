@@ -6,8 +6,8 @@ Add Telegram as a small input/output adapter for the existing CRM graph. The bot
 runs on the developer's laptop and lets an approved user submit one business-card
 image with the person's name as its caption.
 
-This task does not make Telegram part of LangGraph and does not change the
-existing graph, state model, or CLI behavior.
+Telegram remains outside LangGraph and does not change the graph's execution
+model or the CLI behavior.
 
 ```text
 Telegram private message
@@ -16,7 +16,9 @@ Telegram adapter (access, download, formatting, cleanup)
         ↓
 {name, image_path, voice_path=None, status="pending", errors=[]}
         ↓
-START → load_input → validate_input → finalize → END
+load_input → validate_input → extract_card → validate_extraction
+        ↓
+merge_context → finalize
         ↓
 Telegram response
 ```
@@ -31,8 +33,8 @@ Telegram response
 - Read the bot token from `TELEGRAM_BOT_TOKEN`.
 - Read a comma-separated allowlist of numeric Telegram user IDs from
   `TELEGRAM_ALLOWED_USER_IDS`.
-- Both variables are required. Secrets must never be committed, shown to users,
-  or logged.
+- Both variables are required. `GROQ_API_KEY` is also required for live card
+  extraction. Secrets must never be committed, shown to users, or logged.
 
 ## Accepted input
 
@@ -62,7 +64,7 @@ is no persistent image storage.
 
 ## Responses
 
-Successful graph validation returns exactly:
+Successful card extraction and schema validation returns exactly:
 
 ```text
 ✓ Input accepted
@@ -97,10 +99,11 @@ The bot safely rejects:
 
 ## Explicit non-goals
 
-This MVP has no voice-note flow, pending conversation state, OCR, transcription,
-database, duplicate detection, persistence, processing indicator, RAG, or
-additional graph nodes. `Status: complete` means only that the current graph
-accepted the input validation; it does **not** mean a contact was saved.
+This Telegram MVP has no voice-note conversation, pending conversation state,
+database, duplicate detection, persistence, processing indicator, or RAG. The
+shared graph does support Groq card extraction and optional CLI voice-file
+transcription. `Status: complete` means extraction produced schema-valid
+evidence; it does **not** mean a contact was saved.
 
 ## Acceptance criteria
 
@@ -113,4 +116,4 @@ accepted the input validation; it does **not** mean a contact was saved.
 - `/start` and `/help` document the exact input contract.
 - Configuration rejects missing tokens, empty allowlists, and nonnumeric IDs.
 - Automated tests use fake Telegram updates/files and never contact Telegram.
-- Existing graph and CLI tests continue to pass unchanged.
+- Existing graph, provider, voice, CLI, and Telegram tests pass together.
