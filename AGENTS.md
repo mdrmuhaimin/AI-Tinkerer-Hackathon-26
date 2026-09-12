@@ -221,17 +221,23 @@ Last updated: 2026-09-12
 
 ### Completed
 
-**Task 1 — LangGraph Skeleton** (verifier PASS; `pytest -q` → 8 passed)
-
-The human specified this task. It is the only completed learning task.
+**Task 1 — LangGraph Skeleton** (verifier PASS)
 
 * CLI: `python -m crm --name ... --image ... [--voice ...]`
-* Graph: `START → load_input → validate_input → finalize → END`
-* State: `CRMState` in `crm/state.py` (raw inputs, `status`, `errors`)
-* Validation is deterministic Python. Failures set `status="invalid"` and still reach END.
-* No LLM. No database. No embeddings.
+* Graph was: `START → load_input → validate_input → finalize → END`
+* Deterministic input validation only.
 
-Key files: `crm/state.py`, `crm/graph.py`, `crm/cli.py`, `tests/test_graph.py`, `tests/test_cli.py`
+**Task 2 — Business Card Extraction** (verifier PASS; `pytest -q` → 19 passed, 1 deselected)
+
+The human specified this task.
+
+* Graph: `START → load_input → validate_input → extract_card → validate_extraction → finalize → END`
+* Pydantic `ContactEvidence` in `crm/schemas.py`
+* Isolated `CardExtractor` protocol; live impl is official Groq client (`GROQ_API_KEY` from `.env` or system env)
+* Unit tests use `FakeExtractor`. Live smoke test is `@pytest.mark.live` and excluded by default.
+* No CRM storage. No embeddings.
+
+Key files: `crm/schemas.py`, `crm/providers/`, `crm/graph.py`, `tests/test_extract.py`
 
 ### Next
 

@@ -7,7 +7,7 @@ name = "ai-conference-crm"
 version = "0.1.0"
 description = "AI Conference CRM — deterministic capture graph"
 requires-python = ">=3.11"
-dependencies = ["langgraph"]
+dependencies = ["langgraph", "pydantic", "groq", "python-dotenv"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
@@ -20,3 +20,7 @@ include = ["crm*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "live: calls a live AI provider (deselect with -m 'not live')",
+]
+addopts = ["-m", "not live"]
