@@ -13,8 +13,9 @@ from crm.providers.base import (
     TranscriberError,
     VoiceTranscriber,
 )
-from crm.providers.embeddings import GroqEmbedder
 from crm.providers.groq import GroqCardExtractor, GroqVoiceTranscriber
+# Kept as a public patch point for older injected-embedding tests; never used by default.
+from crm.providers.embeddings import GroqEmbedder
 from crm.schemas import ContactEvidence
 from crm.search import build_search_document as _search_document
 from crm.state import CRMState
@@ -58,9 +59,6 @@ def load_input(state: CRMState) -> CRMState:
 
 def validate_input(state: CRMState) -> CRMState:
     errors: list[str] = []
-
-    if _blank(state.get("name")):
-        errors.append("name is required")
 
     image_path = state.get("image_path")
     if _blank(image_path):
@@ -109,7 +107,10 @@ def validate_extraction(state: CRMState) -> CRMState:
     if status != "extracted":
         return state
     try:
-        evidence = ContactEvidence.model_validate(state.get("extracted_card"))
+        raw = state.get("extracted_card")
+        if isinstance(raw, dict) and _blank(raw.get("full_name")) and not _blank(state.get("name")):
+            raw = {**raw, "full_name": str(state["name"]).strip()}
+        evidence = ContactEvidence.model_validate(raw)
         return {
             **state,
             "status": "valid",
@@ -378,6 +379,11 @@ def build_graph(
     def create_embedding_node(state: CRMState) -> CRMState:
         return create_embedding(state, embedder)
 
+    def after_write(state: CRMState) -> str:
+        if write_ok(state) == "write_failed":
+            return "write_failed"
+        return "embedding" if embedder is not None else "finalize"
+
     def store_embedding_node(state: CRMState) -> CRMState:
         return store_embedding(state, active_store)
 
@@ -432,9 +438,10 @@ def build_graph(
     graph.add_edge("update_contact", "verify_write")
     graph.add_conditional_edges(
         "verify_write",
-        write_ok,
+        after_write,
         {
-            "write_ok": "build_search_document",
+            "embedding": "build_search_document",
+            "finalize": "finalize",
             "write_failed": "finalize",
         },
     )

@@ -15,8 +15,8 @@ After every later task that passes verification, the orchestrator must update **
 
 | Kind | Examples | Who does it |
 | --- | --- | --- |
-| Probabilistic | Read a card image, transcribe voice, turn text into an embedding | Groq, behind a small interface |
-| Deterministic | Validate paths, normalize, match, CREATE/UPDATE, verify the row, KNN lookup, load rows by id | Python + SQLite + sqlite-vec |
+| Probabilistic | Read a card image, transcribe voice, phrase a grounded search answer | Groq, behind a small interface |
+| Deterministic | Validate paths, normalize, match, CREATE/UPDATE, verify the row, FTS retrieval | Python + SQLite FTS5 |
 
 Do not ask a model to decide something ordinary code can decide.
 
@@ -103,6 +103,11 @@ The read goes through `ContactStore` (SQLite today). The graph does not need to 
 
 ## Task 6 — The vector is an index, not the record
 
+> **Historical experiment, superseded for default runtime:** the vector code is
+> retained only for explicitly injected embedding providers and tests. The live
+> Groq embedding assumption was incorrect. Default capture bypasses embedding
+> nodes, and current search uses deterministic SQLite FTS5.
+
 An embedding is a list of numbers that represents the *meaning* of a short document. Nearby vectors mean similar meaning. The CRM still stores the person in `contacts`. `contact_embeddings` only answers: “which `contact_id`s are closest to this question?”
 
 The searchable document is not the whole row. It is `full_name`, `company`, `job_title`, and `notes`. Email and phone help *find the same person later*. They do not help *“who talked about automation?”*
@@ -116,7 +121,9 @@ This is a different job from duplicate matching:
 
 The embed path runs only after `write_ok`. A failed verify must not write a vector for a row you do not trust. When notes change, DELETE + INSERT replaces that `contact_id`’s vector so search does not keep the old meaning.
 
-The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider. Tests inject `FakeEmbedder`.
+The experimental graph path calls `EmbeddingProvider.embed(text)` only when a
+caller explicitly injects one. Tests inject `FakeEmbedder`; normal runtime does
+not construct `GroqEmbedder`.
 
 `crm query` is not a capture-graph node. It embeds the question, asks sqlite-vec for IDs, then `ContactStore.get`.
 
@@ -128,7 +135,9 @@ The graph calls `EmbeddingProvider.embed(text)`. Groq HTTP stays in the provider
 
 Tracing answers “what ran?” Evaluation answers “was it right?”
 
-LangSmith traces (when `LANGSMITH_API_KEY` is set) wrap live Groq extract / transcribe / embed under the graph invoke. They do not add CRM nodes.
+LangSmith traces (when `LANGSMITH_API_KEY` is set) wrap live Groq extract and
+transcribe calls. An embed trace applies only to the retained experimental
+injected-provider path. Tracing does not add CRM nodes.
 
 The experiment is a **labeled dataset** plus **code evaluators**. Each example has expected `contact_evidence`, `crm_action`, `null_fields`, and `verified`. The target is the real capture graph. Fakes stand in for Groq so default eval needs no key.
 
@@ -146,7 +155,7 @@ Typed notes and a voice transcript are two sources of the same kind of thing: co
 
 Absence of `--notes` or `--voice` is normal. Text-only never calls Whisper. Voice-only never needs typed text.
 
-Search is a different path:
+The following was the Task 8 experimental search path and is no longer the default:
 
 ```text
 question → query embedding → sqlite-vec IDs → contacts row → print
@@ -155,6 +164,59 @@ question → query embedding → sqlite-vec IDs → contacts row → print
 The question gets a new embedding at query time. That is not the contact’s stored vector. The stored vector was built from the search document after a verified write. Results are CRM rows, not vec-table metadata.
 
 **Check:** You type `--notes` and also pass `--voice`. Which node combines them, and does `crm query` run that node?
+
+---
+
+## Task 9 — One database, deterministic retrieval, grounded wording
+
+Telegram is an adapter around the same capture graph. It downloads temporary
+media, supplies the optional caption as a name hint, waits for voice or `/done`,
+formats the result for the chat, and deletes the media. It does not save a second
+copy of the contact.
+
+`ContactStore` is the single source of truth. A successful CREATE or UPDATE also
+synchronizes `contacts_fts` in the same SQLite transaction. Startup backfills
+older contacts. If either the row or its FTS entry cannot be written, success is
+not claimed.
+
+Search has two distinct responsibilities:
+
+```text
+question → deterministic SQLite FTS5 retrieval (max 5 rows)
+         → Groq phrases an answer only from those rows
+```
+
+FTS decides which stored evidence is relevant. Groq does not invent retrieval,
+embed the query, or gain access to unrelated rows. With no FTS matches, the bot
+answers deterministically and does not call Groq.
+
+Default capture routes directly from a verified write to `finalize`. The vector
+nodes remain an explicit-injection experiment and are not part of normal runtime.
+
+**Check:** If `/search Who did I meet at LEAP?` finds no FTS rows, should Groq be
+called? Why does keeping that decision deterministic matter?
+
+---
+
+## Task 10 — Reasoning stays behind the provider boundary
+
+Telegram users should receive the answer, not the model's private reasoning.
+The Groq request now asks Qwen to hide reasoning at the source. A small local
+check is still necessary because older or mocked responses can contain a leading
+`<think>...</think>` block.
+
+That fallback accepts one complete leading reasoning block followed by a real
+answer. It rejects reasoning-only, malformed, nested, or residual reasoning tags
+instead of guessing which fragment is safe to show. This keeps failure handling
+deterministic and prevents punctuation or reasoning text from reaching Telegram.
+
+The cleanup belongs in `GroqSearchAnswerer`, the provider boundary, so every
+caller receives the same safe final-answer contract. Telegram keeps its existing
+`🔎 Search result` presentation and does not need model-specific parsing.
+
+**Check:** Temporarily mock Groq to return
+`<think>reason</think>\nYou met Mariana.` What should Telegram show? What should
+happen if the returned final sentence contains another `<think>` tag?
 
 ---
 
@@ -184,14 +246,12 @@ voice_present?
                                        /        \
                                  fail            ok
                                   |               |
-                                  |    build_search_document
-                                  |         ↓
-                                  |    create_embedding
-                                  |         ↓
-                                  |    store_embedding
-                                   \        /
-                                    finalize → END
+                                  \               /
+                                   finalize → END
 ```
+
+When an `EmbeddingProvider` is explicitly injected, the retained experimental
+branch may still run after `verify_write`; it is not part of this default graph.
 
 ---
 

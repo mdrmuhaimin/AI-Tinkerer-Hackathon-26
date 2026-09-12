@@ -101,7 +101,7 @@ def test_fake_invalid_payload_is_schema_invalid(tmp_path: Path) -> None:
     image = _touch(tmp_path / "card.jpg")
 
     missing_name = _graph(tmp_path, FakeExtractor({"company": "Analytical Engines"})).invoke(
-        _pending(name="Ada Lovelace", image_path=image)
+        _pending(name=None, image_path=image)
     )
     assert missing_name["status"] == "invalid"
     assert missing_name["contact_evidence"] is None
@@ -133,10 +133,9 @@ def test_fake_extractor_error_sets_error_status(tmp_path: Path) -> None:
 
 
 def test_invalid_input_does_not_call_extractor(tmp_path: Path) -> None:
-    image = _touch(tmp_path / "card.jpg")
     fake = FakeExtractor(FULL_PAYLOAD)
     result = _graph(tmp_path, fake).invoke(
-        _pending(name=None, image_path=image)
+        _pending(name="Ada Lovelace", image_path=None)
     )
 
     assert result["status"] == "invalid"

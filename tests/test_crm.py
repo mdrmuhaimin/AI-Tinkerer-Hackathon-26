@@ -288,14 +288,13 @@ def test_persist_tests_never_construct_groq(
 
 def test_invalid_or_error_does_not_write_db(tmp_path: Path) -> None:
     store = _store(tmp_path)
-    image = _touch(tmp_path / "card.jpg")
     graph = build_graph(
         extractor=FakeExtractor(SARAH),
         transcriber=FakeTranscriber(),
         store=store,
         embedder=FakeEmbedder(),
     )
-    result = graph.invoke(_pending(name=None, image_path=image))
+    result = graph.invoke(_pending(name="Sarah Khan", image_path=None))
     assert result["status"] == "invalid"
     assert result["contact_id"] is None
     assert _count(store) == 0

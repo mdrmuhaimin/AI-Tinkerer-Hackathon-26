@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Mapping, Protocol, Sequence
 
 
 class ExtractorError(Exception):
@@ -15,6 +15,10 @@ class CardExtractor(Protocol):
 
 class VoiceTranscriber(Protocol):
     def transcribe(self, voice_path: str) -> str: ...
+
+
+class SearchAnswerer(Protocol):
+    def answer(self, query: str, records: Sequence[Mapping]) -> str: ...
 
 
 class EmbedderError(Exception):

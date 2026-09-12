@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 
 from crm.db import DEFAULT_DB_PATH, ContactStore
 from crm.graph import build_graph
-from crm.providers.embeddings import GroqEmbedder
-from crm.search import query_contacts
 from crm.tracing import enable_tracing
 
 
@@ -44,13 +42,8 @@ def _format_query_hits(hits: list[dict]) -> str:
 
 
 def _run_query(args: argparse.Namespace, embedder=None, store=None) -> int:
-    active_embedder = embedder if embedder is not None else GroqEmbedder.from_env()
-    active_store = (
-        store
-        if store is not None
-        else ContactStore(DEFAULT_DB_PATH, embedding_dim=active_embedder.dimension)
-    )
-    hits = query_contacts(active_store, active_embedder, args.text, args.limit)
+    active_store = store if store is not None else ContactStore(DEFAULT_DB_PATH)
+    hits = active_store.search(args.text, args.limit)
     print(_format_query_hits(hits))
     return 0
 
