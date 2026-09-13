@@ -1,16 +1,23 @@
 {
   "0": "How to Run — AI Conference CRM (Task 4)",
-  "1": "test_cli.py",
+  "1": "ExtractorError",
   "2": "AI Conference CRM — Learning-First Development Harness",
   "3": "test_eval.py",
   "4": "graph.py",
   "5": "FakeTranscriber",
+  "6": "discord_bot.py",
+  "7": "test_graph.py",
   "8": "FakeExtractor",
   "9": "AI Conference CRM Agent",
   "10": "crm/__init__.py",
-  "11": "telegram_plan.md",
+  "11": "Discord DM adapter — plan for a later build",
   "12": "tests/__init__.py",
   "13": "ai-conference-crm",
   "14": "_run",
-  "15": "ContactStore"
+  "15": "ContactStore",
+  "16": "Progress So Far — AI Conference CRM",
+  "17": "What You Should Understand So Far",
+  "18": "progress_so_far.md",
+  "19": "Progress",
+  "20": "Tooling"
 }

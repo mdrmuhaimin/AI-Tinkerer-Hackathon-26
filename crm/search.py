@@ -27,3 +27,22 @@ def query_contacts(
         if row is not None:
             results.append({**row, "distance": distance})
     return results
+
+
+def _format_query_hits(hits: list[dict]) -> str:
+    if not hits:
+        return "No matches."
+    blocks = []
+    for i, hit in enumerate(hits, 1):
+        lines = [f"{i}. {hit.get('full_name') or 'Unknown'}"]
+        for key in ("company", "job_title"):
+            value = hit.get(key)
+            if value and str(value).strip():
+                lines.append(f"   {value}")
+        notes = hit.get("notes")
+        if notes and str(notes).strip():
+            lines.append("")
+            for line in str(notes).splitlines():
+                lines.append(f"   {line}")
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)

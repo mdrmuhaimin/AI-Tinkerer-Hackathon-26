@@ -73,9 +73,10 @@ This installs:
 
 - `langgraph` — graph orchestration
 - `pydantic` — `ContactEvidence` schema
-- `groq` — card extract, voice transcription, embeddings
+- `groq` — card extract, voice transcription (embeddings default to a local 768-d token hash)
 - `sqlite-vec` — local vector KNN (`contact_embeddings`)
 - `langsmith` — optional tracing and offline `evaluate()`
+- `discord.py` — optional Discord DM adapter (`python -m crm.discord_bot`)
 - `pytest` — test runner
 - the `crm` CLI entry point (optional; see below)
 
@@ -195,6 +196,44 @@ Successful runs persist a contact to **`data/crm.db`**. A later run with the sam
 
 ---
 
+## 6b. Discord DM adapter
+
+The Discord bot is **not** a LangGraph node. It maps DMs to the same `{name, image_path, voice_path, typed_notes}` payload as the CLI, or to `query_contacts`. The CLI stays available.
+
+**Token:** set `DISCORD_BOT_TOKEN` in `.env` or the environment (same `GROQ_API_KEY` and `data/crm.db` as the CLI). Gateway connection — no webhook or public URL.
+
+```bash
+# .env
+DISCORD_BOT_TOKEN=...
+GROQ_API_KEY=...
+```
+
+In the [Discord Developer Portal](https://discord.com/developers/applications), enable **Message Content Intent** (Privileged Gateway Intents). The bot uses DM messages + `message_content` only.
+
+Invite the bot to your account (or a server if you need the slash command registered), then:
+
+```bash
+python -m crm.discord_bot
+```
+
+**DM capture**
+
+1. DM a business-card **image**. Optional typed text is notes only — the name comes from the card.
+2. Bot replies that the card was received; send a **voice message** or type `save` (or `done`).
+3. Voice (`audio/ogg`, `voice-message.ogg`, or any `audio/*`) is downloaded as-is (no FFmpeg) and the capture graph runs.
+4. Extra typed text while waiting is appended to notes. Pending state is in-memory (lost on restart).
+5. Image + voice in the first DM runs immediately. `full_name` always comes from the card.
+
+**Query** (does not run the capture graph, does not write contacts):
+
+```text
+/query Who did I meet regarding data warehouse consulting?
+```
+
+Guild/channel messages are ignored. DMs only.
+
+---
+
 ## 7. What the output looks like
 
 On success, the CLI prints the **final graph state as JSON** (including `contact_evidence`) and exits with code `0`:
@@ -259,7 +298,7 @@ START → load_input → validate_input → extract_card → validate_extraction
 | Node                  | Purpose                                                                 |
 |-----------------------|-------------------------------------------------------------------------|
 | `load_input`          | Copies CLI inputs (`name`, `image_path`, `voice_path`, `typed_notes`) into graph state |
-| `validate_input`      | Checks name, image file, optional voice file                            |
+| `validate_input`      | Checks image file and optional voice file; name is required only when there is no image |
 | `extract_card`        | Calls `CardExtractor` when input is valid; skips the API when invalid   |
 | `validate_extraction` | Validates the raw payload with `ContactEvidence`                        |
 | `transcribe_voice`    | Calls `VoiceTranscriber` only when a voice file is present and status is valid |
@@ -270,7 +309,7 @@ START → load_input → validate_input → extract_card → validate_extraction
 | `update_contact`      | Updates the matched row; blank new fields do not erase existing values  |
 | `verify_write`        | Re-reads the row and checks intended fields                             |
 | `build_search_document` | Joins non-blank `full_name`, `company`, `job_title`, `notes`          |
-| `create_embedding`    | Isolated embedder → vector (live Groq only when no embedder injected)   |
+| `create_embedding`    | Isolated embedder → vector (local 768-d token hash by default; Groq only if `CRM_EMBED_MODEL` is set)   |
 | `store_embedding`     | Upserts `contact_embeddings` (rowid = contact_id); always replaces      |
 | `finalize`            | Sets `status` to `complete` only after verify; embedding errors stay `error` |
 
@@ -297,7 +336,7 @@ The live tests are skipped unless `GROQ_API_KEY` is set. Default `pytest` never 
 The following are intentionally out of scope for this task:
 
 - PostgreSQL, SQLAlchemy, or migrations
-- RAG chat / Telegram or other chat integrations
+- RAG chat / Telegram, Slack, WhatsApp, or a web UI
 - Reminder / task / follow-up-date extraction from the voice note
 
 ---

@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from crm.providers.base import ExtractorError, TranscriberError
+from crm.providers.embeddings import GroqEmbedder
 from crm.providers.groq import GroqCardExtractor, GroqVoiceTranscriber
 
 
@@ -63,3 +64,38 @@ def test_transcribe_uses_whisper_large_v3_and_wraps_errors(
     monkeypatch.setattr("crm.providers.groq.Groq", _Boom)
     with pytest.raises(TranscriberError, match="network down"):
         GroqVoiceTranscriber(api_key="test-key").transcribe(str(voice))
+
+
+def test_default_embed_does_not_call_groq(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _Embeddings:
+        def create(self, **_kwargs):
+            raise AssertionError("embeddings.create must not be called")
+
+    class _Client:
+        def __init__(self, **_kwargs):
+            self.embeddings = _Embeddings()
+
+    monkeypatch.setattr("crm.providers.embeddings.Groq", _Client)
+    monkeypatch.delenv("CRM_EMBED_MODEL", raising=False)
+    vector = GroqEmbedder(api_key="test-key").embed("workflow automation")
+    assert len(vector) == GroqEmbedder.dimension
+    assert any(x != 0 for x in vector)
+
+
+def test_embed_falls_back_when_groq_model_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _Embeddings:
+        def create(self, **_kwargs):
+            raise RuntimeError(
+                "Error code: 404 - {'error': {'code': 'model_not_found'}}"
+            )
+
+    class _Client:
+        def __init__(self, **_kwargs):
+            self.embeddings = _Embeddings()
+
+    monkeypatch.setattr("crm.providers.embeddings.Groq", _Client)
+    vector = GroqEmbedder(api_key="test-key", model="missing-embed").embed(
+        "workflow automation"
+    )
+    assert len(vector) == GroqEmbedder.dimension
+    assert any(x != 0 for x in vector)

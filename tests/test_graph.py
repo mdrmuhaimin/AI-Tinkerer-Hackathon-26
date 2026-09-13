@@ -61,22 +61,23 @@ def test_valid_name_and_image_completes(tmp_path: Path) -> None:
     assert result["contact_evidence"]["full_name"] == "Ada Lovelace"
 
 
-def test_missing_or_blank_name_is_invalid(tmp_path: Path) -> None:
-    image = _touch(tmp_path / "card.jpg")
+def test_missing_name_without_image_is_invalid(tmp_path: Path) -> None:
     fake = FakeExtractor({"full_name": "Ada Lovelace"})
     graph = _graph(tmp_path, fake)
-
-    missing = graph.invoke(_pending(name=None, image_path=image))
+    missing = graph.invoke(_pending(name=None, image_path=None))
     assert missing["status"] == "invalid"
-    assert missing["errors"]
     assert any("name" in error.lower() for error in missing["errors"])
     assert fake.calls == []
 
-    blank = graph.invoke(_pending(name="   ", image_path=image))
-    assert blank["status"] == "invalid"
-    assert blank["errors"]
-    assert any("name" in error.lower() for error in blank["errors"])
-    assert fake.calls == []
+
+def test_blank_name_is_taken_from_card(tmp_path: Path) -> None:
+    image = _touch(tmp_path / "card.jpg")
+    fake = FakeExtractor({"full_name": "Ada Lovelace"})
+    graph = _graph(tmp_path, fake)
+    result = graph.invoke(_pending(name=None, image_path=image))
+    assert result["status"] == "complete"
+    assert result["name"] == "Ada Lovelace"
+    assert fake.calls == [image]
 
 
 def test_missing_or_nonexistent_image_is_invalid(tmp_path: Path) -> None:
@@ -182,7 +183,7 @@ def test_stream_node_order_valid_and_invalid(tmp_path: Path) -> None:
 
     invalid_fake = FakeExtractor({"full_name": "Ada Lovelace"})
     invalid_graph = _graph(tmp_path, invalid_fake)
-    invalid_state = _pending(name=None, image_path=image)
+    invalid_state = _pending(name=None, image_path=None)
     assert _stream_node_names(invalid_graph, invalid_state) == expected_invalid
 
     invalid_events = list(invalid_graph.stream(invalid_state))
